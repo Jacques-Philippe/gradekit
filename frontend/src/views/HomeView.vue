@@ -1,5 +1,12 @@
-<script setup lang="ts"></script>
-
 <template>
-  <h2>Home</h2>
+  <CourseInput />
 </template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import CourseInput from "@/components/CourseInput.vue";
+
+export default defineComponent({
+  components: { CourseInput },
+});
+</script>
