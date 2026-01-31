@@ -117,7 +117,7 @@ This project will be made up of a monorepo with the following structure
    ```bash
    python -m venv .venv
    . .venv/Scripts/Activate # Windows
-   source .venv/bin/activate # MacOSX
+   source .venv/bin/activate # macOS / Linux
    pip install -r requirements.txt
    ```
 1. Activate pre-commit hooks
