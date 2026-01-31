@@ -22,8 +22,6 @@ A single TA grading one course during one semester.
 - Focused scope: grading only, not a full LMS
 - Opinionated UX: optimized for the grading workflow
 
-# Core Features (v1)
-
 ## Flow
 
 ### Setup
@@ -69,7 +67,7 @@ For a TA, grading is a mix of:
 1. TA selects the student
 2. The rubric is shown as a list of criteria
 3. For each criterion:
-   - TA selects a score (radio buttons, slider, dropdown)
+   - TA selects a score
    - Default feedback auto-fills
 
 4. TA optionally:
@@ -94,9 +92,6 @@ For a TA, grading is a mix of:
 | Style         | 5   | 3       | Inconsistent naming and formatting.            |
 
 **Total:** 15 / 20
-
-The TA did not “choose responses”.
-They **made decisions**, and the app helped express them efficiently.
 
 ## Project structure
 
