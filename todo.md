@@ -9,7 +9,7 @@ The purpose of this document is to keep an inventory of things to be done
   - format
   - line endings
   - trailing whitespace
-- Associate CodeRabbit with this repository
+- ~~Associate CodeRabbit with this repository~~
 - Define pipeline and add
   - build command
   - tests run
