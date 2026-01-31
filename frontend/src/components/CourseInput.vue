@@ -8,18 +8,15 @@
         placeholder="Course name"
         required
       />
-      <button type="submit" :disabled="store.loading">
-        {{ store.loading ? "Submitting..." : "Submit" }}
-      </button>
     </form>
+    <button :disabled="store.loading">
+      {{ store.loading ? "Submitting..." : "Submit" }}
+    </button>
     <p v-if="store.currentCourse">
       Course submitted: {{ store.currentCourse.name }} (id:
       {{ store.currentCourse.id }})
     </p>
     <p v-if="store.error" class="error">{{ store.error }}</p>
-    <button :disabled="store.loading">
-      {{ store.loading ? "Submitting..." : "Submit" }}
-    </button>
   </div>
 </template>
 
