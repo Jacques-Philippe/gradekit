@@ -25,9 +25,14 @@ export async function getCourseById(id: string): Promise<Course> {
 export async function submitCourseName(name: string): Promise<Course> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
+  const normalizedName = name.trim();
+  if (!normalizedName) {
+    throw new Error("Course name is required");
+  }
+
   // check for duplicates
   const exists = Object.values(courses).some(
-    (c) => c.name.toLowerCase() === name.toLowerCase(),
+    (c) => c.name.toLowerCase() === normalizedName.toLowerCase(),
   );
   if (exists) {
     throw new Error(`Course with name "${name}" already exists`);
@@ -35,7 +40,7 @@ export async function submitCourseName(name: string): Promise<Course> {
 
   // create and add new course
   const id = Math.random().toString(36).substring(2, 9);
-  const course: Course = { id, name };
+  const course: Course = { id, name: normalizedName };
   courses[id] = course;
   return course;
 }
