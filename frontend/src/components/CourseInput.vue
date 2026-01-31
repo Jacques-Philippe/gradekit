@@ -31,7 +31,9 @@ export default defineComponent({
 
     async function submitCourse() {
       await store.createCourse(courseName.value);
-      courseName.value = "";
+      if (!store.error) {
+        courseName.value = "";
+      }
     }
 
     return {
