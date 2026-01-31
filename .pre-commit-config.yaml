@@ -12,9 +12,11 @@ repos:
         entry: bash -c "cd frontend && npm run lint"
         language: system
         pass_filenames: false
+        files: ^frontend/
 
       - id: prettier
         name: Frontend format
         entry: bash -c "cd frontend && npm run format"
         language: system
         pass_filenames: false
+        files: ^frontend/
