@@ -102,7 +102,7 @@ They **made decisions**, and the app helped express them efficiently.
 
 This project will be made up of a monorepo with the following structure
 
-```
+```text
 ./
     frontend    # where the web application lives
     backend     # where the server lives
