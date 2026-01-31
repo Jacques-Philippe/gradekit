@@ -1,41 +1,116 @@
-## GradeKit Concept Summary
+## GradeKit
 
-**Purpose**
+## Purpose
+
 A local-first, web-based grading application designed to help university Teaching Assistants grade assignments faster, more consistently, and with less mental overhead.
 
-**Target User**
+### Target User
+
 A single TA grading one course during one semester.
 
-**Core Problem It Solves**
+#### Core Problem It Solves
 
 - Rubric-based grading is slow and inconsistent in existing tools
 - Repetitive feedback wastes time
 - Grading decisions are hard to defend during disputes
 - LMS tools are heavy, inflexible, or require institutional access
 
-**Key Principles**
+### Key Principles
 
 - Local-first: runs on the TA’s own machine
 - Simple setup: no accounts, no SSO, no university IT involvement
 - Focused scope: grading only, not a full LMS
 - Opinionated UX: optimized for the grading workflow
 
-**Core Features (v1)**
+# Core Features (v1)
 
-- Create assignments
-- Define rubrics with criteria and point values
-- Grade submissions using the rubric
-- Apply reusable feedback snippets
-- Automatically calculate scores
-- Maintain a clear audit trail of grading decisions
-- Export grades and feedback in common formats (e.g. CSV)
+## Flow
 
-**Technology**
+### Setup
+
+1. Create course
+2. Add students
+3. Create assignment
+4. Define rubric
+5. Grade assignment for each student
+
+### Grading
+
+5. Select assignment
+6. Select student
+7. Fill out rubric
+8. Review auto-calculated grade
+9. Add feedback
+10. Save
+
+### Export
+
+11. Export grades per assignment or per course
+
+## On grading criteria
+
+For each assignment question, the TA can define a list of grading criterion.
+
+For a TA, grading is a mix of:
+
+1. **Judgment**
+   “Did this satisfy the criterion?”
+
+2. **Scoring**
+   “How many points does that deserve?”
+
+3. **Communication**
+   “How do I explain this efficiently and fairly?”
+
+## What the TA actually does, step by step
+
+### For one student, one assignment:
+
+1. TA selects the student
+2. The rubric is shown as a list of criteria
+3. For each criterion:
+   - TA selects a score (radio buttons, slider, dropdown)
+   - Default feedback auto-fills
+
+4. TA optionally:
+   - Edits feedback
+   - Adds a general comment
+
+5. The app:
+   - Calculates total score
+   - Shows a live summary
+
+6. TA saves and moves to the next student
+
+## A concrete example (end-to-end)
+
+**Assignment:** Programming Lab
+**Student:** Alice
+
+| Criterion     | Max | Awarded | Feedback                                       |
+| ------------- | --- | ------- | ---------------------------------------------- |
+| Compiles      | 5   | 5       | Compiles successfully.                         |
+| Correct logic | 10  | 7       | Logic is mostly correct, but fails edge cases. |
+| Style         | 5   | 3       | Inconsistent naming and formatting.            |
+
+**Total:** 15 / 20
+
+The TA did not “choose responses”.
+They **made decisions**, and the app helped express them efficiently.
+
+## Project structure
+
+This project will be made up of a monorepo with the following structure
+
+```
+./
+    frontend    # where the web application lives
+    backend     # where the server lives
+```
+
+## Technology
 
 - Frontend: Vue.js (Vue 3 + TypeScript)
 - Backend: ASP.NET Core (.NET 8)
 - Database: SQLite
 - Deployment: single local instance, self-hosted
-
-**End Goal**
-A small, trustworthy tool that a TA can adopt immediately to make grading suck less—without bureaucracy, lock-in, or unnecessary complexity.
