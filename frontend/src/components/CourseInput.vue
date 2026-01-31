@@ -16,7 +16,9 @@
       Course submitted: {{ store.currentCourse.name }} (id:
       {{ store.currentCourse.id }})
     </p>
-    <p v-if="store.error" class="error">{{ store.error }}</p>
+    <p v-if="store.error" class="error" id="course-creation-error">
+      {{ store.error }}
+    </p>
   </div>
 </template>
 

@@ -6,8 +6,11 @@ import * as api from "@/api/mock/courses";
 import { useCourseStore } from "@/stores/courseStore";
 
 describe("CourseInput.vue", () => {
+  let pinia: ReturnType<typeof createPinia>;
+
   beforeEach(() => {
-    setActivePinia(createPinia());
+    pinia = createPinia();
+    setActivePinia(pinia);
   });
 
   it("renders input and button", () => {
@@ -23,15 +26,16 @@ describe("CourseInput.vue", () => {
     expect(wrapper.vm.courseName).toBe("My Course");
   });
 
-  it("displays success message when API resolves", async () => {
-    const store = useCourseStore();
+  it("submits course successfully", async () => {
     const mockCourse = { id: "abc123", name: "Test Course" };
     const spy = vi.spyOn(api, "submitCourseName").mockResolvedValue(mockCourse);
 
-    await store.createCourse("Math 101");
+    const wrapper = mount(CourseInput, { global: { plugins: [pinia] } });
+    await wrapper.find("input").setValue("Test Course");
+    await wrapper.find("form").trigger("submit.prevent");
+    await wrapper.vm.$nextTick();
 
-    expect(store.currentCourse).toEqual(mockCourse);
-    expect(store.error).toBe("");
+    expect(wrapper.text()).toContain("Course submitted: Test Course");
 
     spy.mockRestore();
   });
@@ -46,6 +50,22 @@ describe("CourseInput.vue", () => {
 
     expect(store.currentCourse).toBeNull();
     expect(store.error).toContain("Failed to create course");
+    spy.mockRestore();
+  });
+
+  it("displays error message for course submission failed", async () => {
+    const spy = vi
+      .spyOn(api, "submitCourseName")
+      .mockRejectedValue(new Error("API Error"));
+
+    const wrapper = mount(CourseInput, { global: { plugins: [pinia] } });
+    await wrapper.find("input").setValue("Test Course");
+    await wrapper.find("form").trigger("submit.prevent");
+    await wrapper.vm.$nextTick();
+
+    await wrapper.find("#course-creation-error");
+    expect(wrapper.text()).toContain("API Error");
+
     spy.mockRestore();
   });
 });
