@@ -47,7 +47,7 @@ A single TA grading one course during one semester.
 
 ## On grading criteria
 
-For each assignment question, the TA can define a list of grading criterion.
+For each assignment question, the TA can define a list of grading criteria.
 
 For a TA, grading is a mix of:
 
