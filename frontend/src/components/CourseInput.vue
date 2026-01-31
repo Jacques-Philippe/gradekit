@@ -8,9 +8,13 @@
         placeholder="Course name"
         required
       />
-      <button type="submit">Submit</button>
+      <button type="submit" :disabled="loading">
+        {{ loading ? "Submitting..." : "Submit" }}
+      </button>
     </form>
-    <p v-if="responseMessage">{{ responseMessage }}</p>
+    <p v-if="responseMessage" :class="{ error: isError }">
+      {{ responseMessage }}
+    </p>
   </div>
 </template>
 
@@ -23,19 +27,29 @@ export default defineComponent({
   setup() {
     const courseName = ref("");
     const responseMessage = ref("");
+    const isError = ref(false);
+    const loading = ref(false);
 
     async function submitCourse() {
+      loading.value = true;
+      responseMessage.value = "";
+      isError.value = false;
       try {
         const result = await submitCourseName(courseName.value);
         responseMessage.value = `Course submitted: ${result.name} (id: ${result.id})`;
       } catch (err) {
-        responseMessage.value = "Error submitting course " + err;
+        responseMessage.value = `Error submitting course: ${err}`;
+        isError.value = true;
+      } finally {
+        loading.value = false;
       }
     }
 
     return {
       courseName,
       responseMessage,
+      isError,
+      loading,
       submitCourse,
     };
   },
@@ -50,13 +64,20 @@ export default defineComponent({
   flex-direction: column;
   gap: 0.5rem;
 }
+
 input {
   padding: 0.5rem;
   font-size: 1rem;
 }
+
 button {
   padding: 0.5rem;
   font-size: 1rem;
   cursor: pointer;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
 }
 </style>

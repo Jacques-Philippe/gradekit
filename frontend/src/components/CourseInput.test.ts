@@ -17,43 +17,37 @@ describe("CourseInput.vue", () => {
     expect(wrapper.vm.courseName).toBe("My Course");
   });
 
-  it("calls submitCourseName and displays response", async () => {
-    // Mock the API function
+  it("displays success message when API resolves", async () => {
     const mockCourse = { id: "abc123", name: "Test Course" };
     const spy = vi.spyOn(api, "submitCourseName").mockResolvedValue(mockCourse);
 
     const wrapper = mount(CourseInput);
-    const input = wrapper.find("input");
-    await input.setValue("Test Course");
+    await wrapper.find("input").setValue("Test Course");
     await wrapper.find("form").trigger("submit.prevent");
-
-    // Wait for promise to resolve
     await wrapper.vm.$nextTick();
 
     expect(spy).toHaveBeenCalledWith("Test Course");
     expect(wrapper.text()).toContain(
       "Course submitted: Test Course (id: abc123)",
     );
+    expect(wrapper.vm.isError).toBe(false);
 
     spy.mockRestore();
   });
 
-  it("calls submitCourseName and displays error", async () => {
-    // Mock the API function
+  it("displays error message when API rejects", async () => {
     const spy = vi
       .spyOn(api, "submitCourseName")
-      .mockRejectedValue(new Error("something went wrong"));
+      .mockRejectedValue(new Error("API error"));
 
     const wrapper = mount(CourseInput);
-    const input = wrapper.find("input");
-    await input.setValue("Test Course");
+    await wrapper.find("input").setValue("Fail Course");
     await wrapper.find("form").trigger("submit.prevent");
-
-    // Wait for promise to resolve
     await wrapper.vm.$nextTick();
 
-    expect(spy).toHaveBeenCalledWith("Test Course");
-    expect(wrapper.text()).toContain("something went wrong");
+    expect(spy).toHaveBeenCalledWith("Fail Course");
+    expect(wrapper.text()).toContain("Error submitting course");
+    expect(wrapper.vm.isError).toBe(true);
 
     spy.mockRestore();
   });
