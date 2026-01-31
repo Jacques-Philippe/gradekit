@@ -17,9 +17,8 @@ Why is it useful or necessary?
 
 Describe how you think this feature should work.
 
-* New CLI flags?
-* New library API?
-* Change in behavior or output?
+- New library API?
+- Change in behavior or output?
 
 If you have a rough idea, include it — it doesn’t have to be perfect.
 
@@ -27,15 +26,11 @@ If you have a rough idea, include it — it doesn’t have to be perfect.
 
 ### Example Usage (if applicable)
 
-```bash
-datalinttool --example-flag input.csv
-```
+Example usage here
 
 Expected output or behavior:
 
-```text
-<example output>
-```
+Expected output here
 
 ---
 
@@ -50,10 +45,10 @@ Why is this approach preferable?
 
 Check all that apply:
 
-* [ ] CLI-only change
-* [ ] Library (`datalintlib`) API change
-* [ ] New behavior that needs tests
-* [ ] Potential breaking change
+- [ ] frontend-only change
+- [ ] backend-only change
+- [ ] New behavior that needs tests
+- [ ] Potential breaking change
 
 ---
 
@@ -61,10 +56,10 @@ Check all that apply:
 
 Anything else that might help with design or implementation:
 
-* Similar tools that do this well
-* Edge cases
-* Performance concerns
-* Compatibility concerns
+- Similar tools that do this well
+- Edge cases
+- Performance concerns
+- Compatibility concerns
 
 ---
 
@@ -72,6 +67,6 @@ Anything else that might help with design or implementation:
 
 What would make this feature “done”?
 
-* [ ] Behavior X is supported
-* [ ] Tests cover the new functionality
-* [ ] Documentation updated (README / help text)
+- [ ] Behavior X is supported
+- [ ] Tests cover the new functionality
+- [ ] Documentation updated (README / help text)
