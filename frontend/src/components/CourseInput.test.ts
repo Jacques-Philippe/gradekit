@@ -45,7 +45,7 @@ describe("CourseInput.vue", () => {
     await store.createCourse("Fail Course");
 
     expect(store.currentCourse).toBeNull();
-    expect(store.error).toBe("Failed to create course");
+    expect(store.error).toContain("Failed to create course");
     spy.mockRestore();
   });
 });

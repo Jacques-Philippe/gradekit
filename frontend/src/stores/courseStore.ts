@@ -33,7 +33,7 @@ export const useCourseStore = defineStore("course", {
         // fetch full course object only for selected course
         this.currentCourse = await getCourseById(id);
       } catch (err) {
-        this.error = `Failed to load courses ${err}`;
+        this.error = `Failed to select course ${err}`;
       } finally {
         this.loading = false;
       }
@@ -45,7 +45,7 @@ export const useCourseStore = defineStore("course", {
         const course = await submitCourseName(name);
         this.currentCourse = course;
       } catch (err) {
-        this.error = `Failed to load courses ${err}`;
+        this.error = `Failed to create course ${err}`;
         this.currentCourse = null;
       } finally {
         this.loading = false;
