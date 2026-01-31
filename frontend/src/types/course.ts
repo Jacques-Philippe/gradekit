@@ -3,7 +3,4 @@ export interface Course {
   name: string;
 }
 
-export interface CourseSummary {
-  id: string;
-  name: string;
-}
+export type CourseSummary = Pick<Course, "id" | "name">;
