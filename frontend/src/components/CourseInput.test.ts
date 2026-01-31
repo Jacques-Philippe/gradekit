@@ -37,4 +37,24 @@ describe("CourseInput.vue", () => {
 
     spy.mockRestore();
   });
+
+  it("calls submitCourseName and displays error", async () => {
+    // Mock the API function
+    const spy = vi
+      .spyOn(api, "submitCourseName")
+      .mockRejectedValue(new Error("something went wrong"));
+
+    const wrapper = mount(CourseInput);
+    const input = wrapper.find("input");
+    await input.setValue("Test Course");
+    await wrapper.find("form").trigger("submit.prevent");
+
+    // Wait for promise to resolve
+    await wrapper.vm.$nextTick();
+
+    expect(spy).toHaveBeenCalledWith("Test Course");
+    expect(wrapper.text()).toContain("something went wrong");
+
+    spy.mockRestore();
+  });
 });
