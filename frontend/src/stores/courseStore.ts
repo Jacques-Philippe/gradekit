@@ -5,6 +5,7 @@ import {
   getCourseSummaries,
   getCourseById,
 } from "@/api/mock/courses";
+import { toErrorMessage } from "@/utils/error";
 
 export const useCourseStore = defineStore("course", {
   state: () => ({
@@ -21,7 +22,7 @@ export const useCourseStore = defineStore("course", {
         // mock API call returns id + name
         this.courses = await getCourseSummaries();
       } catch (err) {
-        this.error = `Failed to load courses ${err}`;
+        this.error = `Failed to load courses ${toErrorMessage(err)}`;
       } finally {
         this.loading = false;
       }
@@ -33,7 +34,7 @@ export const useCourseStore = defineStore("course", {
         // fetch full course object only for selected course
         this.currentCourse = await getCourseById(id);
       } catch (err) {
-        this.error = `Failed to select course ${err}`;
+        this.error = `Failed to select course ${toErrorMessage(err)}`;
       } finally {
         this.loading = false;
       }
@@ -45,7 +46,7 @@ export const useCourseStore = defineStore("course", {
         const course = await submitCourseName(name);
         this.currentCourse = course;
       } catch (err) {
-        this.error = `Failed to create course ${err}`;
+        this.error = `Failed to create course ${toErrorMessage(err)}`;
         this.currentCourse = null;
       } finally {
         this.loading = false;
