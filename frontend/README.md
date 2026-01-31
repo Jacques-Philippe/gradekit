@@ -18,3 +18,11 @@ src/
 # State management
 
 We use Pinia to manage the application state store.
+
+# Dev get started
+
+1. install dependencies
+   ```bash
+   cd frontend
+   npm install
+   ```
