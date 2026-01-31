@@ -34,16 +34,16 @@ A single TA grading one course during one semester.
 
 ### Grading
 
-5. Select assignment
-6. Select student
-7. Fill out rubric
-8. Review auto-calculated grade
-9. Add feedback
-10. Save
+1. Select assignment
+2. Select student
+3. Fill out rubric
+4. Review auto-calculated grade
+5. Add feedback
+6. Save
 
 ### Export
 
-11. Export grades per assignment or per course
+Export grades per assignment or per course
 
 ## On grading criteria
 
