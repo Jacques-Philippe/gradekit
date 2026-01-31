@@ -8,48 +8,38 @@
         placeholder="Course name"
         required
       />
-      <button type="submit" :disabled="loading">
-        {{ loading ? "Submitting..." : "Submit" }}
+      <button type="submit" :disabled="store.loading">
+        {{ store.loading ? "Submitting..." : "Submit" }}
       </button>
     </form>
-    <p v-if="responseMessage" :class="{ error: isError }">
-      {{ responseMessage }}
+    <p v-if="store.currentCourse">
+      Course submitted: {{ store.currentCourse.name }} (id:
+      {{ store.currentCourse.id }})
     </p>
+    <p v-if="store.error" class="error">{{ store.error }}</p>
+    <button :disabled="store.loading">
+      {{ store.loading ? "Submitting..." : "Submit" }}
+    </button>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { submitCourseName } from "@/api/mock/courses";
+import { useCourseStore } from "@/stores/courseStore";
 
 export default defineComponent({
-  name: "CourseInput",
   setup() {
     const courseName = ref("");
-    const responseMessage = ref("");
-    const isError = ref(false);
-    const loading = ref(false);
+    const store = useCourseStore();
 
     async function submitCourse() {
-      loading.value = true;
-      responseMessage.value = "";
-      isError.value = false;
-      try {
-        const result = await submitCourseName(courseName.value);
-        responseMessage.value = `Course submitted: ${result.name} (id: ${result.id})`;
-      } catch (err) {
-        responseMessage.value = `Error submitting course: ${err}`;
-        isError.value = true;
-      } finally {
-        loading.value = false;
-      }
+      await store.createCourse(courseName.value);
+      courseName.value = "";
     }
 
     return {
-      courseName,
-      responseMessage,
-      isError,
-      loading,
+      courseName, // needed for v-model
+      store, // needed for template access
       submitCourse,
     };
   },

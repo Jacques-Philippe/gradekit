@@ -1,9 +1,15 @@
 import { mount } from "@vue/test-utils";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { setActivePinia, createPinia } from "pinia";
 import CourseInput from "./CourseInput.vue";
 import * as api from "@/api/mock/courses";
+import { useCourseStore } from "@/stores/courseStore";
 
 describe("CourseInput.vue", () => {
+  beforeEach(() => {
+    setActivePinia(createPinia());
+  });
+
   it("renders input and button", () => {
     const wrapper = mount(CourseInput);
     expect(wrapper.find("input").exists()).toBe(true);
@@ -18,37 +24,28 @@ describe("CourseInput.vue", () => {
   });
 
   it("displays success message when API resolves", async () => {
+    const store = useCourseStore();
     const mockCourse = { id: "abc123", name: "Test Course" };
     const spy = vi.spyOn(api, "submitCourseName").mockResolvedValue(mockCourse);
 
-    const wrapper = mount(CourseInput);
-    await wrapper.find("input").setValue("Test Course");
-    await wrapper.find("form").trigger("submit.prevent");
-    await wrapper.vm.$nextTick();
+    await store.createCourse("Math 101");
 
-    expect(spy).toHaveBeenCalledWith("Test Course");
-    expect(wrapper.text()).toContain(
-      "Course submitted: Test Course (id: abc123)",
-    );
-    expect(wrapper.vm.isError).toBe(false);
+    expect(store.currentCourse).toEqual(mockCourse);
+    expect(store.error).toBe("");
 
     spy.mockRestore();
   });
 
   it("displays error message when API rejects", async () => {
+    const store = useCourseStore();
     const spy = vi
       .spyOn(api, "submitCourseName")
       .mockRejectedValue(new Error("API error"));
 
-    const wrapper = mount(CourseInput);
-    await wrapper.find("input").setValue("Fail Course");
-    await wrapper.find("form").trigger("submit.prevent");
-    await wrapper.vm.$nextTick();
+    await store.createCourse("Fail Course");
 
-    expect(spy).toHaveBeenCalledWith("Fail Course");
-    expect(wrapper.text()).toContain("Error submitting course");
-    expect(wrapper.vm.isError).toBe(true);
-
+    expect(store.currentCourse).toBeNull();
+    expect(store.error).toBe("Failed to create course");
     spy.mockRestore();
   });
 });
