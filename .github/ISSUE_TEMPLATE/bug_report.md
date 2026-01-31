@@ -20,18 +20,12 @@ What actually happened?
 
 ### Steps to Reproduce
 
-Provide the minimal steps needed to reproduce the issue.
+Provide the exact minimal steps needed to reproduce the issue.
 
-1. Command run:
-
-   ```bash
-   datalinttool ...
-   ```
-2. Input file (if relevant):
-
-   * Format: CSV / JSON / etc
-   * Size: small / medium / large
-3. Observed output / error
+1. Run frontend/backend
+1. Click X
+1. Observe Y
+1. Observed output / error
 
 ---
 
@@ -39,19 +33,14 @@ Provide the minimal steps needed to reproduce the issue.
 
 If possible, include:
 
-* A **minimal input file**, or
-* A description of the structure (headers, delimiters, quoting, etc.)
-
-> ⚠️ Do not include sensitive data.
+- A screenshot of the issue
 
 ---
 
 ### Environment
 
-* OS: macOS / Linux / Windows
-* Compiler: clang / gcc / MSVC (version)
-* CMake version:
-* Build type: Debug / Release
+- OS: macOS / Linux / Windows
+- python/node version
 
 ---
 
