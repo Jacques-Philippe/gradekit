@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      - id: clang-format
+        args: [--style=file]
+        types: [c++]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+  - repo: local
+    hooks:
+      - id: eslint
+        name: ESLint
+        entry: bash -c "cd frontend && npm run lint"
+        language: system
+        pass_filenames: false
+
+      - id: prettier
+        name: Prettier (check only)
+        entry: bash -c "cd frontend && npm run format"
+        language: system
+        pass_filenames: false

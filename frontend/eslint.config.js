@@ -1,9 +1,9 @@
-import js from "@eslint/js"
-import vue from "eslint-plugin-vue"
-import tseslint from "@typescript-eslint/eslint-plugin"
-import tsParser from "@typescript-eslint/parser"
-import vueParser from "vue-eslint-parser"
-import prettier from "eslint-config-prettier"
+import js from "@eslint/js";
+import vue from "eslint-plugin-vue";
+import tseslint from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+import vueParser from "vue-eslint-parser";
+import prettier from "eslint-config-prettier";
 
 export default [
   // Ignore build output
@@ -52,4 +52,4 @@ export default [
 
   // Disable formatting rules that conflict with Prettier
   prettier,
-]
+];

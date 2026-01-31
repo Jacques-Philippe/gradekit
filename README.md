@@ -109,3 +109,18 @@ This project will be made up of a monorepo with the following structure
 - Backend: ASP.NET Core (.NET 8)
 - Database: SQLite
 - Deployment: single local instance, self-hosted
+
+## Developer Get Started
+
+1. Clone the repo
+1. Install the requirements for the python virtual environment
+   ```bash
+   python -m venv .venv
+   . .venv/Scripts/Activate # Windows
+   source .venv/bin/activate # MacOSX
+   pip install -r requirements.txt
+   ```
+1. Activate pre-commit hooks
+   ```bash
+   python -m pre_commit install
+   ```
