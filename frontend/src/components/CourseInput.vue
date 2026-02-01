@@ -13,7 +13,7 @@
       </button>
     </form>
     <p v-if="store.currentCourse">
-      Course submitted: {{ store.currentCourse.name }} (id:
+      Current course: {{ store.currentCourse.name }} (id:
       {{ store.currentCourse.id }})
     </p>
     <p v-if="store.error" class="error" id="course-creation-error">

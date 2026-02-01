@@ -35,7 +35,7 @@ describe("CourseInput.vue", () => {
     await wrapper.find("form").trigger("submit.prevent");
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.text()).toContain("Course submitted: Test Course");
+    expect(wrapper.text()).toContain("Current course: Test Course");
 
     spy.mockRestore();
   });
