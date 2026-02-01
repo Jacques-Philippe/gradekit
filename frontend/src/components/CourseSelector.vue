@@ -23,20 +23,22 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useCourseStore } from "@/stores/courseStore";
 
 const courseStore = useCourseStore();
 
-// make state reactive in template
 const { courses, loading, error } = storeToRefs(courseStore);
+const router = useRouter();
 
 onMounted(() => {
   courseStore.fetchCourseSummaries();
 });
 
-function select(id: string) {
-  courseStore.selectCourse(id);
+async function select(id: string) {
+  await courseStore.selectCourse(id);
+  router.push({ name: "course", params: { id } });
 }
 </script>
 

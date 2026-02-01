@@ -22,29 +22,31 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 import { useCourseStore } from "@/stores/courseStore";
+import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 
-export default defineComponent({
-  setup() {
-    const courseName = ref("");
-    const store = useCourseStore();
+const courseStore = useCourseStore();
+const { currentCourse } = storeToRefs(courseStore);
+const router = useRouter();
+const courseName = ref("");
+const store = useCourseStore();
 
-    async function submitCourse() {
-      await store.createCourse(courseName.value);
-      if (!store.error) {
-        courseName.value = "";
-      }
-    }
-
-    return {
-      courseName, // needed for v-model
-      store, // needed for template access
-      submitCourse,
-    };
-  },
-});
+async function submitCourse() {
+  await store.createCourse(courseName.value);
+  // if there's no error, don't reset the input field
+  if (!store.error) {
+    courseName.value = "";
+  }
+  if (currentCourse) {
+    router.push({
+      name: "course",
+      params: { id: currentCourse.value?.id },
+    });
+  }
+}
 </script>
 
 <style scoped>
