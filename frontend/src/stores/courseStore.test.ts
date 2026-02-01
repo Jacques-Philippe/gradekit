@@ -1,15 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { setActivePinia, createPinia } from "pinia";
 import { useCourseStore } from "@/stores/courseStore";
 import * as api from "@/api/mock/courses";
 import type { Course, CourseSummary } from "@/types/course";
+import { setupTestPinia } from "@/utils/piniaTestHelper";
 
 describe("courseStore", () => {
   let store: ReturnType<typeof useCourseStore>;
 
   beforeEach(() => {
-    const pinia = createPinia();
-    setActivePinia(pinia);
+    setupTestPinia();
     store = useCourseStore();
   });
 

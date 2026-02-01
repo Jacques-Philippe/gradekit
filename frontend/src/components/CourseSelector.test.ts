@@ -1,12 +1,13 @@
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createPinia, setActivePinia } from "pinia";
+import { createPinia } from "pinia";
 import { createRouter } from "vue-router";
 import CourseSelector from "@/components/CourseSelector.vue";
 import { useCourseStore } from "@/stores/courseStore";
 import * as api from "@/api/mock/courses";
 import type { CourseSummary } from "@/types/course";
 import { createTestRouter } from "@/router/routerTestHelper";
+import { setupTestPinia } from "@/utils/piniaTestHelper";
 
 describe("CourseSelector.vue", () => {
   let pinia: ReturnType<typeof createPinia>;
@@ -19,8 +20,7 @@ describe("CourseSelector.vue", () => {
   ];
 
   beforeEach(() => {
-    pinia = createPinia();
-    setActivePinia(pinia);
+    pinia = setupTestPinia();
     store = useCourseStore();
     router = createTestRouter();
   });

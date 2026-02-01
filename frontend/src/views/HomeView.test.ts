@@ -1,17 +1,17 @@
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, beforeEach } from "vitest";
-import { createPinia, setActivePinia } from "pinia";
+import { createPinia } from "pinia";
 import { createRouter } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import { createTestRouter } from "@/router/routerTestHelper";
+import { setupTestPinia } from "@/utils/piniaTestHelper";
 
 describe("HomeView", () => {
   let pinia: ReturnType<typeof createPinia>;
   let router: ReturnType<typeof createRouter>;
 
   beforeEach(() => {
-    pinia = createPinia();
-    setActivePinia(pinia);
+    pinia = setupTestPinia();
     router = createTestRouter();
   });
 

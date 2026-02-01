@@ -1,19 +1,19 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
-import { createPinia, setActivePinia } from "pinia";
+import { createPinia } from "pinia";
 import { createRouter } from "vue-router";
 import CourseView from "@/views/CourseView.vue";
 import { useCourseStore } from "@/stores/courseStore";
 import type { Course } from "@/types/course";
 import { createTestRouter } from "@/router/routerTestHelper";
+import { setupTestPinia } from "@/utils/piniaTestHelper";
 
 describe("CourseView", () => {
   let pinia: ReturnType<typeof createPinia>;
   let router: ReturnType<typeof createRouter>;
 
   beforeEach(() => {
-    pinia = createPinia();
-    setActivePinia(pinia);
+    pinia = setupTestPinia();
     router = createTestRouter();
   });
 
