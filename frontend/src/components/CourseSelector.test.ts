@@ -1,14 +1,26 @@
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
+import { createRouter, createWebHistory } from "vue-router";
 import CourseSelector from "@/components/CourseSelector.vue";
 import { useCourseStore } from "@/stores/courseStore";
 import * as api from "@/api/mock/courses";
 import type { CourseSummary } from "@/types/course";
 
+import { defineComponent } from "vue";
+
+const routes = [
+  {
+    path: "/course/:id",
+    name: "course",
+    component: defineComponent({ template: "<div>Course</div>" }),
+  },
+];
+
 describe("CourseSelector.vue", () => {
   let pinia: ReturnType<typeof createPinia>;
   let store: ReturnType<typeof useCourseStore>;
+  let router: ReturnType<typeof createRouter>;
 
   const mockCourses: CourseSummary[] = [
     { id: "a", name: "Math 101" },
@@ -19,6 +31,10 @@ describe("CourseSelector.vue", () => {
     pinia = createPinia();
     setActivePinia(pinia);
     store = useCourseStore();
+    router = createRouter({
+      history: createWebHistory(),
+      routes,
+    });
   });
 
   it("shows loading indicator while courses are being fetched", async () => {
@@ -28,7 +44,7 @@ describe("CourseSelector.vue", () => {
     );
 
     const wrapper = mount(CourseSelector, {
-      global: { plugins: [pinia] },
+      global: { plugins: [pinia, router] },
     });
     await wrapper.find("#courses-loading-indicator");
 
@@ -39,7 +55,7 @@ describe("CourseSelector.vue", () => {
     vi.spyOn(api, "getCourseSummaries").mockResolvedValue(mockCourses);
 
     const wrapper = mount(CourseSelector, {
-      global: { plugins: [pinia] },
+      global: { plugins: [pinia, router] },
     });
 
     // wait for fetch + render
@@ -55,7 +71,7 @@ describe("CourseSelector.vue", () => {
     const selectSpy = vi.spyOn(store, "selectCourse").mockResolvedValue();
 
     const wrapper = mount(CourseSelector, {
-      global: { plugins: [pinia] },
+      global: { plugins: [pinia, router] },
     });
 
     await wrapper.vm.$nextTick();

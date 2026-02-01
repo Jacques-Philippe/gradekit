@@ -6,6 +6,7 @@
         v-model="courseName"
         type="text"
         placeholder="Course name"
+        id="course-name-input-text-box"
         required
       />
       <button :disabled="store.loading">
@@ -40,7 +41,7 @@ async function submitCourse() {
   if (!store.error) {
     courseName.value = "";
   }
-  if (currentCourse) {
+  if (currentCourse.value) {
     router.push({
       name: "course",
       params: { id: currentCourse.value?.id },
