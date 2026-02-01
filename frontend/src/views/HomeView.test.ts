@@ -1,25 +1,24 @@
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, beforeEach } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
-
-const router = createRouter({
-  history: createWebHistory(),
-  routes: [{ path: "/", component: HomeView }],
-});
+import { createTestRouter } from "@/router/routerTestHelper";
 
 describe("HomeView", () => {
-  beforeEach(async () => {
-    setActivePinia(createPinia());
-    router.push("/");
-    await router.isReady();
+  let pinia: ReturnType<typeof createPinia>;
+  let router: ReturnType<typeof createRouter>;
+
+  beforeEach(() => {
+    pinia = createPinia();
+    setActivePinia(pinia);
+    router = createTestRouter();
   });
 
   it("renders", () => {
     const wrapper = mount(HomeView, {
       global: {
-        plugins: [router],
+        plugins: [pinia, router],
       },
     });
 

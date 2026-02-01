@@ -1,20 +1,29 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
+import { createRouter } from "vue-router";
 import CourseView from "@/views/CourseView.vue";
 import { useCourseStore } from "@/stores/courseStore";
 import type { Course } from "@/types/course";
+import { createTestRouter } from "@/router/routerTestHelper";
 
 describe("CourseView", () => {
+  let pinia: ReturnType<typeof createPinia>;
+  let router: ReturnType<typeof createRouter>;
+
   beforeEach(() => {
-    setActivePinia(createPinia());
+    pinia = createPinia();
+    setActivePinia(pinia);
+    router = createTestRouter();
   });
 
   it("shows fallback text when no course is selected", () => {
     const store = useCourseStore();
     store.currentCourse = null;
 
-    const wrapper = mount(CourseView);
+    const wrapper = mount(CourseView, {
+      global: { plugins: [pinia, router] },
+    });
 
     expect(wrapper.text()).toContain("No course selected");
   });
@@ -27,7 +36,9 @@ describe("CourseView", () => {
       name: courseName,
     } as Course;
 
-    const wrapper = mount(CourseView);
+    const wrapper = mount(CourseView, {
+      global: { plugins: [pinia, router] },
+    });
 
     expect(wrapper.text()).toContain(courseName);
   });
