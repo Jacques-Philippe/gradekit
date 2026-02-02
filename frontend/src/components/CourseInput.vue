@@ -9,16 +9,16 @@
         id="course-name-input-text-box"
         required
       />
-      <button :disabled="store.loading">
-        {{ store.loading ? "Submitting..." : "Submit" }}
+      <button :disabled="courseStore.loading">
+        {{ courseStore.loading ? "Submitting..." : "Submit" }}
       </button>
     </form>
-    <p v-if="store.currentCourse">
-      Current course: {{ store.currentCourse.name }} (id:
-      {{ store.currentCourse.id }})
+    <p v-if="courseStore.currentCourse">
+      Current course: {{ courseStore.currentCourse.name }} (id:
+      {{ courseStore.currentCourse.id }})
     </p>
-    <p v-if="store.error" class="error" id="course-creation-error">
-      {{ store.error }}
+    <p v-if="courseStore.error" class="error" id="course-creation-error">
+      {{ courseStore.error }}
     </p>
   </div>
 </template>
@@ -33,12 +33,11 @@ const courseStore = useCourseStore();
 const { currentCourse } = storeToRefs(courseStore);
 const router = useRouter();
 const courseName = ref("");
-const store = useCourseStore();
 
 async function submitCourse() {
-  await store.createCourse(courseName.value);
+  await courseStore.createCourse(courseName.value);
   // if there's no error, don't reset the input field
-  if (!store.error) {
+  if (!courseStore.error) {
     courseName.value = "";
   }
   if (currentCourse.value) {
