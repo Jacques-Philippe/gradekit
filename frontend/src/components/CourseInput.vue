@@ -36,7 +36,7 @@ const courseName = ref("");
 
 async function submitCourse() {
   await courseStore.createCourse(courseName.value);
-  // if there's no error, don't reset the input field
+  // if there's no error, reset the input field
   if (!courseStore.error) {
     courseName.value = "";
   }
