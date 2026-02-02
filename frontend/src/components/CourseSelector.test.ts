@@ -19,10 +19,12 @@ describe("CourseSelector.vue", () => {
     { id: "b", name: "Physics 201" },
   ];
 
-  beforeEach(() => {
+  beforeEach(async () => {
     pinia = setupTestPinia();
-    store = useCourseStore();
     router = createTestRouter();
+    store = useCourseStore();
+    await router.push("/");
+    await router.isReady();
   });
 
   it("shows loading indicator while courses are being fetched", async () => {

@@ -12,9 +12,11 @@ describe("CourseView", () => {
   let pinia: ReturnType<typeof createPinia>;
   let router: ReturnType<typeof createRouter>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     pinia = setupTestPinia();
     router = createTestRouter();
+    await router.push("/");
+    await router.isReady();
   });
 
   it("shows fallback text when no course is selected", () => {
