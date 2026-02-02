@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useCourseStore } from "@/stores/courseStore";
 import * as api from "@/api/mock/courses";
 import type { Course, CourseSummary } from "@/types/course";
@@ -10,6 +10,10 @@ describe("courseStore", () => {
   beforeEach(() => {
     setupTestPinia();
     store = useCourseStore();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   describe("createCourse", () => {

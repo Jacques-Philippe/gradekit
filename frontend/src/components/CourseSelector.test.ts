@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { createPinia } from "pinia";
 import { createRouter } from "vue-router";
 import CourseSelector from "@/components/CourseSelector.vue";
@@ -25,6 +25,10 @@ describe("CourseSelector.vue", () => {
     store = useCourseStore();
     await router.push("/");
     await router.isReady();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it("shows loading indicator while courses are being fetched", async () => {

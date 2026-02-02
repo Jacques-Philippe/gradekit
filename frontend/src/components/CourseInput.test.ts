@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { createRouter } from "vue-router";
 import { createPinia } from "pinia";
 import CourseInput from "./CourseInput.vue";
@@ -16,6 +16,10 @@ describe("CourseInput.vue", () => {
     router = createTestRouter();
     await router.push("/");
     await router.isReady();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it("submits course successfully", async () => {
