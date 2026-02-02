@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createMemoryHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import { defineComponent } from "vue";
 
@@ -13,7 +13,7 @@ const defaultRoutes: RouteRecordRaw[] = [
   },
   {
     path: "/",
-    name: "home",
+    name: "Home",
     component: DummyComponent,
   },
 ];
@@ -23,7 +23,7 @@ const defaultRoutes: RouteRecordRaw[] = [
  */
 export function createTestRouter(routes: RouteRecordRaw[] = defaultRoutes) {
   const router = createRouter({
-    history: createWebHistory(),
+    history: createMemoryHistory(),
     routes,
   });
   return router;
