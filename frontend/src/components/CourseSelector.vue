@@ -14,6 +14,7 @@
         :key="course.id"
         :data-test="`course-${course.id}`"
         @click="select(course.id)"
+        type="button"
       >
         {{ course.name }}
       </button>
