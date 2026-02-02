@@ -37,8 +37,7 @@ onMounted(() => {
   courseStore.fetchCourseSummaries();
 });
 
-async function select(id: string) {
-  await courseStore.selectCourse(id);
+function select(id: string) {
   router.push({ name: "course", params: { id } });
 }
 </script>

@@ -10,8 +10,10 @@
         <HouseIcon />
       </button>
 
-      <p v-if="!course" id="no-course-selected-warning">No course selected</p>
-      <h1 v-else>{{ course.name }}</h1>
+      <p v-if="!courseStore.currentCourse" id="no-course-selected-warning">
+        No course selected
+      </p>
+      <h1 v-else>{{ courseStore.currentCourse.name }}</h1>
     </nav>
 
     <!-- Page content -->
@@ -22,15 +24,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useRouter } from "vue-router";
-import { useCourseStore } from "@/stores/courseStore";
 import HouseIcon from "@/assets/House_01.svg";
+import { onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useCourseStore } from "@/stores/courseStore";
 
 const router = useRouter();
-const store = useCourseStore();
+const route = useRoute();
+const courseStore = useCourseStore();
 
-const course = computed(() => store.currentCourse);
+async function loadCourse() {
+  const id = route.params.id as string;
+  await courseStore.selectCourse(id);
+}
+
+onMounted(loadCourse);
+
+// Handle route param changes (rare but correct)
+watch(() => route.params.id, loadCourse);
 
 function goHome() {
   router.push("/");
