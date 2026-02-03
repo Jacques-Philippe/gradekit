@@ -1,12 +1,11 @@
 <template>
-  <CourseInput />
+  <main>
+    <CourseInput />
+    <CourseSelector />
+  </main>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import CourseInput from "@/components/CourseInput.vue";
-
-export default defineComponent({
-  components: { CourseInput },
-});
+import CourseSelector from "@/components/CourseSelector.vue";
 </script>
