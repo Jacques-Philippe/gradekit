@@ -35,6 +35,7 @@ export const useCourseStore = defineStore("course", {
         this.currentCourse = await getCourseById(id);
       } catch (err) {
         this.error = `Failed to select course ${toErrorMessage(err)}`;
+        this.currentCourse = null;
       } finally {
         this.loading = false;
       }
