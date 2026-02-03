@@ -1,15 +1,15 @@
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { createRouter } from "vue-router";
-import { createPinia } from "pinia";
+import type { Router } from "vue-router";
+import type { Pinia } from "pinia";
 import CourseInput from "./CourseInput.vue";
 import * as api from "@/api/mock/courses";
 import { createTestRouter } from "@/router/routerTestHelper";
 import { setupTestPinia } from "@/utils/piniaTestHelper";
 
 describe("CourseInput.vue", () => {
-  let pinia: ReturnType<typeof createPinia>;
-  let router: ReturnType<typeof createRouter>;
+  let pinia: Pinia;
+  let router: Router;
 
   beforeEach(async () => {
     pinia = setupTestPinia();

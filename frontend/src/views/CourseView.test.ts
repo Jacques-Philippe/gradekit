@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { mount } from "@vue/test-utils";
-import { createPinia } from "pinia";
-import { createRouter } from "vue-router";
+import type { Pinia } from "pinia";
+import type { Router } from "vue-router";
 import CourseView from "@/views/CourseView.vue";
 import { useCourseStore } from "@/stores/courseStore";
 import type { Course } from "@/types/course";
@@ -9,8 +9,8 @@ import { createTestRouter } from "@/router/routerTestHelper";
 import { setupTestPinia } from "@/utils/piniaTestHelper";
 
 describe("CourseView", () => {
-  let pinia: ReturnType<typeof createPinia>;
-  let router: ReturnType<typeof createRouter>;
+  let pinia: Pinia;
+  let router: Router;
 
   beforeEach(async () => {
     pinia = setupTestPinia();

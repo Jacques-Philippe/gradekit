@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { createPinia } from "pinia";
-import { createRouter } from "vue-router";
+import type { Pinia } from "pinia";
+import type { Router } from "vue-router";
 import CourseSelector from "@/components/CourseSelector.vue";
 import * as api from "@/api/mock/courses";
 import type { CourseSummary } from "@/types/course";
@@ -9,8 +9,8 @@ import { createTestRouter } from "@/router/routerTestHelper";
 import { setupTestPinia } from "@/utils/piniaTestHelper";
 
 describe("CourseSelector.vue", () => {
-  let pinia: ReturnType<typeof createPinia>;
-  let router: ReturnType<typeof createRouter>;
+  let pinia: Pinia;
+  let router: Router;
 
   const mockCourses: CourseSummary[] = [
     { id: "a", name: "Math 101" },
