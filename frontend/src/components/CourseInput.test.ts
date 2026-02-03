@@ -29,8 +29,9 @@ describe("CourseInput.vue", () => {
     const wrapper = mount(CourseInput, {
       global: { plugins: [pinia, router] },
     });
-    await wrapper.find("input").setValue("Test Course");
-    await wrapper.find("form").trigger("submit.prevent");
+    wrapper.find("input").setValue("Test Course");
+    wrapper.find("form").trigger("submit.prevent");
+    await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
 
     expect(wrapper.text()).toContain("Current course: Test Course");
@@ -42,12 +43,13 @@ describe("CourseInput.vue", () => {
       global: { plugins: [pinia, router] },
     });
     // Write to the button
-    await wrapper.find("input").setValue("Test Course");
+    wrapper.find("input").setValue("Test Course");
     // Try to submit
-    await wrapper.find("form").trigger("submit.prevent");
+    wrapper.find("form").trigger("submit.prevent");
+    await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
     // Expect that the text contains the error
-    await wrapper.find("#course-creation-error");
+    wrapper.find("#course-creation-error");
     expect(wrapper.text()).toContain("Failed to create course");
   });
 });
