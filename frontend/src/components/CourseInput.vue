@@ -6,45 +6,40 @@
         v-model="courseName"
         type="text"
         placeholder="Course name"
+        id="course-name-input-text-box"
         required
       />
-      <button :disabled="store.loading">
-        {{ store.loading ? "Submitting..." : "Submit" }}
+      <button :disabled="courseStore.loading">
+        {{ courseStore.loading ? "Submitting..." : "Submit" }}
       </button>
     </form>
-    <p v-if="store.currentCourse">
-      Course submitted: {{ store.currentCourse.name }} (id:
-      {{ store.currentCourse.id }})
+    <p v-if="courseStore.currentCourse">
+      Current course: {{ courseStore.currentCourse.name }} (id:
+      {{ courseStore.currentCourse.id }})
     </p>
-    <p v-if="store.error" class="error" id="course-creation-error">
-      {{ store.error }}
+    <p v-if="courseStore.error" class="error" id="course-creation-error">
+      {{ courseStore.error }}
     </p>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 import { useCourseStore } from "@/stores/courseStore";
+import { useRouter } from "vue-router";
 
-export default defineComponent({
-  setup() {
-    const courseName = ref("");
-    const store = useCourseStore();
+const courseStore = useCourseStore();
+const router = useRouter();
+const courseName = ref("");
 
-    async function submitCourse() {
-      await store.createCourse(courseName.value);
-      if (!store.error) {
-        courseName.value = "";
-      }
-    }
-
-    return {
-      courseName, // needed for v-model
-      store, // needed for template access
-      submitCourse,
-    };
-  },
-});
+async function submitCourse() {
+  const course = await courseStore.createCourse(courseName.value);
+  // if there's no error, reset the input field
+  if (!courseStore.error && course) {
+    courseName.value = "";
+    router.push({ name: "course", params: { id: course.id } });
+  }
+}
 </script>
 
 <style scoped>

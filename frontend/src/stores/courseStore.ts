@@ -35,19 +35,24 @@ export const useCourseStore = defineStore("course", {
         this.currentCourse = await getCourseById(id);
       } catch (err) {
         this.error = `Failed to select course ${toErrorMessage(err)}`;
+        this.currentCourse = null;
       } finally {
         this.loading = false;
       }
     },
-    async createCourse(name: string) {
+    async createCourse(name: string): Promise<Course | null> {
       this.loading = true;
       this.error = "";
+
       try {
         const course = await submitCourseName(name);
         this.currentCourse = course;
+        this.courses.push({ id: course.id, name: course.name });
+        return course;
       } catch (err) {
         this.error = `Failed to create course ${toErrorMessage(err)}`;
         this.currentCourse = null;
+        return null;
       } finally {
         this.loading = false;
       }
