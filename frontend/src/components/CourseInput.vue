@@ -27,24 +27,17 @@
 import { ref } from "vue";
 import { useCourseStore } from "@/stores/courseStore";
 import { useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
 
 const courseStore = useCourseStore();
-const { currentCourse } = storeToRefs(courseStore);
 const router = useRouter();
 const courseName = ref("");
 
 async function submitCourse() {
-  await courseStore.createCourse(courseName.value);
+  const course = await courseStore.createCourse(courseName.value);
   // if there's no error, reset the input field
-  if (!courseStore.error) {
+  if (!courseStore.error && course) {
     courseName.value = "";
-  }
-  if (currentCourse.value) {
-    router.push({
-      name: "course",
-      params: { id: currentCourse.value?.id },
-    });
+    router.push({ name: "course", params: { id: course.id } });
   }
 }
 </script>

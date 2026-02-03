@@ -39,15 +39,18 @@ export const useCourseStore = defineStore("course", {
         this.loading = false;
       }
     },
-    async createCourse(name: string) {
+    async createCourse(name: string): Promise<Course | null> {
       this.loading = true;
       this.error = "";
+
       try {
         const course = await submitCourseName(name);
         this.currentCourse = course;
+        return course;
       } catch (err) {
         this.error = `Failed to create course ${toErrorMessage(err)}`;
         this.currentCourse = null;
+        return null;
       } finally {
         this.loading = false;
       }

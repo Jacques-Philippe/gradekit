@@ -21,10 +21,13 @@ describe("courseStore", () => {
       const mockCourse = { id: "abc123", name: "Test Course" };
       vi.spyOn(api, "submitCourseName").mockResolvedValue(mockCourse);
 
-      await store.createCourse("Test Course");
+      const course = await store.createCourse("Test Course");
 
       expect(store.currentCourse).toEqual(mockCourse);
       expect(store.error).toBe("");
+
+      expect(course?.id).toEqual(mockCourse.id);
+      expect(course?.name).toEqual(mockCourse.name);
     });
 
     it("sets error when creation fails", async () => {
