@@ -24,7 +24,7 @@ describe("CourseInput.vue", () => {
 
   it("submits course successfully", async () => {
     const mockCourse = { id: "abc123", name: "Test Course" };
-    const spy = vi.spyOn(api, "submitCourseName").mockResolvedValue(mockCourse);
+    vi.spyOn(api, "submitCourseName").mockResolvedValue(mockCourse);
 
     const wrapper = mount(CourseInput, {
       global: { plugins: [pinia, router] },
@@ -34,14 +34,10 @@ describe("CourseInput.vue", () => {
     await wrapper.vm.$nextTick();
 
     expect(wrapper.text()).toContain("Current course: Test Course");
-
-    spy.mockRestore();
   });
 
   it("displays error message when API rejects", async () => {
-    const spy = vi
-      .spyOn(api, "submitCourseName")
-      .mockRejectedValue(new Error("API error"));
+    vi.spyOn(api, "submitCourseName").mockRejectedValue(new Error("API error"));
     const wrapper = mount(CourseInput, {
       global: { plugins: [pinia, router] },
     });
@@ -53,6 +49,5 @@ describe("CourseInput.vue", () => {
     // Expect that the text contains the error
     await wrapper.find("#course-creation-error");
     expect(wrapper.text()).toContain("Failed to create course");
-    spy.mockRestore();
   });
 });
