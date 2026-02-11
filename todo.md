@@ -40,6 +40,7 @@ The purpose of this document is to keep an inventory of things to be done
    1. ~~Allow the user to select a course from a list of mocked courses~~
    1. ~~On course selection, redirect the user to the course page~~
 1. Transition to a SPA
+   1. ~~Define UX on Figma~~
    1. Define state diagram
    1. Replace existing routing infrastructure with state switching
 1. Course page:
