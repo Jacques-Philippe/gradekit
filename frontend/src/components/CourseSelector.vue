@@ -24,21 +24,27 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useRouter } from "vue-router";
+import {
+  ButtonPressedStateTransition,
+  COURSE_BUTTON_NAME,
+} from "@/types/state";
 import { storeToRefs } from "pinia";
 import { useCourseStore } from "@/stores/courseStore";
+import { useAppStore } from "@/stores/appStore";
 
 const courseStore = useCourseStore();
-
+const appStore = useAppStore();
 const { courses, loading, error } = storeToRefs(courseStore);
-const router = useRouter();
 
 onMounted(() => {
   courseStore.fetchCourseSummaries();
 });
 
 function select(id: string) {
-  router.push({ name: "course", params: { id } });
+  // set the current course in the course store
+  courseStore.selectCourse(id);
+  // tell the app store that a course button was pressed
+  appStore.transition(new ButtonPressedStateTransition(COURSE_BUTTON_NAME));
 }
 </script>
 

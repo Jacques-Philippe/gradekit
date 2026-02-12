@@ -26,18 +26,24 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useCourseStore } from "@/stores/courseStore";
-import { useRouter } from "vue-router";
+import { useAppStore } from "@/stores/appStore";
+import {
+  FormSubmittedStateTransition,
+  NEW_COURSE_FORM_NAME,
+} from "@/types/state";
 
 const courseStore = useCourseStore();
-const router = useRouter();
+const appStore = useAppStore();
 const courseName = ref("");
 
 async function submitCourse() {
   const course = await courseStore.createCourse(courseName.value);
   // if there's no error, reset the input field
   if (!courseStore.error && course) {
-    courseName.value = "";
-    router.push({ name: "course", params: { id: course.id } });
+    // Select the created course
+    await courseStore.selectCourse(course.id);
+    // Tell the appstore that the new course form is submitted
+    appStore.transition(new FormSubmittedStateTransition(NEW_COURSE_FORM_NAME));
   }
 }
 </script>

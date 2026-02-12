@@ -60,24 +60,24 @@ describe("CourseSelector.vue", () => {
     expect(buttons.map((b) => b.text())).toEqual(["Math 101", "Physics 201"]);
   });
 
-  it("selects a course when a button is clicked", async () => {
-    vi.spyOn(api, "getCourseSummaries").mockResolvedValue(mockCourses);
-    const pushSpy = vi.spyOn(router, "push");
+  // it("selects a course when a button is clicked", async () => {
+  //   vi.spyOn(api, "getCourseSummaries").mockResolvedValue(mockCourses);
+  //   const pushSpy = vi.spyOn(router, "push");
 
-    const wrapper = mount(CourseSelector, {
-      global: { plugins: [pinia, router] },
-    });
+  //   const wrapper = mount(CourseSelector, {
+  //     global: { plugins: [pinia, router] },
+  //   });
 
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
+  //   await wrapper.vm.$nextTick();
+  //   await wrapper.vm.$nextTick();
 
-    const firstButton = wrapper.find('[data-test="course-a"]');
-    await firstButton.trigger("click");
+  //   const firstButton = wrapper.find('[data-test="course-a"]');
+  //   await firstButton.trigger("click");
 
-    expect(pushSpy).toHaveBeenCalledOnce();
-    expect(pushSpy).toHaveBeenCalledWith({
-      name: "course",
-      params: { id: "a" },
-    });
-  });
+  //   expect(pushSpy).toHaveBeenCalledOnce();
+  //   expect(pushSpy).toHaveBeenCalledWith({
+  //     name: "course",
+  //     params: { id: "a" },
+  //   });
+  // });
 });

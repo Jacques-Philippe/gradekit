@@ -3,9 +3,14 @@ import {
   AppTransition,
   BUTTON_PRESSED_TRANSITION,
   ButtonPressedStateTransition,
+  COURSE_BUTTON_NAME,
+  HOME_VIEW_STATE_NAME,
+  FormSubmittedStateTransition,
+  FORM_SUBMITTED_TRANSITION,
+  NEW_COURSE_FORM_NAME,
 } from "@/types/state";
 
-export const HOME_VIEW_STATE_NAME = "HomeView";
+import { CourseViewState } from "@/state/courseViewState";
 
 export class HomeViewState implements AppState {
   name: string;
@@ -25,9 +30,14 @@ export class HomeViewState implements AppState {
   handleTransition(transition: AppTransition): AppState | null {
     if (transition.type === BUTTON_PRESSED_TRANSITION) {
       const buttonTransition = transition as ButtonPressedStateTransition;
-      console.log(`Button ${buttonTransition.button} was pressed in HomeView`);
-      // Here you could return a different state based on the button pressed
-      // For example:
+      if (buttonTransition.button === COURSE_BUTTON_NAME) {
+        return new CourseViewState();
+      }
+    } else if (transition.type === FORM_SUBMITTED_TRANSITION) {
+      const formTransition = transition as FormSubmittedStateTransition;
+      if (formTransition.form === NEW_COURSE_FORM_NAME) {
+        return new CourseViewState();
+      }
     }
     console.warn(`Unhandled transition ${transition.type} in HomeViewState`);
     // Otherwise no transition, stay in the same state
