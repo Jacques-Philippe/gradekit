@@ -8,8 +8,6 @@ import {
 } from "@/types/state";
 import { HomeViewState } from "@/state/homeViewState";
 
-// export const COURSE_VIEW_STATE_NAME = "CourseView";
-
 export class CourseViewState implements AppState {
   name: string;
 
@@ -31,8 +29,6 @@ export class CourseViewState implements AppState {
       if (buttonTransition.button === BACK_BUTTON_NAME) {
         return new HomeViewState();
       }
-      // Here you could return a different state based on the button pressed
-      // For example:
     }
     console.warn(`Unhandled transition ${transition.type} in CourseViewState`);
     // Otherwise no transition, stay in the same state

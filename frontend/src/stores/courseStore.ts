@@ -46,12 +46,12 @@ export const useCourseStore = defineStore("course", {
 
       try {
         const course = await submitCourseName(name);
-        this.currentCourse = course;
+        // this.currentCourse = course;
         this.courses.push({ id: course.id, name: course.name });
         return course;
       } catch (err) {
         this.error = `Failed to create course ${toErrorMessage(err)}`;
-        this.currentCourse = null;
+        // this.currentCourse = null;
         return null;
       } finally {
         this.loading = false;

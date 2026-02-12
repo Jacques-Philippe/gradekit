@@ -5,9 +5,6 @@ import {
   ButtonPressedStateTransition,
   COURSE_BUTTON_NAME,
   HOME_VIEW_STATE_NAME,
-  FormSubmittedStateTransition,
-  FORM_SUBMITTED_TRANSITION,
-  NEW_COURSE_FORM_NAME,
 } from "@/types/state";
 
 import { CourseViewState } from "@/state/courseViewState";
@@ -31,11 +28,6 @@ export class HomeViewState implements AppState {
     if (transition.type === BUTTON_PRESSED_TRANSITION) {
       const buttonTransition = transition as ButtonPressedStateTransition;
       if (buttonTransition.button === COURSE_BUTTON_NAME) {
-        return new CourseViewState();
-      }
-    } else if (transition.type === FORM_SUBMITTED_TRANSITION) {
-      const formTransition = transition as FormSubmittedStateTransition;
-      if (formTransition.form === NEW_COURSE_FORM_NAME) {
         return new CourseViewState();
       }
     }
