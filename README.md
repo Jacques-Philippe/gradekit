@@ -29,21 +29,24 @@ A single TA grading one course during one semester.
 1. Create course
 2. Add students
 3. Create assignment
-4. Define rubric
-5. Grade assignment for each student
+4. Create questions
+5. Assign/Create criteria for each question
 
 ### Grading
 
+1. Select course
 1. Select assignment
-2. Select student
-3. Fill out rubric
-4. Review auto-calculated grade
-5. Add feedback
-6. Save
+1. Select next student to grade
+1. For each question
+   1. Add criteria fulfillment
+   1. Add feedback
+   1. Finalize grading for student
+1. Continue to next student
+1. (For all grading complete) Finalize grading for assignment
 
 ### Export
 
-Export grades per assignment or per course
+Export grades per assignment
 
 ## On grading criteria
 
