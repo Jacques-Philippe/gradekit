@@ -1,6 +1,6 @@
 export class AppTransition {
   /** The transition type */
-  type: string;
+  readonly type: string;
 
   constructor(type: string) {
     this.type = type;
@@ -8,7 +8,7 @@ export class AppTransition {
 }
 export interface AppState {
   /** A unique name for the state, used for debugging and logging */
-  name: string;
+  readonly name: string;
   setup(): void;
   teardown(): void;
   handleTransition(transition: AppTransition): AppState | null;
