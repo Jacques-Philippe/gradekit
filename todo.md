@@ -41,8 +41,8 @@ The purpose of this document is to keep an inventory of things to be done
    1. ~~On course selection, redirect the user to the course page~~
 1. Transition to a SPA
    1. ~~Define UX on Figma~~
-   1. Define state diagram
-   1. Replace existing routing infrastructure with state switching
+   1. ~~Define state diagram~~
+   1. ~~Replace existing routing infrastructure with state switching~~
 1. Course page:
    1. ~~There should be a home button that takes the user back to the home page~~
    1. Display course information
