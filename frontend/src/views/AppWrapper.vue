@@ -13,8 +13,4 @@ import { HOME_VIEW_STATE_NAME, COURSE_VIEW_STATE_NAME } from "@/types/state";
 const store = useAppStore();
 
 const stateName = computed(() => store.currentState.name);
-// console.log("App state changed to:", stateName.value);
-// watch(stateName, (newState) => {
-//   console.log("App state changed to:", newState);
-// });
 </script>
