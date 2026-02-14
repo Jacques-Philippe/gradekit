@@ -1,3 +1,5 @@
+import { createState } from "@/state/stateFactory";
+
 export class AppTransition {
   /** The transition type */
   readonly type: string;
@@ -6,12 +8,19 @@ export class AppTransition {
     this.type = type;
   }
 }
+
+export interface StateChange {
+  target: string;
+  payload?: unknown;
+}
+
 export interface AppState {
   /** A unique name for the state, used for debugging and logging */
   readonly name: string;
   setup(): void;
   teardown(): void;
-  handleTransition(transition: AppTransition): AppState | null;
+  /** Returns the name of the new state to transition to, or null to stay in the same state */
+  handleTransition(transition: AppTransition): StateChange | null;
 }
 
 export class StateMachine {
@@ -28,10 +37,10 @@ export class StateMachine {
   }
 
   transition(transition: AppTransition) {
-    const newState = this.currentState.handleTransition(transition);
-    if (newState !== null && newState !== this.currentState) {
+    const stateChange = this.currentState.handleTransition(transition);
+    if (stateChange !== null && stateChange.target !== this.currentState.name) {
       this.currentState.teardown();
-      this.currentState = newState;
+      this.currentState = createState(stateChange);
       this.currentState.setup();
     }
   }

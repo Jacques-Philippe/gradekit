@@ -1,6 +1,6 @@
 // stores/appStore.ts
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { computed, shallowRef } from "vue";
 import { StateMachine } from "@/types/state";
 import { HomeViewState } from "@/state/homeViewState";
 import type { AppTransition } from "@/types/state";
@@ -9,7 +9,7 @@ export const useAppStore = defineStore("app", () => {
   const machine = new StateMachine(new HomeViewState());
 
   // This is the reactive bridge
-  const stateRef = ref(machine.getCurrentState());
+  const stateRef = shallowRef(machine.getCurrentState());
 
   function transition(t: AppTransition) {
     machine.transition(t);

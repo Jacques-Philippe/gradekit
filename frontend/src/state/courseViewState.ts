@@ -1,12 +1,12 @@
-import type { AppState } from "@/types/state";
+import type { AppState, StateChange } from "@/types/state";
 import {
   AppTransition,
   BUTTON_PRESSED_TRANSITION,
   ButtonPressedStateTransition,
   BACK_BUTTON_NAME,
   COURSE_VIEW_STATE_NAME,
+  HOME_VIEW_STATE_NAME,
 } from "@/types/state";
-import { HomeViewState } from "@/state/homeViewState";
 
 export class CourseViewState implements AppState {
   name: string;
@@ -23,11 +23,11 @@ export class CourseViewState implements AppState {
     // any cleanup logic for CourseView can go here
   }
 
-  handleTransition(transition: AppTransition): AppState | null {
+  handleTransition(transition: AppTransition): StateChange | null {
     if (transition.type === BUTTON_PRESSED_TRANSITION) {
       const buttonTransition = transition as ButtonPressedStateTransition;
       if (buttonTransition.button === BACK_BUTTON_NAME) {
-        return new HomeViewState();
+        return { target: HOME_VIEW_STATE_NAME };
       }
     }
     console.warn(`Unhandled transition ${transition.type} in CourseViewState`);
