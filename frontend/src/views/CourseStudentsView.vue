@@ -19,21 +19,11 @@
         :loading="studentStore.loading"
         @submit="createStudent"
       />
-      <!-- Students list, with deletion element -->
+      <!-- Student API failure message -->
       <div v-if="studentStore.error" class="error">
         {{ studentStore.error }}
       </div>
-      <!-- <ul>
-        <li v-for="student in studentStore.students" :key="student.id">
-          {{ student.fullName }}
-          <BaseButton
-            @click="deleteStudent(student.id)"
-            aria-label="Delete student"
-          >
-            Delete
-          </BaseButton>
-        </li>
-      </ul> -->
+      <!-- Students list, with deletion element -->
       <ul class="student-list">
         <BaseListRow v-for="student in studentStore.students" :key="student.id">
           {{ student.fullName }}
