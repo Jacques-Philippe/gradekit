@@ -1,5 +1,3 @@
-import { createState } from "@/state/stateFactory";
-
 export class AppTransition {
   /** The transition type */
   readonly type: string;
@@ -23,28 +21,6 @@ export interface AppState {
   handleTransition(transition: AppTransition): StateChange | null;
 }
 
-export class StateMachine {
-  /** The current application state */
-  private currentState: AppState;
-
-  constructor(initialState: AppState) {
-    this.currentState = initialState;
-    this.currentState.setup();
-  }
-
-  getCurrentState(): AppState {
-    return this.currentState;
-  }
-
-  transition(transition: AppTransition) {
-    const stateChange = this.currentState.handleTransition(transition);
-    if (stateChange !== null && stateChange.target !== this.currentState.name) {
-      this.currentState.teardown();
-      this.currentState = createState(stateChange);
-      this.currentState.setup();
-    }
-  }
-}
 // Form names
 export const NEW_COURSE_FORM_NAME = "NewCourseForm";
 

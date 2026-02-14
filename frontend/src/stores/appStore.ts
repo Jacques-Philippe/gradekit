@@ -1,7 +1,6 @@
-// stores/appStore.ts
 import { defineStore } from "pinia";
 import { computed, shallowRef } from "vue";
-import { StateMachine } from "@/types/state";
+import { StateMachine } from "@/types/stateMachine";
 import { HomeViewState } from "@/state/homeViewState";
 import type { AppTransition } from "@/types/state";
 
