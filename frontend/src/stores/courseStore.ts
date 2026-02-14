@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import type { Course, CourseSummary } from "@/types/course";
 import {
-  submitCourseName,
+  createCourse,
   getCourseSummaries,
   getCourseById,
 } from "@/api/mock/courses";
@@ -45,7 +45,7 @@ export const useCourseStore = defineStore("course", {
       this.error = "";
 
       try {
-        const course = await submitCourseName(name);
+        const course = await createCourse(name);
         this.courses.push({ id: course.id, name: course.name });
         return course;
       } catch (err) {
