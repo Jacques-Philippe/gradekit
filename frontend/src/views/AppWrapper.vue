@@ -1,6 +1,7 @@
 <template>
   <HomeView v-if="stateName === HOME_VIEW_STATE_NAME" />
   <CourseView v-else-if="stateName === COURSE_VIEW_STATE_NAME" />
+  <div v-else>Unknown state: {{ stateName }}</div>
 </template>
 
 <script setup lang="ts">
