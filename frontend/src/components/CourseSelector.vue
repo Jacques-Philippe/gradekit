@@ -36,13 +36,13 @@ const courseStore = useCourseStore();
 const appStore = useAppStore();
 const { courses, loading, error } = storeToRefs(courseStore);
 
-onMounted(() => {
-  courseStore.fetchCourseSummaries();
+onMounted(async () => {
+  await courseStore.fetchCourseSummaries();
 });
 
-function select(id: string) {
+async function select(id: string) {
   // set the current course in the course store
-  courseStore.selectCourse(id);
+  await courseStore.selectCourse(id);
   // tell the app store that a course button was pressed
   appStore.transition(new ButtonPressedStateTransition(COURSE_BUTTON_NAME));
 }
