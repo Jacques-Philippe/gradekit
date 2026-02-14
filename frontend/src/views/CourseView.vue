@@ -25,25 +25,17 @@
 
 <script setup lang="ts">
 import HouseIcon from "@/assets/House_01.svg";
-import { onMounted, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
 import { useCourseStore } from "@/stores/courseStore";
+import { useAppStore } from "@/stores/appStore";
+import { ButtonPressedStateTransition, BACK_BUTTON_NAME } from "@/types/state";
 
-const router = useRouter();
-const route = useRoute();
 const courseStore = useCourseStore();
-
-async function loadCourse() {
-  const id = route.params.id as string;
-  await courseStore.selectCourse(id);
-}
-
-onMounted(loadCourse);
-
-// Handle route param changes (rare but correct)
-watch(() => route.params.id, loadCourse);
+const appStore = useAppStore();
 
 function goHome() {
-  router.push("/");
+  // Reset the current course in the course store
+  courseStore.clearCourse();
+  // Tell the app store that the back button was pressed
+  appStore.transition(new ButtonPressedStateTransition(BACK_BUTTON_NAME));
 }
 </script>

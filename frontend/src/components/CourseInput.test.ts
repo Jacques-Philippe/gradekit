@@ -4,6 +4,7 @@ import type { Router } from "vue-router";
 import type { Pinia } from "pinia";
 import CourseInput from "./CourseInput.vue";
 import * as api from "@/api/mock/courses";
+import { useCourseStore } from "@/stores/courseStore";
 import { createTestRouter } from "@/router/routerTestHelper";
 import { setupTestPinia } from "@/utils/piniaTestHelper";
 
@@ -23,18 +24,27 @@ describe("CourseInput.vue", () => {
   });
 
   it("submits course successfully", async () => {
+    const courseStore = useCourseStore();
     const mockCourse = { id: "abc123", name: "Test Course" };
     vi.spyOn(api, "submitCourseName").mockResolvedValue(mockCourse);
 
     const wrapper = mount(CourseInput, {
       global: { plugins: [pinia, router] },
     });
+    // initially, the course shouldn't be found
+    expect(
+      courseStore.courses.filter((c) => c.id === mockCourse.id),
+    ).toHaveLength(0);
+
     wrapper.find("input").setValue("Test Course");
     wrapper.find("form").trigger("submit.prevent");
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.text()).toContain("Current course: Test Course");
+    // the course should be found in the list of courses in the course store
+    expect(
+      courseStore.courses.filter((c) => c.id === mockCourse.id),
+    ).toHaveLength(1);
   });
 
   it("displays error message when API rejects", async () => {

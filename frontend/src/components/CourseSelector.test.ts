@@ -1,4 +1,5 @@
 import { mount } from "@vue/test-utils";
+import { createTestingPinia } from "@pinia/testing";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import type { Pinia } from "pinia";
 import type { Router } from "vue-router";
@@ -7,6 +8,7 @@ import * as api from "@/api/mock/courses";
 import type { CourseSummary } from "@/types/course";
 import { createTestRouter } from "@/router/routerTestHelper";
 import { setupTestPinia } from "@/utils/piniaTestHelper";
+import { useCourseStore } from "@/stores/courseStore";
 
 describe("CourseSelector.vue", () => {
   let pinia: Pinia;
@@ -61,23 +63,27 @@ describe("CourseSelector.vue", () => {
   });
 
   it("selects a course when a button is clicked", async () => {
-    vi.spyOn(api, "getCourseSummaries").mockResolvedValue(mockCourses);
-    const pushSpy = vi.spyOn(router, "push");
+    const pinia = createTestingPinia({
+      createSpy: vi.fn,
+      stubActions: true, // <-- important
+    });
 
     const wrapper = mount(CourseSelector, {
-      global: { plugins: [pinia, router] },
+      global: {
+        plugins: [pinia, router],
+      },
     });
 
-    await wrapper.vm.$nextTick();
+    const store = useCourseStore();
+
+    // Provide fake course list manually
+    store.courses = [{ id: "a", name: "Course A" }];
+
     await wrapper.vm.$nextTick();
 
-    const firstButton = wrapper.find('[data-test="course-a"]');
-    await firstButton.trigger("click");
+    const button = wrapper.find('[data-test="course-a"]');
+    await button.trigger("click");
 
-    expect(pushSpy).toHaveBeenCalledOnce();
-    expect(pushSpy).toHaveBeenCalledWith({
-      name: "course",
-      params: { id: "a" },
-    });
+    expect(store.selectCourse).toHaveBeenCalledWith("a");
   });
 });
