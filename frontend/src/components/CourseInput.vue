@@ -13,10 +13,6 @@
         {{ courseStore.loading ? "Creating..." : "Create" }}
       </button>
     </form>
-    <p v-if="courseStore.currentCourse">
-      Current course: {{ courseStore.currentCourse.name }} (id:
-      {{ courseStore.currentCourse.id }})
-    </p>
     <p v-if="courseStore.error" class="error" id="course-creation-error">
       {{ courseStore.error }}
     </p>
@@ -32,6 +28,9 @@ const courseName = ref("");
 
 async function submitCourse() {
   await courseStore.createCourse(courseName.value);
+  if (!courseStore.error) {
+    courseName.value = "";
+  }
 }
 </script>
 
