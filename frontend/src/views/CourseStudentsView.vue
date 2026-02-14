@@ -44,6 +44,7 @@ import BackIcon from "@/assets/Chevron_Left_MD.svg";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseTextForm from "@/components/base/BaseTextForm.vue";
 import { useAppStore } from "@/stores/appStore";
+import { useCourseStore } from "@/stores/courseStore";
 import { useStudentStore } from "@/stores/studentStore";
 import { ButtonPressedStateTransition, BACK_BUTTON_NAME } from "@/types/state";
 
@@ -52,6 +53,7 @@ const studentForm = ref();
 const appStore = useAppStore();
 
 const studentStore = useStudentStore();
+const courseStore = useCourseStore();
 
 function goBack() {
   appStore.transition(new ButtonPressedStateTransition(BACK_BUTTON_NAME));
@@ -65,11 +67,13 @@ async function createStudent(name: string) {
   studentStore.error = ""; // Clear previous errors
   await studentStore.createStudent(name);
   if (!studentStore.error) {
-    studentForm.value?.clear();
+    studentForm.value?.reset();
   }
 }
 
 onMounted(async () => {
-  await studentStore.fetchStudentSummaries();
+  await studentStore.fetchStudentSummariesForCourse(
+    courseStore.currentCourse?.id || "",
+  );
 });
 </script>

@@ -4,6 +4,7 @@ import {
   createStudent,
   getStudentSummaries,
   deleteStudent,
+  getStudentSummariesForCourse,
 } from "@/api/mock/students";
 import { toErrorMessage } from "@/utils/error";
 
@@ -14,14 +15,32 @@ export const useStudentStore = defineStore("student", {
     loading: false,
   }),
   actions: {
-    async fetchStudentSummaries() {
+    async fetchStudentSummaries(): Promise<StudentSummary[] | null> {
       this.loading = true;
       this.error = "";
       try {
-        // mock API call returns id + name
-        this.students = await getStudentSummaries();
+        const summaries = await getStudentSummaries();
+        this.students = summaries;
+        return summaries;
       } catch (err) {
         this.error = `Failed to load students ${toErrorMessage(err)}`;
+        return null;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async fetchStudentSummariesForCourse(
+      courseId: string,
+    ): Promise<StudentSummary[] | null> {
+      this.loading = true;
+      this.error = "";
+      try {
+        const summaries = await getStudentSummariesForCourse(courseId);
+        this.students = summaries;
+        return summaries;
+      } catch (err) {
+        this.error = `Failed to load students for course ${courseId} ${toErrorMessage(err)}`;
+        return null;
       } finally {
         this.loading = false;
       }
@@ -29,7 +48,6 @@ export const useStudentStore = defineStore("student", {
     async createStudent(name: string): Promise<Student | null> {
       this.loading = true;
       this.error = "";
-
       try {
         const student = await createStudent(name);
         this.students.push({ id: student.id, fullName: student.fullName });
