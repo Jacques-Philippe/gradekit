@@ -49,8 +49,8 @@ The purpose of this document is to keep an inventory of things to be done
       - ~~Course name~~
    1. Allow the user to navigate to the `assignment creation page` given they press a button
    1. Allow the user to navigate to the `course students page` given they press another button
+1. Course students page
+   1. Allow the user to define a new student to be associated to the course
 1. Assignment creation page
    1. Allow the user to navigate back to the course page
    1. Allow the user to name the assignment
-1. Course students page
-   1. Allow the user to define a new student to be associated to the course

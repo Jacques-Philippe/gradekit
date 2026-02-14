@@ -9,9 +9,9 @@
         id="course-name-input-text-box"
         required
       />
-      <button :disabled="courseStore.loading">
+      <BaseButton :disabled="courseStore.loading" type="submit">
         {{ courseStore.loading ? "Creating..." : "Create" }}
-      </button>
+      </BaseButton>
     </form>
     <p v-if="courseStore.error" class="error" id="course-creation-error">
       {{ courseStore.error }}
@@ -20,6 +20,7 @@
 </template>
 
 <script setup lang="ts">
+import BaseButton from "@/components/base/BaseButton.vue";
 import { ref } from "vue";
 import { useCourseStore } from "@/stores/courseStore";
 
