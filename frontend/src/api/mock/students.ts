@@ -36,7 +36,10 @@ export async function getStudentById(id: string): Promise<Student> {
 }
 
 // submit new student
-export async function createStudent(fullName: string): Promise<Student> {
+export async function createStudent(
+  fullName: string,
+  courses?: string[],
+): Promise<Student> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
   const normalizedName = fullName.trim();
@@ -54,7 +57,7 @@ export async function createStudent(fullName: string): Promise<Student> {
 
   // create and add new student
   const id = Math.random().toString(36).substring(2, 9);
-  const student: Student = { id, fullName: normalizedName };
+  const student: Student = { id, fullName: normalizedName, courses };
   students[id] = student;
   return student;
 }

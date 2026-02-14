@@ -23,7 +23,7 @@
       <div v-if="studentStore.error" class="error">
         {{ studentStore.error }}
       </div>
-      <ul>
+      <!-- <ul>
         <li v-for="student in studentStore.students" :key="student.id">
           {{ student.fullName }}
           <BaseButton
@@ -33,6 +33,21 @@
             Delete
           </BaseButton>
         </li>
+      </ul> -->
+      <ul class="student-list">
+        <BaseListRow v-for="student in studentStore.students" :key="student.id">
+          {{ student.fullName }}
+
+          <template #actions>
+            <BaseButton
+              variant="danger"
+              @click="deleteStudent(student.id)"
+              aria-label="Delete student"
+            >
+              <TrashIcon />
+            </BaseButton>
+          </template>
+        </BaseListRow>
       </ul>
     </main>
   </div>
@@ -42,7 +57,9 @@
 import { onMounted, ref } from "vue";
 import BackIcon from "@/assets/Chevron_Left_MD.svg";
 import BaseButton from "@/components/base/BaseButton.vue";
+import BaseListRow from "@/components/base/BaseListRow.vue";
 import BaseTextForm from "@/components/base/BaseTextForm.vue";
+import TrashIcon from "@/assets/Trash_Full.svg";
 import { useAppStore } from "@/stores/appStore";
 import { useCourseStore } from "@/stores/courseStore";
 import { useStudentStore } from "@/stores/studentStore";
@@ -65,7 +82,7 @@ async function deleteStudent(id: string) {
 
 async function createStudent(name: string) {
   studentStore.error = ""; // Clear previous errors
-  await studentStore.createStudent(name);
+  await studentStore.createStudent(name, [courseStore.currentCourse?.id || ""]);
   if (!studentStore.error) {
     studentForm.value?.reset();
   }

@@ -45,12 +45,19 @@ export const useStudentStore = defineStore("student", {
         this.loading = false;
       }
     },
-    async createStudent(name: string): Promise<Student | null> {
+    async createStudent(
+      name: string,
+      courses?: string[],
+    ): Promise<Student | null> {
       this.loading = true;
       this.error = "";
       try {
-        const student = await createStudent(name);
-        this.students.push({ id: student.id, fullName: student.fullName });
+        const student = await createStudent(name, courses);
+        this.students.push({
+          id: student.id,
+          fullName: student.fullName,
+          courses: student.courses,
+        });
         return student;
       } catch (err) {
         this.error = `Failed to create student ${toErrorMessage(err)}`;
