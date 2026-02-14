@@ -9,7 +9,7 @@ import {
 } from "@/types/state";
 
 export class CourseViewState implements AppState {
-  name: string;
+  readonly name: string;
 
   constructor() {
     this.name = COURSE_VIEW_STATE_NAME;

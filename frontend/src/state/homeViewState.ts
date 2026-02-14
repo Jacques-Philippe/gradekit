@@ -9,7 +9,7 @@ import {
 } from "@/types/state";
 
 export class HomeViewState implements AppState {
-  name: string;
+  readonly name: string;
 
   constructor() {
     this.name = HOME_VIEW_STATE_NAME;
