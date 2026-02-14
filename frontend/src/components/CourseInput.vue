@@ -1,18 +1,14 @@
 <template>
   <div class="course-input">
     <h2>Enter a course name</h2>
-    <form @submit.prevent="submitCourse">
-      <input
-        v-model="courseName"
-        type="text"
-        placeholder="New course name"
-        id="course-name-input-text-box"
-        required
-      />
-      <BaseButton :disabled="courseStore.loading" type="submit">
-        {{ courseStore.loading ? "Creating..." : "Create" }}
-      </BaseButton>
-    </form>
+    <BaseTextForm
+      ref="courseForm"
+      label="Course Name"
+      placeholder="New course name"
+      :button-text="courseStore.loading ? 'Creating...' : 'Create'"
+      :loading="courseStore.loading"
+      @submit="submitCourse"
+    />
     <p v-if="courseStore.error" class="error" id="course-creation-error">
       {{ courseStore.error }}
     </p>
@@ -20,17 +16,18 @@
 </template>
 
 <script setup lang="ts">
-import BaseButton from "@/components/base/BaseButton.vue";
+import BaseTextForm from "@/components/base/BaseTextForm.vue";
 import { ref } from "vue";
 import { useCourseStore } from "@/stores/courseStore";
 
 const courseStore = useCourseStore();
-const courseName = ref("");
+const courseForm = ref();
 
-async function submitCourse() {
-  await courseStore.createCourse(courseName.value);
-  if (!courseStore.error) {
-    courseName.value = "";
+async function submitCourse(value: string) {
+  courseStore.error = ""; // Clear previous errors
+  const course = await courseStore.createCourse(value);
+  if (course) {
+    courseForm.value?.reset();
   }
 }
 </script>
