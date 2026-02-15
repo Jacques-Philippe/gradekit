@@ -63,13 +63,19 @@ export async function createStudent(
 }
 
 // delete student
-export async function deleteStudent(id: string): Promise<Student> {
+export async function removeStudentFromCourse(
+  studentId: string,
+  courseId: string,
+): Promise<Student> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
-  const student = students[id];
+  const student = students[studentId];
   if (!student) {
-    throw new Error(`Student with id ${id} not found`);
+    throw new Error(`Student with id ${studentId} not found`);
   }
-  delete students[id];
+  student.courses = student.courses?.filter((c) => c !== courseId);
+  if (student.courses?.length === 0) {
+    delete students[studentId];
+  }
   return student;
 }

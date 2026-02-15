@@ -3,7 +3,7 @@ import type { Student, StudentSummary } from "@/types/student";
 import {
   createStudent as createStudentApi,
   getStudentSummaries as getStudentSummariesApi,
-  deleteStudent as deleteStudentApi,
+  removeStudentFromCourse as removeStudentFromCourseApi,
   getStudentSummariesForCourse as getStudentSummariesForCourseApi,
 } from "@/api/mock/students";
 import { toErrorMessage } from "@/utils/error";
@@ -66,12 +66,17 @@ export const useStudentStore = defineStore("student", {
         this.loading = false;
       }
     },
-    async deleteStudent(id: string): Promise<Student | null> {
+    async removeStudentFromCourse(
+      studentId: string,
+      courseId: string,
+    ): Promise<Student | null> {
       this.loading = true;
       this.error = "";
       try {
-        const student = { ...(await deleteStudentApi(id)) };
-        this.students = this.students.filter((s) => s.id !== id);
+        const student = {
+          ...(await removeStudentFromCourseApi(studentId, courseId)),
+        };
+        this.students = this.students.filter((s) => s.id !== studentId);
         return student;
       } catch (err) {
         this.error = `Failed to delete student ${toErrorMessage(err)}`;

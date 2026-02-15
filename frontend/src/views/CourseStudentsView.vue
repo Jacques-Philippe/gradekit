@@ -23,15 +23,16 @@
       <div v-if="studentStore.error" class="error">
         {{ studentStore.error }}
       </div>
+      <BaseLoadingSpinner v-if="studentStore.loading" />
       <!-- Students list, with deletion element -->
-      <ul class="student-list">
+      <ul v-else class="student-list">
         <BaseListRow v-for="student in studentStore.students" :key="student.id">
           {{ student.fullName }}
 
           <template #actions>
             <BaseButton
               variant="danger"
-              @click="deleteStudent(student.id)"
+              @click="removeStudentFromCurrentCourse(student.id)"
               aria-label="Delete student"
             >
               <TrashIcon />
@@ -49,6 +50,7 @@ import BackIcon from "@/assets/Chevron_Left_MD.svg";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseListRow from "@/components/base/BaseListRow.vue";
 import BaseTextForm from "@/components/base/BaseTextForm.vue";
+import BaseLoadingSpinner from "@/components/base/BaseLoadingSpinner.vue";
 import TrashIcon from "@/assets/Trash_Full.svg";
 import { useAppStore } from "@/stores/appStore";
 import { useCourseStore } from "@/stores/courseStore";
@@ -66,8 +68,16 @@ function goBack() {
   appStore.transition(new ButtonPressedStateTransition(BACK_BUTTON_NAME));
 }
 
-async function deleteStudent(id: string) {
-  await studentStore.deleteStudent(id);
+async function removeStudentFromCurrentCourse(studentId: string) {
+  if (!courseStore.currentCourse) {
+    studentStore.error = "No course selected";
+    return;
+  }
+  studentStore.error = ""; // Clear previous errors
+  await studentStore.removeStudentFromCourse(
+    studentId,
+    courseStore.currentCourse.id,
+  );
 }
 
 async function createStudent(name: string) {

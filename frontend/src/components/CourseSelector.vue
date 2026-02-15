@@ -1,7 +1,7 @@
 <template>
   <section>
-    <h2>Select a course</h2>
-    <p v-if="!loading && error.length > 0" class="error">
+    <BaseLoadingSpinner v-if="loading" />
+    <p v-else-if="!loading && error.length > 0" class="error">
       Unable to access courses <br />
       {{ error }}
     </p>
@@ -30,6 +30,7 @@ import { storeToRefs } from "pinia";
 import { useCourseStore } from "@/stores/courseStore";
 import { useAppStore } from "@/stores/appStore";
 import BaseButton from "@/components/base/BaseButton.vue";
+import BaseLoadingSpinner from "@/components/base/BaseLoadingSpinner.vue";
 
 const courseStore = useCourseStore();
 const appStore = useAppStore();
