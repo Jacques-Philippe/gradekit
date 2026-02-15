@@ -35,7 +35,7 @@ export async function getStudentById(id: string): Promise<Student> {
   return student;
 }
 
-// submit new student
+// create enw student
 export async function createStudent(
   fullName: string,
   courses?: string[],
@@ -62,6 +62,32 @@ export async function createStudent(
   return student;
 }
 
+function normalizeStudentName(name: string): string {
+  return name.trim().toLowerCase();
+}
+
+// create enw student
+export async function addStudentToCourse(
+  fullName: string,
+  courseId: string,
+): Promise<Student> {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  // if the student exists already, just add the course to their list
+  const existing = Object.values(students).find(
+    (s) => normalizeStudentName(s.fullName) === normalizeStudentName(fullName),
+  );
+  if (existing) {
+    if (!existing.courses?.includes(courseId)) {
+      existing.courses = [...(existing.courses || []), courseId];
+    }
+    return existing;
+  } else {
+    // if student doesn't exist, create new one
+    return createStudent(fullName, [courseId]);
+  }
+}
+
 // delete student
 export async function removeStudentFromCourse(
   studentId: string,
@@ -75,7 +101,18 @@ export async function removeStudentFromCourse(
   }
   student.courses = student.courses?.filter((c) => c !== courseId);
   if (student.courses?.length === 0) {
-    delete students[studentId];
+    return await deleteStudent(studentId);
   }
+  return student;
+}
+
+export async function deleteStudent(studentId: string): Promise<Student> {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  const student = students[studentId];
+  if (!student) {
+    throw new Error(`Student with id ${studentId} not found`);
+  }
+  delete students[studentId];
   return student;
 }

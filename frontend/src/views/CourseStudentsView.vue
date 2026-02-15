@@ -25,7 +25,7 @@
         placeholder="New student name"
         :button-text="studentStore.loading ? 'Creating...' : 'Create'"
         :loading="studentStore.loading"
-        @submit="createStudent"
+        @submit="addStudentToCurrentCourse"
       />
       <!-- Student API failure message -->
       <div v-if="studentStore.error" class="error">
@@ -105,25 +105,13 @@ function goBack() {
   studentStore.clearError();
 }
 
-// async function removeStudentFromCurrentCourse(studentId: string) {
-//   if (!courseStore.currentCourse) {
-//     studentStore.error = "No course selected";
-//     return;
-//   }
-//   studentStore.error = ""; // Clear previous errors
-//   await studentStore.removeStudentFromCourse(
-//     studentId,
-//     courseStore.currentCourse.id,
-//   );
-// }
-
-async function createStudent(name: string) {
+async function addStudentToCurrentCourse(name: string) {
   if (!courseStore.currentCourse) {
     studentStore.error = "No course selected";
     return;
   }
   studentStore.error = ""; // Clear previous errors
-  await studentStore.createStudent(name, [courseStore.currentCourse.id]);
+  await studentStore.addStudentToCourse(name, courseStore.currentCourse.id);
   if (!studentStore.error) {
     studentForm.value?.reset();
   }

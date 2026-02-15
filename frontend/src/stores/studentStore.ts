@@ -5,6 +5,7 @@ import {
   getStudentSummaries as getStudentSummariesApi,
   removeStudentFromCourse as removeStudentFromCourseApi,
   getStudentSummariesForCourse as getStudentSummariesForCourseApi,
+  addStudentToCourse as addStudentToCourseApi,
 } from "@/api/mock/students";
 import { toErrorMessage } from "@/utils/error";
 
@@ -61,6 +62,25 @@ export const useStudentStore = defineStore("student", {
         return student;
       } catch (err) {
         this.error = `Failed to create student ${toErrorMessage(err)}`;
+        return null;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async addStudentToCourse(
+      name: string,
+      course: string,
+    ): Promise<Student | null> {
+      this.loading = true;
+      this.error = "";
+      try {
+        const student = { ...(await addStudentToCourseApi(name, course)) };
+        const _students = this.students.filter((s) => s.id !== student.id);
+        _students.push({ ...student });
+        this.students = _students;
+        return student;
+      } catch (err) {
+        this.error = `Failed to add student to course\n${toErrorMessage(err)}`;
         return null;
       } finally {
         this.loading = false;
