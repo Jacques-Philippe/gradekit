@@ -100,10 +100,7 @@ export async function removeStudentFromCourse(
     throw new Error(`Student with id ${studentId} not found`);
   }
   student.courses = student.courses?.filter((c) => c !== courseId);
-  if (student.courses?.length === 0) {
-    return await deleteStudent(studentId);
-  }
-  return student;
+  return { ...student };
 }
 
 export async function deleteStudent(studentId: string): Promise<Student> {
