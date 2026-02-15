@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
 import type { Student, StudentSummary } from "@/types/student";
 import {
-  createStudent,
-  getStudentSummaries,
-  deleteStudent,
-  getStudentSummariesForCourse,
+  createStudent as createStudentApi,
+  getStudentSummaries as getStudentSummariesApi,
+  deleteStudent as deleteStudentApi,
+  getStudentSummariesForCourse as getStudentSummariesForCourseApi,
 } from "@/api/mock/students";
 import { toErrorMessage } from "@/utils/error";
 
@@ -19,7 +19,7 @@ export const useStudentStore = defineStore("student", {
       this.loading = true;
       this.error = "";
       try {
-        const summaries = await getStudentSummaries();
+        const summaries = await getStudentSummariesApi();
         this.students = summaries;
         return summaries;
       } catch (err) {
@@ -35,7 +35,7 @@ export const useStudentStore = defineStore("student", {
       this.loading = true;
       this.error = "";
       try {
-        const summaries = await getStudentSummariesForCourse(courseId);
+        const summaries = await getStudentSummariesForCourseApi(courseId);
         this.students = summaries;
         return summaries;
       } catch (err) {
@@ -52,7 +52,7 @@ export const useStudentStore = defineStore("student", {
       this.loading = true;
       this.error = "";
       try {
-        const student = await createStudent(name, courses);
+        const student = await createStudentApi(name, courses);
         this.students.push({
           id: student.id,
           fullName: student.fullName,
@@ -70,7 +70,7 @@ export const useStudentStore = defineStore("student", {
       this.loading = true;
       this.error = "";
       try {
-        const student = await deleteStudent(id);
+        const student = await deleteStudentApi(id);
         this.students = this.students.filter((s) => s.id !== id);
         return student;
       } catch (err) {
