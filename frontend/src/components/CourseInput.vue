@@ -41,17 +41,6 @@ async function submitCourse(value: string) {
   gap: 0.5rem;
 }
 
-input {
-  padding: 0.5rem;
-  font-size: 1rem;
-}
-
-button {
-  padding: 0.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
 .error {
   color: red;
   font-weight: bold;
