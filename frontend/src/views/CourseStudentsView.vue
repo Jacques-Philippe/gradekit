@@ -71,16 +71,24 @@ async function deleteStudent(id: string) {
 }
 
 async function createStudent(name: string) {
+  if (!courseStore.currentCourse) {
+    studentStore.error = "No course selected";
+    return;
+  }
   studentStore.error = ""; // Clear previous errors
-  await studentStore.createStudent(name, [courseStore.currentCourse?.id || ""]);
+  await studentStore.createStudent(name, [courseStore.currentCourse.id]);
   if (!studentStore.error) {
     studentForm.value?.reset();
   }
 }
 
 onMounted(async () => {
+  if (!courseStore.currentCourse) {
+    studentStore.error = "No course selected";
+    return;
+  }
   await studentStore.fetchStudentSummariesForCourse(
-    courseStore.currentCourse?.id || "",
+    courseStore.currentCourse.id,
   );
 });
 </script>
