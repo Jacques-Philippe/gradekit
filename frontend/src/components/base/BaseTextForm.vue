@@ -53,7 +53,7 @@ defineExpose({ reset });
         type="text"
         class="base-form__input"
         :placeholder="placeholder"
-        :disabled="loading"
+        :disabled="loading || disabled"
       />
 
       <BaseButton type="submit" :disabled="isDisabled">
