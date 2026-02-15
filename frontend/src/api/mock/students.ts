@@ -59,7 +59,7 @@ export async function createStudent(
   const id = Math.random().toString(36).substring(2, 9);
   const student: Student = { id, fullName: normalizedName, courses };
   students[id] = student;
-  return student;
+  return { ...student };
 }
 
 function normalizeStudentName(name: string): string {
