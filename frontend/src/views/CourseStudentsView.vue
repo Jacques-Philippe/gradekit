@@ -10,6 +10,14 @@
     <!-- Page content -->
     <main>
       <div>Course Students View</div>
+      <BaseConfirmModal
+        v-model="confirmVisible"
+        title="Delete Student"
+        :message="`Are you sure you want to delete ${studentToDelete?.fullName}?`"
+        confirmText="Delete"
+        @confirm="confirmDelete"
+      />
+
       <!-- Student creation input -->
       <BaseTextForm
         ref="studentForm"
@@ -32,7 +40,7 @@
           <template #actions>
             <BaseButton
               variant="danger"
-              @click="removeStudentFromCurrentCourse(student.id)"
+              @click="askDelete(student)"
               aria-label="Delete student"
             >
               <TrashIcon />
@@ -54,11 +62,13 @@ import BaseButton from "@/components/base/BaseButton.vue";
 import BaseListRow from "@/components/base/BaseListRow.vue";
 import BaseTextForm from "@/components/base/BaseTextForm.vue";
 import BaseLoadingSpinner from "@/components/base/BaseLoadingSpinner.vue";
+import BaseConfirmModal from "@/components/base/BaseConfirmModal.vue";
 import TrashIcon from "@/assets/Trash_Full.svg";
 import { useAppStore } from "@/stores/appStore";
 import { useCourseStore } from "@/stores/courseStore";
 import { useStudentStore } from "@/stores/studentStore";
 import { ButtonPressedStateTransition, BACK_BUTTON_NAME } from "@/types/state";
+import type { StudentSummary } from "@/types/student";
 
 const studentForm = ref();
 
@@ -67,22 +77,45 @@ const appStore = useAppStore();
 const studentStore = useStudentStore();
 const courseStore = useCourseStore();
 
-function goBack() {
-  appStore.transition(new ButtonPressedStateTransition(BACK_BUTTON_NAME));
-  studentStore.clearError();
+const confirmVisible = ref(false);
+const studentToDelete = ref<StudentSummary | null>(null);
+
+function askDelete(student: StudentSummary) {
+  studentToDelete.value = student;
+  confirmVisible.value = true;
 }
 
-async function removeStudentFromCurrentCourse(studentId: string) {
+async function confirmDelete() {
+  if (!studentToDelete.value) return;
+
   if (!courseStore.currentCourse) {
     studentStore.error = "No course selected";
     return;
   }
   studentStore.error = ""; // Clear previous errors
   await studentStore.removeStudentFromCourse(
-    studentId,
+    studentToDelete.value!.id,
     courseStore.currentCourse.id,
   );
+  studentToDelete.value = null;
 }
+
+function goBack() {
+  appStore.transition(new ButtonPressedStateTransition(BACK_BUTTON_NAME));
+  studentStore.clearError();
+}
+
+// async function removeStudentFromCurrentCourse(studentId: string) {
+//   if (!courseStore.currentCourse) {
+//     studentStore.error = "No course selected";
+//     return;
+//   }
+//   studentStore.error = ""; // Clear previous errors
+//   await studentStore.removeStudentFromCourse(
+//     studentId,
+//     courseStore.currentCourse.id,
+//   );
+// }
 
 async function createStudent(name: string) {
   if (!courseStore.currentCourse) {
