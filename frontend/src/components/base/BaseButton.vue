@@ -70,5 +70,6 @@ const classes = computed(() => [
 .base-button--disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  pointer-events: none;
 }
 </style>
