@@ -1,7 +1,10 @@
 <template>
   <section>
     <h2>Select a course</h2>
-    <p v-if="!courses" class="error">Unable to access courses</p>
+    <p v-if="!loading && error.length > 0" class="error">
+      Unable to access courses <br />
+      {{ error }}
+    </p>
     <div v-else class="course-list">
       <BaseButton
         v-for="course in courses"
@@ -30,7 +33,7 @@ import BaseButton from "@/components/base/BaseButton.vue";
 
 const courseStore = useCourseStore();
 const appStore = useAppStore();
-const { courses, loading } = storeToRefs(courseStore);
+const { courses, loading, error } = storeToRefs(courseStore);
 
 onMounted(async () => {
   await courseStore.fetchCourseSummaries();
