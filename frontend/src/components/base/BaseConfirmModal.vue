@@ -3,9 +3,14 @@
     <Transition name="fade">
       <div v-if="modelValue" class="overlay" @click.self="onCancel">
         <Transition name="scale">
-          <div class="modal" role="dialog" aria-modal="true">
+          <div
+            class="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+          >
             <header class="modal-header">
-              <h3>{{ title }}</h3>
+              <h3 id="modal-title">{{ title }}</h3>
             </header>
 
             <section class="modal-body">
