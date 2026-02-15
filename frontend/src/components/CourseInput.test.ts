@@ -26,7 +26,7 @@ describe("CourseInput.vue", () => {
   it("submits course successfully", async () => {
     const courseStore = useCourseStore();
     const mockCourse = { id: "abc123", name: "Test Course" };
-    vi.spyOn(api, "submitCourseName").mockResolvedValue(mockCourse);
+    vi.spyOn(api, "createCourse").mockResolvedValue(mockCourse);
 
     const wrapper = mount(CourseInput, {
       global: { plugins: [pinia, router] },
@@ -48,7 +48,7 @@ describe("CourseInput.vue", () => {
   });
 
   it("displays error message when API rejects", async () => {
-    vi.spyOn(api, "submitCourseName").mockRejectedValue(new Error("API error"));
+    vi.spyOn(api, "createCourse").mockRejectedValue(new Error("API error"));
     const wrapper = mount(CourseInput, {
       global: { plugins: [pinia, router] },
     });

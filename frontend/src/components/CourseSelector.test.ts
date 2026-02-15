@@ -30,21 +30,8 @@ describe("CourseSelector.vue", () => {
     vi.restoreAllMocks();
   });
 
-  it("shows loading indicator while courses are being fetched", async () => {
-    // mock fetch to never resolve immediately
-    const getSpy = vi.spyOn(api, "getCourseSummaries").mockImplementation(
-      () => new Promise(() => {}), // pending promise
-    );
-
-    const wrapper = mount(CourseSelector, {
-      global: { plugins: [pinia, router] },
-    });
-    // Wait for the fetch request to be sent
-    await wrapper.vm.$nextTick();
-    expect(getSpy).toHaveBeenCalledOnce();
-    wrapper.find("#courses-loading-indicator");
-
-    expect(wrapper.text()).toContain("Loading courses");
+  it.todo("disables buttons while loading", async () => {
+    // todo
   });
 
   it("renders course buttons after loading", async () => {

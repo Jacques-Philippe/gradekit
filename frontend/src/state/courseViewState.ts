@@ -6,6 +6,10 @@ import {
   BACK_BUTTON_NAME,
   COURSE_VIEW_STATE_NAME,
   HOME_VIEW_STATE_NAME,
+  ASSIGNMENTS_BUTTON_NAME,
+  STUDENTS_BUTTON_NAME,
+  COURSE_ASSIGNMENTS_VIEW_STATE_NAME,
+  COURSE_STUDENTS_VIEW_STATE_NAME,
 } from "@/types/state";
 
 export class CourseViewState implements AppState {
@@ -28,6 +32,10 @@ export class CourseViewState implements AppState {
       const buttonTransition = transition as ButtonPressedStateTransition;
       if (buttonTransition.button === BACK_BUTTON_NAME) {
         return { target: HOME_VIEW_STATE_NAME };
+      } else if (buttonTransition.button === ASSIGNMENTS_BUTTON_NAME) {
+        return { target: COURSE_ASSIGNMENTS_VIEW_STATE_NAME };
+      } else if (buttonTransition.button === STUDENTS_BUTTON_NAME) {
+        return { target: COURSE_STUDENTS_VIEW_STATE_NAME };
       }
     }
     console.warn(`Unhandled transition ${transition.type} in CourseViewState`);

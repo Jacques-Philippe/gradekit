@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 import type { Course, CourseSummary } from "@/types/course";
 import {
-  submitCourseName,
-  getCourseSummaries,
-  getCourseById,
+  createCourse as createCourseApi,
+  getCourseSummaries as getCourseSummariesApi,
+  getCourseById as getCourseByIdApi,
 } from "@/api/mock/courses";
 import { toErrorMessage } from "@/utils/error";
 
@@ -20,7 +20,7 @@ export const useCourseStore = defineStore("course", {
       this.error = "";
       try {
         // mock API call returns id + name
-        this.courses = await getCourseSummaries();
+        this.courses = await getCourseSummariesApi();
       } catch (err) {
         this.error = `Failed to load courses ${toErrorMessage(err)}`;
       } finally {
@@ -32,7 +32,7 @@ export const useCourseStore = defineStore("course", {
       this.error = "";
       try {
         // fetch full course object only for selected course
-        this.currentCourse = await getCourseById(id);
+        this.currentCourse = { ...(await getCourseByIdApi(id)) };
       } catch (err) {
         this.error = `Failed to select course ${toErrorMessage(err)}`;
         this.currentCourse = null;
@@ -45,7 +45,7 @@ export const useCourseStore = defineStore("course", {
       this.error = "";
 
       try {
-        const course = await submitCourseName(name);
+        const course = { ...(await createCourseApi(name)) };
         this.courses.push({ id: course.id, name: course.name });
         return course;
       } catch (err) {

@@ -1,0 +1,112 @@
+import { defineStore } from "pinia";
+import type { Student, StudentSummary } from "@/types/student";
+import {
+  createStudent as createStudentApi,
+  getStudentSummaries as getStudentSummariesApi,
+  removeStudentFromCourse as removeStudentFromCourseApi,
+  getStudentSummariesForCourse as getStudentSummariesForCourseApi,
+  addStudentToCourse as addStudentToCourseApi,
+} from "@/api/mock/students";
+import { toErrorMessage } from "@/utils/error";
+
+export const useStudentStore = defineStore("student", {
+  state: () => ({
+    students: [] as StudentSummary[], // just id + name
+    error: "" as string,
+    loading: false,
+  }),
+  actions: {
+    async fetchStudentSummaries(): Promise<StudentSummary[] | null> {
+      this.loading = true;
+      this.error = "";
+      try {
+        const summaries = await getStudentSummariesApi();
+        this.students = summaries;
+        return summaries;
+      } catch (err) {
+        this.error = `Failed to load students ${toErrorMessage(err)}`;
+        return null;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async fetchStudentSummariesForCourse(
+      courseId: string,
+    ): Promise<StudentSummary[] | null> {
+      this.loading = true;
+      this.error = "";
+      try {
+        const summaries = await getStudentSummariesForCourseApi(courseId);
+        this.students = summaries;
+        return summaries;
+      } catch (err) {
+        this.error = `Failed to load students for course ${courseId} ${toErrorMessage(err)}`;
+        return null;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async createStudent(
+      name: string,
+      courses?: string[],
+    ): Promise<Student | null> {
+      this.loading = true;
+      this.error = "";
+      try {
+        const student = { ...(await createStudentApi(name, courses)) };
+        this.students.push({
+          id: student.id,
+          fullName: student.fullName,
+          courses: student.courses,
+        });
+        return student;
+      } catch (err) {
+        this.error = `Failed to create student ${toErrorMessage(err)}`;
+        return null;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async addStudentToCourse(
+      name: string,
+      course: string,
+    ): Promise<Student | null> {
+      this.loading = true;
+      this.error = "";
+      try {
+        const student = { ...(await addStudentToCourseApi(name, course)) };
+        const _students = this.students.filter((s) => s.id !== student.id);
+        _students.push({ ...student });
+        this.students = _students;
+        return student;
+      } catch (err) {
+        this.error = `Failed to add student to course\n${toErrorMessage(err)}`;
+        return null;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async removeStudentFromCourse(
+      studentId: string,
+      courseId: string,
+    ): Promise<Student | null> {
+      this.loading = true;
+      this.error = "";
+      try {
+        const student = {
+          ...(await removeStudentFromCourseApi(studentId, courseId)),
+        };
+        this.students = this.students.filter((s) => s.id !== studentId);
+        return student;
+      } catch (err) {
+        this.error = `Failed to delete student ${toErrorMessage(err)}`;
+        return null;
+      } finally {
+        this.loading = false;
+      }
+    },
+    clearError() {
+      this.error = "";
+    },
+  },
+});
