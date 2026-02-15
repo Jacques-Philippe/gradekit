@@ -25,7 +25,7 @@
       </div>
       <BaseLoadingSpinner v-if="studentStore.loading" />
       <!-- Students list, with deletion element -->
-      <ul v-else class="student-list">
+      <ul v-else-if="studentStore.students.length > 0" class="student-list">
         <BaseListRow v-for="student in studentStore.students" :key="student.id">
           {{ student.fullName }}
 
@@ -40,6 +40,9 @@
           </template>
         </BaseListRow>
       </ul>
+      <div v-else-if="studentStore.students.length === 0">
+        No students in this course yet
+      </div>
     </main>
   </div>
 </template>
