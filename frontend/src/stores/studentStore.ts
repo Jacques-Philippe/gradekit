@@ -52,7 +52,7 @@ export const useStudentStore = defineStore("student", {
       this.loading = true;
       this.error = "";
       try {
-        const student = await createStudentApi(name, courses);
+        const student = { ...(await createStudentApi(name, courses)) };
         this.students.push({
           id: student.id,
           fullName: student.fullName,
@@ -70,7 +70,7 @@ export const useStudentStore = defineStore("student", {
       this.loading = true;
       this.error = "";
       try {
-        const student = await deleteStudentApi(id);
+        const student = { ...(await deleteStudentApi(id)) };
         this.students = this.students.filter((s) => s.id !== id);
         return student;
       } catch (err) {

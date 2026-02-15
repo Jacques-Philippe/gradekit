@@ -32,7 +32,7 @@ export const useCourseStore = defineStore("course", {
       this.error = "";
       try {
         // fetch full course object only for selected course
-        this.currentCourse = await getCourseByIdApi(id);
+        this.currentCourse = { ...(await getCourseByIdApi(id)) };
       } catch (err) {
         this.error = `Failed to select course ${toErrorMessage(err)}`;
         this.currentCourse = null;
@@ -45,7 +45,7 @@ export const useCourseStore = defineStore("course", {
       this.error = "";
 
       try {
-        const course = await createCourseApi(name);
+        const course = { ...(await createCourseApi(name)) };
         this.courses.push({ id: course.id, name: course.name });
         return course;
       } catch (err) {
