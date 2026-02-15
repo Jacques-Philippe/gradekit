@@ -21,7 +21,7 @@ import { ref } from "vue";
 import { useCourseStore } from "@/stores/courseStore";
 
 const courseStore = useCourseStore();
-const courseForm = ref();
+const courseForm = ref<InstanceType<typeof BaseTextForm>>();
 
 async function submitCourse(value: string) {
   courseStore.error = ""; // Clear previous errors
