@@ -16,11 +16,11 @@ export class StateMachine {
 
   transition(transition: AppTransition) {
     const stateChange = this.currentState.handleTransition(transition);
-    console.table({
-      fromState: this.currentState.name,
-      transition: transition.type,
-      toState: stateChange?.target,
-    });
+    // console.table({
+    //   fromState: this.currentState.name,
+    //   transition: transition.type,
+    //   toState: stateChange?.target,
+    // });
     if (stateChange !== null && stateChange.target !== this.currentState.name) {
       try {
         const newState = createState(stateChange);
