@@ -92,4 +92,10 @@ defineExpose({ reset });
   outline: none;
   border-color: #2563eb;
 }
+
+.base-form__input:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
 </style>
