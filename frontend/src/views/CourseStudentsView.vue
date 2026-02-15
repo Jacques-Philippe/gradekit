@@ -69,6 +69,7 @@ const courseStore = useCourseStore();
 
 function goBack() {
   appStore.transition(new ButtonPressedStateTransition(BACK_BUTTON_NAME));
+  studentStore.clearError();
 }
 
 async function removeStudentFromCurrentCourse(studentId: string) {
