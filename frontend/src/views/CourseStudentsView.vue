@@ -12,9 +12,9 @@
       <div>Course Students View</div>
       <BaseConfirmModal
         v-model="confirmVisible"
-        title="Delete Student"
-        :message="`Are you sure you want to delete ${studentToDelete?.fullName}?`"
-        confirmText="Delete"
+        title="Remove Student"
+        :message="`Are you sure you want to remove ${studentToDelete?.fullName} from ${courseStore.currentCourse?.name}?`"
+        confirmText="Remove"
         @confirm="confirmDelete"
       />
 
