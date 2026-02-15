@@ -30,7 +30,7 @@ describe("CourseSelector.vue", () => {
     vi.restoreAllMocks();
   });
 
-  it("disables buttons while loading", async () => {
+  it.todo("disables buttons while loading", async () => {
     // todo
   });
 
