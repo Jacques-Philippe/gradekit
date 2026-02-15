@@ -22,7 +22,7 @@ export async function getCourseById(id: string): Promise<Course> {
 }
 
 // submit new course
-export async function submitCourseName(name: string): Promise<Course> {
+export async function createCourse(name: string): Promise<Course> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
   const normalizedName = name.trim();

@@ -19,7 +19,7 @@ describe("courseStore", () => {
   describe("createCourse", () => {
     it("creates a course successfully", async () => {
       const mockCourse = { id: "abc123", name: "Test Course" };
-      vi.spyOn(api, "submitCourseName").mockResolvedValue(mockCourse);
+      vi.spyOn(api, "createCourse").mockResolvedValue(mockCourse);
 
       expect(store.courses).toEqual([]);
 
@@ -35,9 +35,7 @@ describe("courseStore", () => {
     });
 
     it("sets error when creation fails", async () => {
-      vi.spyOn(api, "submitCourseName").mockRejectedValue(
-        new Error("API error"),
-      );
+      vi.spyOn(api, "createCourse").mockRejectedValue(new Error("API error"));
 
       await store.createCourse("Fail Course");
 

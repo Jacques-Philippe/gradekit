@@ -27,6 +27,10 @@ export default [
         ecmaVersion: "latest",
         sourceType: "module",
       },
+      globals: {
+        window: "readonly",
+        KeyboardEvent: "readonly",
+      },
     },
 
     plugins: {
