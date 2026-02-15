@@ -17,10 +17,15 @@
       <BaseButton
         @click="goToAssignments"
         aria-label="Go to course assignments"
+        :disabled="!courseStore.currentCourse"
       >
         Assignments
       </BaseButton>
-      <BaseButton @click="goToStudents" aria-label="Go to course students">
+      <BaseButton
+        @click="goToStudents"
+        aria-label="Go to course students"
+        :disabled="!courseStore.currentCourse"
+      >
         Students
       </BaseButton>
     </main>
