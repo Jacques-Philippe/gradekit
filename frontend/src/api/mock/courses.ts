@@ -2,21 +2,27 @@ import type { Course, CourseSummary } from "@/types/course";
 
 // A fake list of all courses
 // Note: this object can be mutated, it just can't be reassigned
-const courses: Record<string, Course> = {
-  abc: { id: "abc", name: "Math 101" },
-  def: { id: "def", name: "Math 102" },
-  ghi: { id: "ghi", name: "Geography 201" },
-};
+// const courses: Record<string, Course> = {
+//   abc: { id: "abc", name: "Math 101" },
+//   def: { id: "def", name: "Math 102" },
+//   ghi: { id: "ghi", name: "Geography 201" },
+// };
+
+let courses: Array<Course> = [
+  { id: "abc", name: "Math 101" },
+  { id: "def", name: "Math 102" },
+  { id: "ghi", name: "Geography 201" },
+];
 // return id + name for dropdown/list
 export async function getCourseSummaries(): Promise<CourseSummary[]> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return Object.values(courses).map(({ id, name }) => ({ id, name }));
+  return courses.map(({ id, name }) => ({ id, name }));
 }
 
 // return full course by id
 export async function getCourseById(id: string): Promise<Course> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  const course = courses[id];
+  const course = courses.find((c) => c.id === id);
   if (!course) throw new Error(`Course with id ${id} not found`);
   return course;
 }
@@ -31,7 +37,7 @@ export async function createCourse(name: string): Promise<Course> {
   }
 
   // check for duplicates
-  const exists = Object.values(courses).some(
+  const exists = courses.some(
     (c) => c.name.toLowerCase() === normalizedName.toLowerCase(),
   );
   if (exists) {
@@ -41,6 +47,17 @@ export async function createCourse(name: string): Promise<Course> {
   // create and add new course
   const id = Math.random().toString(36).substring(2, 9);
   const course: Course = { id, name: normalizedName };
-  courses[id] = course;
+  courses = [...courses, course];
+  return course;
+}
+
+export async function deleteCourse(id: string): Promise<Course> {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  const course = courses.find((c) => c.id === id);
+  if (!course) {
+    throw new Error(`Course with id ${id} not found`);
+  }
+  courses = courses.filter((c) => c.id !== id);
   return course;
 }
