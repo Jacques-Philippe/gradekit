@@ -13,7 +13,7 @@
       <BaseConfirmModal
         v-model="confirmVisible"
         title="Remove Student"
-        :message="`Are you sure you want to remove ${studentToDelete?.fullName} from ${courseStore.currentCourse?.name}?`"
+        :message="`Are you sure you want to remove ${enrollmentToDelete?.studentId} from ${courseStore.currentCourse?.name}?`"
         confirmText="Remove"
         @confirm="confirmDelete"
       />
@@ -33,14 +33,20 @@
       </div>
       <BaseLoadingSpinner v-if="studentStore.loading" />
       <!-- Students list, with deletion element -->
-      <ul v-else-if="studentStore.students.length > 0" class="student-list">
-        <BaseListRow v-for="student in studentStore.students" :key="student.id">
-          {{ student.fullName }}
+      <ul
+        v-else-if="enrollmentStore.enrollments.length > 0"
+        class="student-list"
+      >
+        <BaseListRow
+          v-for="enrollment in enrollmentStore.enrollments"
+          :key="enrollment.id"
+        >
+          {{ enrollment.studentId }}
 
           <template #actions>
             <BaseButton
               variant="danger"
-              @click="askDelete(student)"
+              @click="askDelete(enrollment)"
               aria-label="Delete student"
             >
               <TrashIcon />
@@ -66,38 +72,44 @@ import BaseConfirmModal from "@/components/base/BaseConfirmModal.vue";
 import TrashIcon from "@/assets/Trash_Full.svg";
 import { useAppStore } from "@/stores/appStore";
 import { useCourseStore } from "@/stores/courseStore";
+import { useEnrollmentStore } from "@/stores/enrollmentStore";
 import { useStudentStore } from "@/stores/studentStore";
 import { ButtonPressedStateTransition, BACK_BUTTON_NAME } from "@/types/state";
-import type { StudentSummary } from "@/types/student";
+import type { Enrollment } from "@/types/enrollment";
 
 const studentForm = ref();
 
 const appStore = useAppStore();
-
 const studentStore = useStudentStore();
 const courseStore = useCourseStore();
+const enrollmentStore = useEnrollmentStore();
 
 const confirmVisible = ref(false);
-const studentToDelete = ref<StudentSummary | null>(null);
+const enrollmentToDelete = ref<Enrollment | null>(null);
 
-function askDelete(student: StudentSummary) {
-  studentToDelete.value = student;
+function askDelete(enrollment: Enrollment) {
+  enrollmentToDelete.value = enrollment;
   confirmVisible.value = true;
 }
 
 async function confirmDelete() {
-  if (!studentToDelete.value) return;
+  if (!enrollmentToDelete.value) return;
 
   if (!courseStore.currentCourse) {
     studentStore.error = "No course selected";
     return;
   }
   studentStore.error = ""; // Clear previous errors
-  await studentStore.removeStudentFromCourse(
-    studentToDelete.value!.id,
+  const enrollment = await enrollmentStore.getEnrollmentByStudentAndCourse(
+    enrollmentToDelete.value.id,
     courseStore.currentCourse.id,
   );
-  studentToDelete.value = null;
+  if (!enrollment || enrollmentStore.error) {
+    studentStore.error = `Failed to remove student from course: ${enrollmentStore.error}`;
+    return;
+  }
+  await enrollmentStore.deleteEnrollment(enrollment.id);
+  enrollmentToDelete.value = null;
 }
 
 function goBack() {
@@ -105,13 +117,17 @@ function goBack() {
   studentStore.clearError();
 }
 
-async function addStudentToCurrentCourse(name: string) {
+async function addStudentToCurrentCourse(studentId: string) {
   if (!courseStore.currentCourse) {
     studentStore.error = "No course selected";
     return;
   }
   studentStore.error = ""; // Clear previous errors
-  await studentStore.addStudentToCourse(name, courseStore.currentCourse.id);
+  // await studentStore.addStudentToCourse(name, courseStore.currentCourse.id);
+  await enrollmentStore.createEnrollment(
+    studentId,
+    courseStore.currentCourse.id,
+  );
   if (!studentStore.error) {
     studentForm.value?.reset();
   }
@@ -122,8 +138,6 @@ onMounted(async () => {
     studentStore.error = "No course selected";
     return;
   }
-  await studentStore.fetchStudentSummariesForCourse(
-    courseStore.currentCourse.id,
-  );
+  await enrollmentStore.getEnrollmentsByCourse(courseStore.currentCourse.id);
 });
 </script>

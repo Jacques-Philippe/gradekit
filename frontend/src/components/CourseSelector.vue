@@ -34,10 +34,10 @@ import BaseLoadingSpinner from "@/components/base/BaseLoadingSpinner.vue";
 
 const courseStore = useCourseStore();
 const appStore = useAppStore();
-const { courses, loading, error } = storeToRefs(courseStore);
+const { loading, error, courses } = storeToRefs(courseStore);
 
 onMounted(async () => {
-  await courseStore.fetchCourseSummaries();
+  await courseStore.getCourses();
 });
 
 async function select(id: string) {

@@ -12,16 +12,17 @@ export const useSubmissionStore = defineStore("submission", {
   state: () => ({
     error: "" as string,
     loading: false,
+    submissions: [] as Submission[],
   }),
   actions: {
-    async getSubmissions(): Promise<Submission[]> {
+    async getSubmissions(): Promise<void> {
       this.loading = true;
       this.error = "";
       try {
-        return await getSubmissionsApi();
+        this.submissions = await getSubmissionsApi();
       } catch (err) {
         this.error = `Failed to load submissions ${toErrorMessage(err)}`;
-        return [];
+        this.submissions = [];
       } finally {
         this.loading = false;
       }

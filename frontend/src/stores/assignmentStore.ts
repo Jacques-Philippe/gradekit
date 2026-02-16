@@ -12,17 +12,18 @@ export const useAssignmentStore = defineStore("assignment", {
   state: () => ({
     error: "" as string,
     loading: false,
+    assignments: [] as Assignment[],
   }),
   actions: {
-    async getAssignments(): Promise<Assignment[]> {
+    async getAssignments(): Promise<void> {
       this.loading = true;
       this.error = "";
       try {
         // mock API call returns id + name
-        return await getAssignmentsApi();
+        this.assignments = await getAssignmentsApi();
       } catch (err) {
         this.error = `Failed to get assignments ${toErrorMessage(err)}`;
-        return [];
+        this.assignments = [];
       } finally {
         this.loading = false;
       }

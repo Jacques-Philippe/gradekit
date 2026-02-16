@@ -12,17 +12,19 @@ export const useCourseStore = defineStore("course", {
   state: () => ({
     error: "" as string,
     loading: false,
+    courses: [] as Course[],
+    currentCourse: null as Course | null,
   }),
   actions: {
-    async getCourses(): Promise<Course[]> {
+    async getCourses(): Promise<void> {
       this.loading = true;
       this.error = "";
       try {
         // mock API call returns id + name
-        return await getCoursesApi();
+        this.courses = await getCoursesApi();
       } catch (err) {
         this.error = `Failed to load courses ${toErrorMessage(err)}`;
-        return [];
+        this.courses = [];
       } finally {
         this.loading = false;
       }
@@ -60,6 +62,19 @@ export const useCourseStore = defineStore("course", {
       this.error = "";
       try {
         return await deleteCourseApi(id);
+      } catch (err) {
+        this.error = `Failed to delete course ${toErrorMessage(err)}`;
+        return null;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async selectCourse(id: string): Promise<Course | null> {
+      this.loading = true;
+      this.error = "";
+      try {
+        this.currentCourse = await getCourseByIdApi(id);
+        return this.currentCourse;
       } catch (err) {
         this.error = `Failed to delete course ${toErrorMessage(err)}`;
         return null;

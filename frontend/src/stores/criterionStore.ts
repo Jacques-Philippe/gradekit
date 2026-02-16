@@ -12,17 +12,18 @@ export const useCriterionStore = defineStore("criterion", {
   state: () => ({
     error: "" as string,
     loading: false,
+    criteria: [] as Criterion[],
   }),
   actions: {
-    async getCriterions(): Promise<Criterion[]> {
+    async getCriteria(): Promise<void> {
       this.loading = true;
       this.error = "";
       try {
         // mock API call returns id + name
-        return await getCriteriaApi();
+        this.criteria = await getCriteriaApi();
       } catch (err) {
-        this.error = `Failed to load criterions ${toErrorMessage(err)}`;
-        return [];
+        this.error = `Failed to load criteria ${toErrorMessage(err)}`;
+        this.criteria = [];
       } finally {
         this.loading = false;
       }

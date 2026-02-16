@@ -12,16 +12,18 @@ export const useStudentStore = defineStore("student", {
   state: () => ({
     error: "" as string,
     loading: false,
+    students: [] as Student[],
+    currentStudent: null as Student | null,
   }),
   actions: {
-    async getStudents(): Promise<Student[]> {
+    async getStudents(): Promise<void> {
       this.loading = true;
       this.error = "";
       try {
-        return await getStudentsApi();
+        this.students = await getStudentsApi();
       } catch (err) {
         this.error = `Failed to load students ${toErrorMessage(err)}`;
-        return [];
+        this.students = [];
       } finally {
         this.loading = false;
       }

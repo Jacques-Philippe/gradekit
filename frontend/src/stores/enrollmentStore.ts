@@ -4,7 +4,9 @@ import {
   createEnrollment as createEnrollmentApi,
   getEnrollments as getEnrollmentsApi,
   getEnrollmentById as getEnrollmentByIdApi,
+  getEnrollmentByStudentAndCourse as getEnrollmentByStudentAndCourseApi,
   deleteEnrollment as deleteEnrollmentApi,
+  getEnrollmentsByCourse as getEnrollmentsByCourseApi,
 } from "@/api/mock/enrollment";
 import { toErrorMessage } from "@/utils/error";
 
@@ -12,17 +14,18 @@ export const useEnrollmentStore = defineStore("enrollment", {
   state: () => ({
     error: "" as string,
     loading: false,
+    enrollments: [] as Enrollment[],
   }),
   actions: {
-    async getEnrollments(): Promise<Enrollment[]> {
+    async getEnrollments(): Promise<void> {
       this.loading = true;
       this.error = "";
       try {
         // mock API call returns id + name
-        return await getEnrollmentsApi();
+        this.enrollments = await getEnrollmentsApi();
       } catch (err) {
         this.error = `Failed to load enrollments ${toErrorMessage(err)}`;
-        return [];
+        this.enrollments = [];
       } finally {
         this.loading = false;
       }
@@ -35,6 +38,33 @@ export const useEnrollmentStore = defineStore("enrollment", {
       } catch (err) {
         this.error = `Failed to load enrollment ${toErrorMessage(err)}`;
         return null;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async getEnrollmentByStudentAndCourse(
+      studentId: string,
+      courseId: string,
+    ): Promise<Enrollment | null> {
+      this.loading = true;
+      this.error = "";
+      try {
+        return await getEnrollmentByStudentAndCourseApi(studentId, courseId);
+      } catch (err) {
+        this.error = `Failed to load enrollment ${toErrorMessage(err)}`;
+        return null;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async getEnrollmentsByCourse(courseId: string): Promise<void> {
+      this.loading = true;
+      this.error = "";
+      try {
+        this.enrollments = await getEnrollmentsByCourseApi(courseId);
+      } catch (err) {
+        this.error = `Failed to load enrollments ${toErrorMessage(err)}`;
+        this.enrollments = [];
       } finally {
         this.loading = false;
       }

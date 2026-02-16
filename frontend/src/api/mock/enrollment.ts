@@ -21,6 +21,31 @@ export async function getEnrollmentById(id: string): Promise<Enrollment> {
   return { ...enrollment };
 }
 
+export async function getEnrollmentByStudentAndCourse(
+  studentId: string,
+  courseId: string,
+): Promise<Enrollment> {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  const enrollment = enrollments.find(
+    (e) => e.studentId === studentId && e.courseId === courseId,
+  );
+  if (!enrollment)
+    throw new Error(
+      `Enrollment with studentId ${studentId} and courseId ${courseId} not found`,
+    );
+  return { ...enrollment };
+}
+
+export async function getEnrollmentsByCourse(
+  courseId: string,
+): Promise<Enrollment[]> {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  const enrollmentsForCourse = enrollments.filter(
+    (e) => e.courseId === courseId,
+  );
+  return [...enrollmentsForCourse];
+}
+
 // submit new enrollment
 export async function createEnrollment(
   studentId: string,
