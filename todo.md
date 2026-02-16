@@ -52,6 +52,30 @@ The purpose of this document is to keep an inventory of things to be done
 1. ~~Course students page~~
    1. ~~Allow the user to define a new student to be associated to the course~~
 1. Define data types for
+   1. Student
+      - id
+      - fullName
+   1. Course
+      - id
+      - name
+      - description?
+   1. Criterion
+      - id
+      - title
+      - description
+      - totalPoints
+   1. Assignment
+      - id
+      - title
+      - description
+   1. Submission
+      - id
+      - studentId
+      - assignmentId
+   1. Enrollment
+      - id
+      - studentId
+      - courseId
    1. AssignmentQuestion
       - id
       - assignmentId
@@ -71,26 +95,6 @@ The purpose of this document is to keep an inventory of things to be done
       - criterionId
       - pointsAwarded
       - feedback?
-   1. Criterion
-      - id
-      - title
-      - description
-      - totalPoints
-   1. Assignment
-      - id
-      - title
-      - description
-   1. Student
-      - id
-      - fullName
-   1. Submission
-      - id
-      - studentId
-      - assignmentId
-   1. Enrollment
-      - id
-      - studentId
-      - courseId
    1. Remove courses from Student
 
 1. Define new data entities to separate data better
