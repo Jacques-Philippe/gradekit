@@ -7,6 +7,8 @@ import type { AppTransition } from "@/types/state";
 export const useAppStore = defineStore("app", () => {
   const machine = new StateMachine(new HomeViewState());
 
+  const activeCourseId = shallowRef<string | null>(null);
+
   // This is the reactive bridge
   const stateRef = shallowRef(machine.getCurrentState());
 
@@ -17,10 +19,16 @@ export const useAppStore = defineStore("app", () => {
     stateRef.value = machine.getCurrentState();
   }
 
+  function setActiveCourse(id: string | null) {
+    activeCourseId.value = id;
+  }
+
   const currentState = computed(() => stateRef.value);
 
   return {
     currentState,
     transition,
+    activeCourseId,
+    setActiveCourse,
   };
 });

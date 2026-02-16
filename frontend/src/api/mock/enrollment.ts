@@ -18,7 +18,7 @@ export async function getEnrollmentById(id: string): Promise<Enrollment> {
   await new Promise((resolve) => setTimeout(resolve, 300));
   const enrollment = enrollments.find((e) => e.id === id);
   if (!enrollment) throw new Error(`Enrollment with id ${id} not found`);
-  return enrollment;
+  return { ...enrollment };
 }
 
 // submit new enrollment
@@ -32,7 +32,7 @@ export async function createEnrollment(
   const id = Math.random().toString(36).substring(2, 9);
   const enrollment: Enrollment = { id, studentId, courseId };
   enrollments = [...enrollments, enrollment];
-  return enrollment;
+  return { ...enrollment };
 }
 
 export async function deleteEnrollment(
@@ -45,5 +45,5 @@ export async function deleteEnrollment(
     throw new Error(`Enrollment with id ${enrollmentId} not found`);
   }
   enrollments = enrollments.filter((e) => e.id !== enrollmentId);
-  return enrollment;
+  return { ...enrollment };
 }

@@ -1,4 +1,4 @@
-import type { Student, StudentSummary } from "@/types/student";
+import type { Student } from "@/types/student";
 
 let students: Array<Student> = [
   { id: "student1", fullName: "John Doe" },
@@ -6,12 +6,9 @@ let students: Array<Student> = [
   { id: "student3", fullName: "Bob Johnson" },
 ];
 // return id + name for dropdown/list
-export async function getStudentSummaries(): Promise<StudentSummary[]> {
+export async function getStudents(): Promise<Student[]> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return students.map(({ id, fullName }) => ({
-    id,
-    fullName,
-  }));
+  return [...students];
 }
 
 // export async function getStudentSummariesForCourse(
@@ -29,7 +26,7 @@ export async function getStudentById(id: string): Promise<Student> {
   await new Promise((resolve) => setTimeout(resolve, 300));
   const student = students.find((s) => s.id === id);
   if (!student) throw new Error(`Student with id ${id} not found`);
-  return student;
+  return { ...student };
 }
 
 // create enw student
@@ -105,5 +102,5 @@ export async function deleteStudent(studentId: string): Promise<Student> {
     throw new Error(`Student with id ${studentId} not found`);
   }
   students = students.filter((s) => s.id !== studentId);
-  return student;
+  return { ...student };
 }

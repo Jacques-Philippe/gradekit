@@ -1,4 +1,4 @@
-import type { Course, CourseSummary } from "@/types/course";
+import type { Course } from "@/types/course";
 
 // A fake list of all courses
 // Note: this object can be mutated, it just can't be reassigned
@@ -14,9 +14,9 @@ let courses: Array<Course> = [
   { id: "ghi", name: "Geography 201" },
 ];
 // return id + name for dropdown/list
-export async function getCourseSummaries(): Promise<CourseSummary[]> {
+export async function getCourses(): Promise<Course[]> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return courses.map(({ id, name }) => ({ id, name }));
+  return [...courses];
 }
 
 // return full course by id
@@ -24,11 +24,14 @@ export async function getCourseById(id: string): Promise<Course> {
   await new Promise((resolve) => setTimeout(resolve, 300));
   const course = courses.find((c) => c.id === id);
   if (!course) throw new Error(`Course with id ${id} not found`);
-  return course;
+  return { ...course };
 }
 
 // submit new course
-export async function createCourse(name: string): Promise<Course> {
+export async function createCourse(
+  name: string,
+  description?: string,
+): Promise<Course> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
   const normalizedName = name.trim();
@@ -46,9 +49,9 @@ export async function createCourse(name: string): Promise<Course> {
 
   // create and add new course
   const id = Math.random().toString(36).substring(2, 9);
-  const course: Course = { id, name: normalizedName };
+  const course: Course = { id, name: normalizedName, description };
   courses = [...courses, course];
-  return course;
+  return { ...course };
 }
 
 export async function deleteCourse(id: string): Promise<Course> {
@@ -59,5 +62,5 @@ export async function deleteCourse(id: string): Promise<Course> {
     throw new Error(`Course with id ${id} not found`);
   }
   courses = courses.filter((c) => c.id !== id);
-  return course;
+  return { ...course };
 }

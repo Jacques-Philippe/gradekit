@@ -1,53 +1,53 @@
 import { defineStore } from "pinia";
-import type { Course, CourseSummary } from "@/types/course";
+import type { Course } from "@/types/course";
 import {
   createCourse as createCourseApi,
-  getCourseSummaries as getCourseSummariesApi,
+  getCourses as getCoursesApi,
   getCourseById as getCourseByIdApi,
+  deleteCourse as deleteCourseApi,
 } from "@/api/mock/courses";
 import { toErrorMessage } from "@/utils/error";
 
 export const useCourseStore = defineStore("course", {
   state: () => ({
-    courses: [] as CourseSummary[], // just id + name
-    currentCourse: null as Course | null,
     error: "" as string,
     loading: false,
   }),
   actions: {
-    async fetchCourseSummaries() {
+    async getCourses(): Promise<Course[]> {
       this.loading = true;
       this.error = "";
       try {
         // mock API call returns id + name
-        this.courses = await getCourseSummariesApi();
+        return await getCoursesApi();
       } catch (err) {
         this.error = `Failed to load courses ${toErrorMessage(err)}`;
+        return [];
       } finally {
         this.loading = false;
       }
     },
-    async selectCourse(id: string) {
+    async getCourseById(id: string): Promise<Course | null> {
       this.loading = true;
       this.error = "";
       try {
-        // fetch full course object only for selected course
-        this.currentCourse = { ...(await getCourseByIdApi(id)) };
+        return await getCourseByIdApi(id);
       } catch (err) {
-        this.error = `Failed to select course ${toErrorMessage(err)}`;
-        this.currentCourse = null;
+        this.error = `Failed to load course ${toErrorMessage(err)}`;
+        return null;
       } finally {
         this.loading = false;
       }
     },
-    async createCourse(name: string): Promise<Course | null> {
+    async createCourse(
+      name: string,
+      description?: string,
+    ): Promise<Course | null> {
       this.loading = true;
       this.error = "";
 
       try {
-        const course = { ...(await createCourseApi(name)) };
-        this.courses.push({ id: course.id, name: course.name });
-        return course;
+        return await createCourseApi(name, description);
       } catch (err) {
         this.error = `Failed to create course ${toErrorMessage(err)}`;
         return null;
@@ -55,12 +55,17 @@ export const useCourseStore = defineStore("course", {
         this.loading = false;
       }
     },
-    clearCourse() {
-      this.currentCourse = null;
+    async deleteCourse(id: string): Promise<Course | null> {
+      this.loading = true;
       this.error = "";
+      try {
+        return await deleteCourseApi(id);
+      } catch (err) {
+        this.error = `Failed to delete course ${toErrorMessage(err)}`;
+        return null;
+      } finally {
+        this.loading = false;
+      }
     },
-  },
-  getters: {
-    hasCourse: (state) => !!state.currentCourse,
   },
 });

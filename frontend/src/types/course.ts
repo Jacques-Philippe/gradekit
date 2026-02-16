@@ -3,5 +3,3 @@ export interface Course {
   name: string;
   description?: string;
 }
-
-export type CourseSummary = Pick<Course, "id" | "name">;

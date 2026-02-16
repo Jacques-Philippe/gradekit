@@ -23,7 +23,7 @@ let criteria: Array<Criterion> = [
 
 export async function getCriteria(): Promise<Criterion[]> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return criteria;
+  return [...criteria];
 }
 
 // return full criterion by id
@@ -31,13 +31,14 @@ export async function getCriterionById(id: string): Promise<Criterion> {
   await new Promise((resolve) => setTimeout(resolve, 300));
   const criterion = criteria.find((c) => c.id === id);
   if (!criterion) throw new Error(`Criterion with id ${id} not found`);
-  return criterion;
+  return { ...criterion };
 }
 
 // submit new criterion
 export async function createCriterion(
   name: string,
   totalPoints: number,
+  description?: string,
 ): Promise<Criterion> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
@@ -56,9 +57,14 @@ export async function createCriterion(
 
   // create and add new criterion
   const id = Math.random().toString(36).substring(2, 9);
-  const criterion: Criterion = { id, name: normalizedName, totalPoints };
+  const criterion: Criterion = {
+    id,
+    name: normalizedName,
+    totalPoints,
+    description,
+  };
   criteria = [...criteria, criterion];
-  return criterion;
+  return { ...criterion };
 }
 
 export async function deleteCriterion(id: string): Promise<Criterion> {
@@ -69,5 +75,5 @@ export async function deleteCriterion(id: string): Promise<Criterion> {
     throw new Error(`Criterion with id ${id} not found`);
   }
   criteria = criteria.filter((c) => c.id !== id);
-  return criterion;
+  return { ...criterion };
 }
