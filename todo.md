@@ -65,6 +65,7 @@ The purpose of this document is to keep an inventory of things to be done
       - description
       - totalPoints
    1. Assignment
+      - courseId
       - id
       - title
       - description
@@ -98,8 +99,8 @@ The purpose of this document is to keep an inventory of things to be done
    1. Remove courses from Student
 
 1. Define new data entities to separate data better
-   1. Enrollment for student to course
-   1. AssignmentGrade for grade to assignment
+   1. ~~Enrollment for student to course~~
+   1. Submission for grade to assignment
 1. Assignment creation page
    1. Allow the user to navigate back to the course page
    1. Allow the user to name the assignment
