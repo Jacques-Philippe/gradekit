@@ -130,10 +130,13 @@ async function addStudentToCurrentCourse(studentId: string) {
     return;
   }
   studentStore.error = ""; // Clear previous errors
-  // await studentStore.addStudentToCourse(name, courseStore.currentCourse.id);
   await enrollmentStore.createEnrollment(
     studentId,
     courseStore.currentCourse.id,
+  );
+  // get all students for the enrollments
+  await studentStore.getStudentsForIdsApi(
+    enrollmentStore.enrollments.map((e) => e.studentId),
   );
   if (!studentStore.error) {
     studentForm.value?.reset();

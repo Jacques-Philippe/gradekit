@@ -69,18 +69,18 @@ export const useEnrollmentStore = defineStore("enrollment", {
         this.loading = false;
       }
     },
-    async createEnrollment(
-      studentId: string,
-      courseId: string,
-    ): Promise<Enrollment | null> {
+    async createEnrollment(studentId: string, courseId: string): Promise<void> {
       this.loading = true;
       this.error = "";
 
       try {
-        return await createEnrollmentApi(studentId, courseId);
+        const createdEnrollment = await createEnrollmentApi(
+          studentId,
+          courseId,
+        );
+        this.enrollments = [...this.enrollments, createdEnrollment];
       } catch (err) {
         this.error = `Failed to create enrollment ${toErrorMessage(err)}`;
-        return null;
       } finally {
         this.loading = false;
       }
