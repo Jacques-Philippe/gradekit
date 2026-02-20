@@ -103,7 +103,7 @@ async function confirmDelete() {
   }
   studentStore.error = ""; // Clear previous errors
   const enrollment = await enrollmentStore.getEnrollmentByStudentAndCourse(
-    enrollmentToDelete.value.id,
+    enrollmentToDelete.value.studentId,
     courseStore.currentCourse.id,
   );
   if (!enrollment || enrollmentStore.error) {
@@ -111,6 +111,11 @@ async function confirmDelete() {
     return;
   }
   await enrollmentStore.deleteEnrollment(enrollment.id);
+
+  // get all students for the enrollments
+  await studentStore.getStudentsForIdsApi(
+    enrollmentStore.enrollments.map((e) => e.studentId),
+  );
   enrollmentToDelete.value = null;
 }
 

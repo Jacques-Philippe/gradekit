@@ -85,14 +85,14 @@ export const useEnrollmentStore = defineStore("enrollment", {
         this.loading = false;
       }
     },
-    async deleteEnrollment(id: string): Promise<Enrollment | null> {
+    async deleteEnrollment(id: string): Promise<void> {
       this.loading = true;
       this.error = "";
       try {
-        return await deleteEnrollmentApi(id);
+        await deleteEnrollmentApi(id);
+        this.enrollments = this.enrollments.filter((e) => e.id !== id);
       } catch (err) {
         this.error = `Failed to delete enrollment ${toErrorMessage(err)}`;
-        return null;
       } finally {
         this.loading = false;
       }
