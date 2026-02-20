@@ -6,6 +6,16 @@ let enrollments: Array<Enrollment> = [
     studentId: "student1",
     courseId: "course1",
   },
+  {
+    id: "enrollment2",
+    studentId: "student2",
+    courseId: "course1",
+  },
+  {
+    id: "enrollment3",
+    studentId: "student2",
+    courseId: "course2",
+  },
 ];
 
 export async function getEnrollments(): Promise<Enrollment[]> {

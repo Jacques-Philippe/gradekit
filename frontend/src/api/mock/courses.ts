@@ -3,8 +3,8 @@ import type { Course } from "@/types/course";
 // A fake list of all courses
 let courses: Array<Course> = [
   { id: "course1", name: "Math 101" },
-  { id: "def", name: "Math 102" },
-  { id: "ghi", name: "Geography 201" },
+  { id: "course2", name: "Math 102" },
+  { id: "course3", name: "Geography 201" },
 ];
 // return id + name for dropdown/list
 export async function getCourses(): Promise<Course[]> {

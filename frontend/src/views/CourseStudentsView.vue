@@ -31,7 +31,9 @@
       <div v-if="studentStore.error" class="error">
         {{ studentStore.error }}
       </div>
-      <BaseLoadingSpinner v-if="studentStore.loading" />
+      <BaseLoadingSpinner
+        v-if="studentStore.loading || enrollmentStore.loading"
+      />
       <!-- Students list, with deletion element -->
       <ul
         v-else-if="enrollmentStore.enrollments.length > 0"

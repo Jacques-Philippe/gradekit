@@ -82,5 +82,9 @@ export const useCourseStore = defineStore("course", {
         this.loading = false;
       }
     },
+    clearCurrentCourse(): void {
+      this.currentCourse = null;
+      this.error = "";
+    },
   },
 });
