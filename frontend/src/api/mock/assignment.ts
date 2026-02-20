@@ -3,11 +3,13 @@ import { type Assignment } from "@/types/assignment";
 let assignments: Array<Assignment> = [
   {
     id: "assignment1",
+    courseId: "course1",
     title: "Project Proposal",
     description: "Submit a proposal for your project",
   },
   {
     id: "assignment2",
+    courseId: "course1",
     title: "Midterm Report",
     description: "Submit a report on your progress at the midterm point",
   },
@@ -24,6 +26,13 @@ export async function getAssignmentById(id: string): Promise<Assignment> {
   const assignment = assignments.find((a) => a.id === id);
   if (!assignment) throw new Error(`Assignment with id ${id} not found`);
   return assignment;
+}
+
+export async function getAssignmentsByCourseId(
+  courseId: string,
+): Promise<Assignment[]> {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  return assignments.filter((a) => a.courseId === courseId);
 }
 
 export async function createAssignment(
