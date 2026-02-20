@@ -3,6 +3,7 @@ import type { Student } from "@/types/student";
 import {
   createStudent as createStudentApi,
   getStudents as getStudentsApi,
+  getStudentsForIds as getStudentsForIdsApi,
   getStudentById as getStudentByIdApi,
   deleteStudent as deleteStudentApi,
 } from "@/api/mock/students";
@@ -21,6 +22,18 @@ export const useStudentStore = defineStore("student", {
       this.error = "";
       try {
         this.students = await getStudentsApi();
+      } catch (err) {
+        this.error = `Failed to load students ${toErrorMessage(err)}`;
+        this.students = [];
+      } finally {
+        this.loading = false;
+      }
+    },
+    async getStudentsForIdsApi(studentIds: string[]): Promise<void> {
+      this.loading = true;
+      this.error = "";
+      try {
+        this.students = await getStudentsForIdsApi(studentIds);
       } catch (err) {
         this.error = `Failed to load students ${toErrorMessage(err)}`;
         this.students = [];

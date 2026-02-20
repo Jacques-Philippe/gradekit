@@ -138,6 +138,11 @@ onMounted(async () => {
     studentStore.error = "No course selected";
     return;
   }
+  // get all enrollments
   await enrollmentStore.getEnrollmentsByCourse(courseStore.currentCourse.id);
+  // get all students for the enrollments
+  await studentStore.getStudentsForIdsApi(
+    enrollmentStore.enrollments.map((e) => e.studentId),
+  );
 });
 </script>

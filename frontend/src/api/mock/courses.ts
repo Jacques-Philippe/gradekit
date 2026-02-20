@@ -1,15 +1,8 @@
 import type { Course } from "@/types/course";
 
 // A fake list of all courses
-// Note: this object can be mutated, it just can't be reassigned
-// const courses: Record<string, Course> = {
-//   abc: { id: "abc", name: "Math 101" },
-//   def: { id: "def", name: "Math 102" },
-//   ghi: { id: "ghi", name: "Geography 201" },
-// };
-
 let courses: Array<Course> = [
-  { id: "abc", name: "Math 101" },
+  { id: "course1", name: "Math 101" },
   { id: "def", name: "Math 102" },
   { id: "ghi", name: "Geography 201" },
 ];

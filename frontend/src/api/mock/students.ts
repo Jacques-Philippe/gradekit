@@ -11,15 +11,12 @@ export async function getStudents(): Promise<Student[]> {
   return [...students];
 }
 
-// export async function getStudentSummariesForCourse(
-//   courseId: string,
-// ): Promise<StudentSummary[]> {
-//   await new Promise((resolve) => setTimeout(resolve, 300));
-//   // get all students in the course, return id + name
-//   return Object.values(students)
-//     .filter((s) => s.courses?.includes(courseId))
-//     .map(({ id, fullName, courses }) => ({ id, fullName, courses }));
-// }
+export async function getStudentsForIds(
+  studentIds: string[],
+): Promise<Student[]> {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  return [...students.filter((s) => studentIds.includes(s.id))];
+}
 
 // return full student by id
 export async function getStudentById(id: string): Promise<Student> {
