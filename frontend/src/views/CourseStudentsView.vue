@@ -28,8 +28,8 @@
         @submit="addStudentToCurrentCourse"
       />
       <!-- Student API failure message -->
-      <div v-if="studentStore.error" class="error">
-        {{ studentStore.error }}
+      <div v-if="error" class="error">
+        {{ error }}
       </div>
       <BaseLoadingSpinner
         v-if="studentStore.loading || enrollmentStore.loading"
@@ -80,6 +80,7 @@ import { ButtonPressedStateTransition, BACK_BUTTON_NAME } from "@/types/state";
 import type { Enrollment } from "@/types/enrollment";
 
 const studentForm = ref();
+const error = ref<string>("");
 
 const appStore = useAppStore();
 const studentStore = useStudentStore();
@@ -98,16 +99,16 @@ async function confirmDelete() {
   if (!enrollmentToDelete.value) return;
 
   if (!courseStore.currentCourse) {
-    studentStore.error = "No course selected";
+    error.value = "No course selected";
     return;
   }
-  studentStore.error = ""; // Clear previous errors
+  error.value = ""; // Clear previous errors
   const enrollment = await enrollmentStore.getEnrollmentByStudentAndCourse(
     enrollmentToDelete.value.studentId,
     courseStore.currentCourse.id,
   );
   if (!enrollment || enrollmentStore.error) {
-    studentStore.error = `Failed to remove student from course: ${enrollmentStore.error}`;
+    error.value = `Failed to remove student from course: ${enrollmentStore.error}`;
     return;
   }
   await enrollmentStore.deleteEnrollment(enrollment.id);
@@ -126,10 +127,10 @@ function goBack() {
 
 async function addStudentToCurrentCourse(studentId: string) {
   if (!courseStore.currentCourse) {
-    studentStore.error = "No course selected";
+    error.value = "No course selected";
     return;
   }
-  studentStore.error = ""; // Clear previous errors
+  error.value = ""; // Clear previous errors
   await enrollmentStore.createEnrollment(
     studentId,
     courseStore.currentCourse.id,
@@ -145,7 +146,7 @@ async function addStudentToCurrentCourse(studentId: string) {
 
 onMounted(async () => {
   if (!courseStore.currentCourse) {
-    studentStore.error = "No course selected";
+    error.value = "No course selected";
     return;
   }
   // get all enrollments
