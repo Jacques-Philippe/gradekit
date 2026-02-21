@@ -56,7 +56,7 @@
           </template>
         </BaseListRow>
       </ul>
-      <div v-else-if="studentStore.students.length === 0">
+      <div v-else-if="enrollmentStore.enrollments.length === 0">
         No students in this course yet
       </div>
     </main>
