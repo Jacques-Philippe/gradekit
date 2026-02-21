@@ -36,7 +36,7 @@ export async function createStudent(fullName: string): Promise<Student> {
   }
 
   // check for duplicates
-  const exists = Object.values(students).some(
+  const exists = students.some(
     (s) => s.fullName.toLowerCase() === normalizedName.toLowerCase(),
   );
   if (exists) {
