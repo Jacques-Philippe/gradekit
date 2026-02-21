@@ -23,17 +23,15 @@
         ref="studentForm"
         label="Student Name"
         placeholder="New student name"
-        :button-text="studentStore.loading ? 'Creating...' : 'Create'"
-        :loading="studentStore.loading"
+        :button-text="loading ? 'Creating...' : 'Create'"
+        :loading="loading"
         @submit="addStudentToCurrentCourse"
       />
       <!-- Student API failure message -->
       <div v-if="error" class="error">
         {{ error }}
       </div>
-      <BaseLoadingSpinner
-        v-if="studentStore.loading || enrollmentStore.loading"
-      />
+      <BaseLoadingSpinner v-if="loading" />
       <!-- Students list, with deletion element -->
       <ul
         v-else-if="enrollmentStore.enrollments.length > 0"
@@ -64,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import BackIcon from "@/assets/Chevron_Left_MD.svg";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseListRow from "@/components/base/BaseListRow.vue";
@@ -81,6 +79,7 @@ import type { Enrollment } from "@/types/enrollment";
 
 const studentForm = ref();
 const error = ref<string>("");
+const loading = computed(() => studentStore.loading || enrollmentStore.loading);
 
 const appStore = useAppStore();
 const studentStore = useStudentStore();
