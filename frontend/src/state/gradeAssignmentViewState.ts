@@ -5,6 +5,7 @@ import {
   ButtonPressedStateTransition,
   BACK_BUTTON_NAME,
   GRADE_ASSIGNMENT_VIEW_STATE_NAME,
+  ASSIGNMENT_VIEW_STATE_NAME,
 } from "@/types/state";
 
 export class GradeAssignmentViewState implements AppState {
@@ -22,9 +23,7 @@ export class GradeAssignmentViewState implements AppState {
     if (transition.type === BUTTON_PRESSED_TRANSITION) {
       const buttonTransition = transition as ButtonPressedStateTransition;
       if (buttonTransition.button === BACK_BUTTON_NAME) {
-        // TODO: Determine the appropriate target state for back button
-        // This might need to go back to AssignmentView or AssignmentQuestionsView
-        return null;
+        return { target: ASSIGNMENT_VIEW_STATE_NAME };
       }
     }
     console.warn(
