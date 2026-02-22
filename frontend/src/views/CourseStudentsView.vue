@@ -25,7 +25,7 @@
         placeholder="New student name"
         :button-text="loading ? 'Creating...' : 'Create'"
         :loading="loading"
-        @submit="addStudentToCurrentCourse"
+        @submit="createEnrollment"
       />
       <!-- Student API failure message -->
       <div v-if="error" class="error">
@@ -124,7 +124,7 @@ function goBack() {
   studentStore.clearError();
 }
 
-async function addStudentToCurrentCourse(studentId: string) {
+async function createEnrollment(studentId: string) {
   if (!courseStore.currentCourse) {
     error.value = "No course selected";
     return;
@@ -134,6 +134,10 @@ async function addStudentToCurrentCourse(studentId: string) {
     studentId,
     courseStore.currentCourse.id,
   );
+  if (enrollmentStore.error) {
+    error.value = `Failed to add student to course: ${enrollmentStore.error}`;
+    return;
+  }
   // get all students for the enrollments
   await studentStore.getStudentsForIdsApi(
     enrollmentStore.enrollments.map((e) => e.studentId),
