@@ -12,6 +12,7 @@ export const useSubmissionStore = defineStore("submission", {
     error: "" as string,
     loading: false,
     submissions: [] as Submission[],
+    currentSubmission: null as Submission | null,
   }),
   actions: {
     async getSubmissions(): Promise<void> {
@@ -26,34 +27,42 @@ export const useSubmissionStore = defineStore("submission", {
       }
       this.loading = false;
     },
-    async getSubmissionById(id: string): Promise<Submission | null> {
+    async getSubmissionById(id: string): Promise<void> {
       this.loading = true;
       this.error = "";
       const result = await getSubmissionByIdApi(id);
+      if (result.ok) {
+        this.currentSubmission = result.data;
+      } else {
+        this.error = `Failed to load submission: ${result.error}`;
+        this.currentSubmission = null;
+      }
       this.loading = false;
-      if (result.ok) return result.data;
-      this.error = `Failed to load submission: ${result.error}`;
-      return null;
     },
     async createSubmission(
       assignmentId: string,
       studentId: string,
-    ): Promise<Submission | null> {
+    ): Promise<void> {
       this.loading = true;
       this.error = "";
       const result = await createSubmissionApi(assignmentId, studentId);
       this.loading = false;
-      if (result.ok) return result.data;
-      this.error = `Failed to create submission: ${result.error}`;
-      return null;
+      if (result.ok) {
+        this.submissions = [...this.submissions, result.data];
+      } else {
+        this.error = `Failed to create submission: ${result.error}`;
+      }
     },
     async deleteSubmission(id: string): Promise<void> {
       this.loading = true;
       this.error = "";
       const result = await deleteSubmissionApi(id);
       this.loading = false;
-      if (result.ok) return;
-      this.error = `Failed to delete submission: ${result.error}`;
+      if (result.ok) {
+        this.submissions = this.submissions.filter((s) => s.id !== id);
+      } else {
+        this.error = `Failed to delete submission: ${result.error}`;
+      }
     },
     clearError() {
       this.error = "";
