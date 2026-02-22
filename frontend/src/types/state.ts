@@ -29,12 +29,17 @@ export const BACK_BUTTON_NAME = "BackButton";
 export const COURSE_BUTTON_NAME = "CourseButton";
 export const STUDENTS_BUTTON_NAME = "StudentsButton";
 export const ASSIGNMENTS_BUTTON_NAME = "AssignmentsButton";
+export const EDIT_QUESTION_BUTTON_NAME = "EditQuestionButton";
+export const GRADE_BUTTON_NAME = "GradeButton";
 
 // State names
 export const HOME_VIEW_STATE_NAME = "HomeView";
 export const COURSE_VIEW_STATE_NAME = "CourseView";
 export const COURSE_ASSIGNMENTS_VIEW_STATE_NAME = "CourseAssignmentsView";
 export const COURSE_STUDENTS_VIEW_STATE_NAME = "CourseStudentsView";
+export const ASSIGNMENT_VIEW_STATE_NAME = "AssignmentView";
+export const ASSIGNMENT_QUESTIONS_VIEW_STATE_NAME = "AssignmentQuestionsView";
+export const GRADE_ASSIGNMENT_VIEW_STATE_NAME = "GradeAssignmentView";
 
 /** A unique name for the transition where a button is pressed */
 export const BUTTON_PRESSED_TRANSITION = "button-pressed-transition";
