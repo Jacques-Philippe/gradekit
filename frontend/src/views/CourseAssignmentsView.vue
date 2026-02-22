@@ -36,7 +36,7 @@
       <!-- Assignment list, with deletion element -->
       <ul
         v-else-if="assignmentStore.assignments.length > 0"
-        class="student-list"
+        class="assignment-list"
       >
         <BaseListRow
           v-for="assignment in assignmentStore.assignments"
