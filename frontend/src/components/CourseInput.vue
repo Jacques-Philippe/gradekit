@@ -25,8 +25,8 @@ const courseForm = ref<InstanceType<typeof BaseTextForm>>();
 
 async function submitCourse(value: string) {
   courseStore.error = ""; // Clear previous errors
-  const course = await courseStore.createCourse(value);
-  if (course) {
+  await courseStore.createCourse(value);
+  if (courseStore.error) {
     courseForm.value?.reset();
   }
 }

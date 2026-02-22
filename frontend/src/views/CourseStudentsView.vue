@@ -111,16 +111,11 @@ async function confirmDelete() {
     return;
   }
   error.value = ""; // Clear previous errors
-  const enrollment = await enrollmentStore.getEnrollmentByStudentAndCourse(
-    enrollmentToDelete.value.studentId,
-    courseStore.currentCourse.id,
-  );
-  if (!enrollment || enrollmentStore.error) {
+  await enrollmentStore.deleteEnrollment(enrollmentToDelete.value.id);
+  if (enrollmentStore.error) {
     error.value = `Failed to remove student from course: ${enrollmentStore.error}`;
     return;
   }
-  await enrollmentStore.deleteEnrollment(enrollment.id);
-
   // get all students for the enrollments
   await studentStore.getStudentsForIdsApi(
     enrollmentStore.enrollments.map((e) => e.studentId),
