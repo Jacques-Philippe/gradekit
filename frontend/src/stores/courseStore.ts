@@ -1,66 +1,82 @@
 import { defineStore } from "pinia";
-import type { Course, CourseSummary } from "@/types/course";
+import type { Course } from "@/types/course";
 import {
   createCourse as createCourseApi,
-  getCourseSummaries as getCourseSummariesApi,
+  getCourses as getCoursesApi,
   getCourseById as getCourseByIdApi,
+  deleteCourse as deleteCourseApi,
 } from "@/api/mock/courses";
-import { toErrorMessage } from "@/utils/error";
 
 export const useCourseStore = defineStore("course", {
   state: () => ({
-    courses: [] as CourseSummary[], // just id + name
-    currentCourse: null as Course | null,
     error: "" as string,
     loading: false,
+    courses: [] as Course[],
+    currentCourse: null as Course | null,
   }),
   actions: {
-    async fetchCourseSummaries() {
+    async getCourses(): Promise<void> {
       this.loading = true;
       this.error = "";
-      try {
-        // mock API call returns id + name
-        this.courses = await getCourseSummariesApi();
-      } catch (err) {
-        this.error = `Failed to load courses ${toErrorMessage(err)}`;
-      } finally {
-        this.loading = false;
+      const result = await getCoursesApi();
+      if (result.ok) {
+        this.courses = result.data;
+      } else {
+        this.error = `Failed to load courses: ${result.error}`;
+        this.courses = [];
       }
+      this.loading = false;
     },
-    async selectCourse(id: string) {
+    async getCourseById(id: string): Promise<void> {
       this.loading = true;
       this.error = "";
-      try {
-        // fetch full course object only for selected course
-        this.currentCourse = { ...(await getCourseByIdApi(id)) };
-      } catch (err) {
-        this.error = `Failed to select course ${toErrorMessage(err)}`;
+      const result = await getCourseByIdApi(id);
+      this.loading = false;
+      if (result.ok) {
+        this.currentCourse = result.data;
+      } else {
+        this.error = `Failed to load course: ${result.error}`;
         this.currentCourse = null;
-      } finally {
-        this.loading = false;
       }
+      this.loading = false;
     },
-    async createCourse(name: string): Promise<Course | null> {
+    async createCourse(name: string, description?: string): Promise<void> {
       this.loading = true;
       this.error = "";
-
-      try {
-        const course = { ...(await createCourseApi(name)) };
-        this.courses.push({ id: course.id, name: course.name });
-        return course;
-      } catch (err) {
-        this.error = `Failed to create course ${toErrorMessage(err)}`;
-        return null;
-      } finally {
-        this.loading = false;
+      const result = await createCourseApi(name, description);
+      this.loading = false;
+      if (result.ok) {
+        this.courses = [...this.courses, result.data];
+        return;
+      }
+      this.error = `Failed to create course: ${result.error}`;
+    },
+    async deleteCourse(id: string): Promise<void> {
+      this.loading = true;
+      this.error = "";
+      const result = await deleteCourseApi(id);
+      this.loading = false;
+      if (result.ok) {
+        this.courses = this.courses.filter((c) => c.id !== id);
+        return;
+      } else {
+        this.error = `Failed to delete course: ${result.error}`;
       }
     },
-    clearCourse() {
+    async selectCourse(id: string): Promise<void> {
+      this.loading = true;
+      this.error = "";
+      const result = await getCourseByIdApi(id);
+      this.loading = false;
+      if (result.ok) {
+        this.currentCourse = result.data;
+        return;
+      }
+      this.error = `Failed to select course: ${result.error}`;
+    },
+    clearCurrentCourse(): void {
       this.currentCourse = null;
       this.error = "";
     },
-  },
-  getters: {
-    hasCourse: (state) => !!state.currentCourse,
   },
 });

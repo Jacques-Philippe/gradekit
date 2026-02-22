@@ -49,7 +49,7 @@ const appStore = useAppStore();
 
 function goHome() {
   // Reset the current course in the course store
-  courseStore.clearCourse();
+  courseStore.clearCurrentCourse();
   // Tell the app store that the back button was pressed
   appStore.transition(new ButtonPressedStateTransition(BACK_BUTTON_NAME));
 }
