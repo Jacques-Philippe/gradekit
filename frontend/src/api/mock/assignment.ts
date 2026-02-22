@@ -38,6 +38,7 @@ export async function getAssignmentsByCourseId(
 }
 
 export async function createAssignment(
+  courseId: string,
   title: string,
   description: string,
 ): Promise<ApiResult<Assignment>> {
@@ -56,7 +57,12 @@ export async function createAssignment(
   }
 
   const id = Math.random().toString(36).substring(2, 9);
-  const assignment: Assignment = { id, title: normalizedTitle, description };
+  const assignment: Assignment = {
+    id,
+    courseId,
+    title: normalizedTitle,
+    description,
+  };
   assignments = [...assignments, assignment];
   return ok(assignment);
 }

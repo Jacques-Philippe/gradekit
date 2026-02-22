@@ -48,10 +48,14 @@ export const useAssignmentStore = defineStore("assignment", {
       }
       this.loading = false;
     },
-    async createAssignment(name: string, description: string): Promise<void> {
+    async createAssignment(
+      courseId: string,
+      name: string,
+      description: string,
+    ): Promise<void> {
       this.loading = true;
       this.error = "";
-      const result = await createAssignmentApi(name, description);
+      const result = await createAssignmentApi(courseId, name, description);
       this.loading = false;
       if (result.ok) {
         this.assignments = [...this.assignments, result.data];

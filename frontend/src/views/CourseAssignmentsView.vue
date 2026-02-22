@@ -119,7 +119,11 @@ async function addAssignmentToCurrentCourse(assignmentTitle: string) {
     return;
   }
   error.value = ""; // Clear previous errors
-  await assignmentStore.createAssignment(assignmentTitle, "");
+  await assignmentStore.createAssignment(
+    courseStore.currentCourse.id,
+    assignmentTitle,
+    "",
+  );
   if (!error.value) {
     assignmentForm.value?.reset();
   }
