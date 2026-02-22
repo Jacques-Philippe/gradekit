@@ -58,14 +58,13 @@ export const useStudentStore = defineStore("student", {
       this.error = `Failed to create student: ${result.error}`;
       return null;
     },
-    async deleteStudent(id: string): Promise<Student | null> {
+    async deleteStudent(id: string): Promise<void> {
       this.loading = true;
       this.error = "";
       const result = await deleteStudentApi(id);
       this.loading = false;
-      if (result.ok) return result.data;
+      if (result.ok) return;
       this.error = `Failed to delete student: ${result.error}`;
-      return null;
     },
     clearError() {
       this.error = "";

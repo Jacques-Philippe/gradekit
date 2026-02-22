@@ -48,14 +48,13 @@ export const useCriterionStore = defineStore("criterion", {
       this.error = `Failed to create criterion: ${result.error}`;
       return null;
     },
-    async deleteCriterion(id: string): Promise<Criterion | null> {
+    async deleteCriterion(id: string): Promise<void> {
       this.loading = true;
       this.error = "";
       const result = await deleteCriterionApi(id);
       this.loading = false;
-      if (result.ok) return result.data;
+      if (result.ok) return;
       this.error = `Failed to delete criterion: ${result.error}`;
-      return null;
     },
   },
 });

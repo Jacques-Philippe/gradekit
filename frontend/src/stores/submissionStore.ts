@@ -47,14 +47,13 @@ export const useSubmissionStore = defineStore("submission", {
       this.error = `Failed to create submission: ${result.error}`;
       return null;
     },
-    async deleteSubmission(id: string): Promise<Submission | null> {
+    async deleteSubmission(id: string): Promise<void> {
       this.loading = true;
       this.error = "";
       const result = await deleteSubmissionApi(id);
       this.loading = false;
-      if (result.ok) return result.data;
+      if (result.ok) return;
       this.error = `Failed to delete submission: ${result.error}`;
-      return null;
     },
     clearError() {
       this.error = "";

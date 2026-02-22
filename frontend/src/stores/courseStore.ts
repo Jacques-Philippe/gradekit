@@ -48,14 +48,13 @@ export const useCourseStore = defineStore("course", {
       this.error = `Failed to create course: ${result.error}`;
       return null;
     },
-    async deleteCourse(id: string): Promise<Course | null> {
+    async deleteCourse(id: string): Promise<void> {
       this.loading = true;
       this.error = "";
       const result = await deleteCourseApi(id);
       this.loading = false;
-      if (result.ok) return result.data;
+      if (result.ok) return;
       this.error = `Failed to delete course: ${result.error}`;
-      return null;
     },
     async selectCourse(id: string): Promise<Course | null> {
       this.loading = true;
