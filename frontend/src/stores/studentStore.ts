@@ -13,7 +13,6 @@ export const useStudentStore = defineStore("student", {
     error: "" as string,
     loading: false,
     students: [] as Student[],
-    currentStudent: null as Student | null,
   }),
   actions: {
     async getStudents(): Promise<void> {
