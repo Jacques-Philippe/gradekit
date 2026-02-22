@@ -66,9 +66,11 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import BackIcon from "@/assets/Chevron_Left_MD.svg";
+import TrashIcon from "@/assets/Trash_Full.svg";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseListRow from "@/components/base/BaseListRow.vue";
 import BaseLoadingSpinner from "@/components/base/BaseLoadingSpinner.vue";
+import BaseConfirmModal from "@/components/base/BaseConfirmModal.vue";
 import { useAppStore } from "@/stores/appStore";
 import { useAssignmentStore } from "@/stores/assignmentStore";
 import { useQuestionStore } from "@/stores/questionStore";
