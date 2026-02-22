@@ -41,12 +41,15 @@ export const COURSE_STUDENTS_VIEW_STATE_NAME = "CourseStudentsView";
 export const ASSIGNMENT_VIEW_STATE_NAME = "AssignmentView";
 export const ASSIGNMENT_QUESTIONS_VIEW_STATE_NAME = "AssignmentQuestionsView";
 export const GRADE_ASSIGNMENT_VIEW_STATE_NAME = "GradeAssignmentView";
+export const QUESTION_VIEW_STATE_NAME = "QuestionView";
 
 /** A unique name for the transition where a button is pressed */
 export const BUTTON_PRESSED_TRANSITION = "button-pressed-transition";
 export const FORM_SUBMITTED_TRANSITION = "form-submitted-transition";
 export const ASSIGNMENT_BUTTON_PRESSED_TRANSITION =
   "assignment-button-pressed-transition";
+export const QUESTION_BUTTON_PRESSED_TRANSITION =
+  "question-button-pressed-transition";
 
 export class ButtonPressedStateTransition extends AppTransition {
   button: string;
@@ -72,5 +75,14 @@ export class AssignmentButtonPressedStateTransition extends AppTransition {
   constructor(assignmentId: string) {
     super(ASSIGNMENT_BUTTON_PRESSED_TRANSITION);
     this.assignmentId = assignmentId;
+  }
+}
+
+export class QuestionButtonPressedStateTransition extends AppTransition {
+  questionId: string;
+
+  constructor(questionId: string) {
+    super(QUESTION_BUTTON_PRESSED_TRANSITION);
+    this.questionId = questionId;
   }
 }

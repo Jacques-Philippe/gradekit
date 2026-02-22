@@ -9,6 +9,13 @@
 
     <!-- Page content -->
     <main>
+      <BaseConfirmModal
+        v-model="confirmVisible"
+        title="Remove Question"
+        :message="`Are you sure you want to remove question ${questionToDelete?.questionText} from ${assignmentStore.currentAssignment?.title}?`"
+        confirmText="Remove"
+        @confirm="confirmDelete"
+      />
       <div v-if="!assignmentStore.currentAssignment" class="error">
         No assignment selected
       </div>
@@ -19,17 +26,30 @@
         <BaseLoadingSpinner v-if="questionStore.loading" />
         <ul
           v-else-if="questionStore.questions.length > 0"
-          class="question-list"
+          class="assignment-list"
         >
           <BaseListRow
-            v-for="question in questionStore.questions"
-            :key="question.id"
+            v-for="assignment in questionStore.questions"
+            :key="assignment.id"
           >
-            <div class="question-row">
-              <div class="question-info">
-                <span class="question-name">{{ question.questionText }}</span>
-              </div>
-            </div>
+            <BaseButton
+              type="button"
+              class="assignment-button"
+              @click="selectQuestion(assignment)"
+              :aria-label="`Open assignment ${assignment.questionText}`"
+            >
+              {{ assignment.questionText }}
+            </BaseButton>
+
+            <template #actions>
+              <BaseButton
+                variant="danger"
+                @click="askDelete(assignment)"
+                aria-label="Delete assignment"
+              >
+                <TrashIcon />
+              </BaseButton>
+            </template>
           </BaseListRow>
         </ul>
         <div
@@ -52,13 +72,20 @@ import BaseLoadingSpinner from "@/components/base/BaseLoadingSpinner.vue";
 import { useAppStore } from "@/stores/appStore";
 import { useAssignmentStore } from "@/stores/assignmentStore";
 import { useQuestionStore } from "@/stores/questionStore";
-import { ButtonPressedStateTransition, BACK_BUTTON_NAME } from "@/types/state";
+import {
+  ButtonPressedStateTransition,
+  BACK_BUTTON_NAME,
+  QuestionButtonPressedStateTransition,
+} from "@/types/state";
+import type { Question } from "@/types/question";
 
 const appStore = useAppStore();
 const assignmentStore = useAssignmentStore();
 const questionStore = useQuestionStore();
 
 const error = ref("");
+const confirmVisible = ref(false);
+const questionToDelete = ref<Question | null>(null);
 
 const loading = computed(
   () => questionStore.loading || assignmentStore.loading,
@@ -66,6 +93,27 @@ const loading = computed(
 
 function goBack() {
   appStore.transition(new ButtonPressedStateTransition(BACK_BUTTON_NAME));
+}
+
+function askDelete(question: Question) {
+  questionToDelete.value = question;
+  confirmVisible.value = true;
+}
+
+async function confirmDelete() {
+  if (!questionToDelete.value) return;
+
+  error.value = ""; // Clear previous errors
+  await questionStore.deleteQuestion(questionToDelete.value.id);
+  if (questionStore.error) {
+    error.value = `Failed to remove question from assignment: ${questionStore.error}`;
+    return;
+  }
+  questionToDelete.value = null;
+}
+async function selectQuestion(_question: Question) {
+  await questionStore.setCurrentQuestion(_question);
+  appStore.transition(new QuestionButtonPressedStateTransition(_question.id));
 }
 
 onMounted(async () => {
