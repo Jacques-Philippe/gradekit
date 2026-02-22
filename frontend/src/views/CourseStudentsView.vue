@@ -13,7 +13,9 @@
       <BaseConfirmModal
         v-model="confirmVisible"
         title="Remove Student"
-        :message="`Are you sure you want to remove ${enrollmentToDelete?.studentId} from ${courseStore.currentCourse?.name}?`"
+        :message="`Are you sure you want to remove ${
+          enrollmentToDelete ? studentNameForEnrollment(enrollmentToDelete) : ''
+        } from ${courseStore.currentCourse?.name}?`"
         confirmText="Remove"
         @confirm="confirmDelete"
       />
@@ -41,7 +43,7 @@
           v-for="enrollment in enrollmentStore.enrollments"
           :key="enrollment.id"
         >
-          {{ enrollment.studentId }}
+          {{ studentNameForEnrollment(enrollment) }}
 
           <template #actions>
             <BaseButton
@@ -88,6 +90,13 @@ const enrollmentStore = useEnrollmentStore();
 
 const confirmVisible = ref(false);
 const enrollmentToDelete = ref<Enrollment | null>(null);
+
+function studentNameForEnrollment(enrollment: Enrollment): string {
+  const student = studentStore.students.find(
+    (s) => s.id === enrollment.studentId,
+  );
+  return student?.fullName ?? enrollment.studentId;
+}
 
 function askDelete(enrollment: Enrollment) {
   enrollmentToDelete.value = enrollment;
