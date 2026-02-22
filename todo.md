@@ -2,34 +2,7 @@
 
 The purpose of this document is to keep an inventory of things to be done
 
-# Order not relevant
-
-- Add pre-commit hooks for
-  - frontend
-    - ~~linting~~
-    - ~~format~~
-  - backend
-    - linting
-    - format
-  - ~~line endings~~
-  - ~~trailing whitespace~~
-- ~~Associate CodeRabbit with this repository~~
-- Define pipeline and add
-  - frontend
-    - ~~build command~~
-    - ~~tests run~~
-    - ~~format check~~
-    - ~~linting check~~
-  - backend
-    - frontend
-    - build command
-    - tests run
-    - format check
-    - linting check
-
-# Order relevant
-
-## Todo
+# Todo
 
 1. Define AssignmentView page
    1. User can click a course assignment and be redirected to the page of this assignment
@@ -42,7 +15,7 @@ The purpose of this document is to keep an inventory of things to be done
 1. Define GradeAssignmentsView page
    1. TBD
 
-## Done
+# Done
 
 1. ~~Create Vue.js (TS) frontend~~
 1. ~~Add build command to package.json~~
