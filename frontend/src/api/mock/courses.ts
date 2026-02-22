@@ -9,7 +9,7 @@ let courses: Array<Course> = [
 
 export async function getCourses(): Promise<ApiResult<Course[]>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return ok([...courses]);
+  return ok(courses.map((c) => ({ ...c })));
 }
 
 export async function getCourseById(id: string): Promise<ApiResult<Course>> {

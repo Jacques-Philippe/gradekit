@@ -9,14 +9,16 @@ let students: Array<Student> = [
 
 export async function getStudents(): Promise<ApiResult<Student[]>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return ok([...students]);
+  return ok(students.map((s) => ({ ...s })));
 }
 
 export async function getStudentsForIds(
   studentIds: string[],
 ): Promise<ApiResult<Student[]>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return ok([...students.filter((s) => studentIds.includes(s.id))]);
+  return ok(
+    students.filter((s) => studentIds.includes(s.id)).map((s) => ({ ...s })),
+  );
 }
 
 export async function getStudentById(id: string): Promise<ApiResult<Student>> {

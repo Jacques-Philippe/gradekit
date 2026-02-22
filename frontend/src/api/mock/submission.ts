@@ -16,7 +16,7 @@ let submissions: Array<Submission> = [
 
 export async function getSubmissions(): Promise<ApiResult<Submission[]>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return ok([...submissions]);
+  return ok(submissions.map((s) => ({ ...s })));
 }
 
 export async function getSubmissionById(

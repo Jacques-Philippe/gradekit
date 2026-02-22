@@ -21,7 +21,7 @@ let enrollments: Array<Enrollment> = [
 
 export async function getEnrollments(): Promise<ApiResult<Enrollment[]>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return ok(enrollments);
+  return ok(enrollments.map((e) => ({ ...e })));
 }
 
 export async function getEnrollmentById(

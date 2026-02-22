@@ -18,7 +18,7 @@ let assignments: Array<Assignment> = [
 
 export async function getAssignments(): Promise<ApiResult<Assignment[]>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return ok(assignments);
+  return ok(assignments.map((a) => ({ ...a })));
 }
 
 export async function getAssignmentById(

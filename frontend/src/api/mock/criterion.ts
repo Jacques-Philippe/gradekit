@@ -24,7 +24,7 @@ let criteria: Array<Criterion> = [
 
 export async function getCriteria(): Promise<ApiResult<Criterion[]>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return ok([...criteria]);
+  return ok(criteria.map((c) => ({ ...c })));
 }
 
 export async function getCriterionById(
