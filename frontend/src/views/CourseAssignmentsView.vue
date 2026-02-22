@@ -42,7 +42,14 @@
           v-for="assignment in assignmentStore.assignments"
           :key="assignment.id"
         >
-          {{ assignment.title }}
+          <BaseButton
+            type="button"
+            class="assignment-button"
+            @click="selectAssignment(assignment)"
+            :aria-label="`Open assignment ${assignment.title}`"
+          >
+            {{ assignment.title }}
+          </BaseButton>
 
           <template #actions>
             <BaseButton
@@ -108,6 +115,11 @@ async function confirmDelete() {
   assignmentToDelete.value = null;
 }
 
+function selectAssignment(_assignment: Assignment) {
+  // console.log("selectAssignment", _assignment);
+  // TODO: Navigate to assignment view
+}
+
 function goBack() {
   appStore.transition(new ButtonPressedStateTransition(BACK_BUTTON_NAME));
   error.value = ""; // Clear previous errors
@@ -138,3 +150,19 @@ onMounted(async () => {
   await assignmentStore.getAssignmentsByCourseId(courseStore.currentCourse.id);
 });
 </script>
+
+<style scoped>
+.assignment-button {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  justify-content: flex-start;
+}
+
+.assignment-button:hover {
+  background: transparent;
+  text-decoration: underline;
+}
+</style>
