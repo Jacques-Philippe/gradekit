@@ -5,7 +5,7 @@ The purpose of this document is to keep an inventory of things to be done
 # Todo
 
 1. Define AssignmentView page
-   1. User can click a course assignment and be redirected to the page of this assignment
+   1. ~~User can click a course assignment and be redirected to the page of this assignment~~
    1. User can click the Edit Questions button and be redirected to the Assignment Questions View
    1. User can click back and be brought back to the CourseView page
    1. User can click grade and be brought to the GradeAssignmentsView
