@@ -81,7 +81,11 @@ import TrashIcon from "@/assets/Trash_Full.svg";
 import { useAppStore } from "@/stores/appStore";
 import { useCourseStore } from "@/stores/courseStore";
 import { useAssignmentStore } from "@/stores/assignmentStore";
-import { ButtonPressedStateTransition, BACK_BUTTON_NAME } from "@/types/state";
+import {
+  ButtonPressedStateTransition,
+  BACK_BUTTON_NAME,
+  AssignmentButtonPressedStateTransition,
+} from "@/types/state";
 import type { Assignment } from "@/types/assignment";
 
 const assignmentForm = ref();
@@ -115,9 +119,11 @@ async function confirmDelete() {
   assignmentToDelete.value = null;
 }
 
-function selectAssignment(_assignment: Assignment) {
-  // console.log("selectAssignment", _assignment);
-  // TODO: Navigate to assignment view
+async function selectAssignment(_assignment: Assignment) {
+  await assignmentStore.selectAssignment(_assignment.id);
+  appStore.transition(
+    new AssignmentButtonPressedStateTransition(_assignment.id),
+  );
 }
 
 function goBack() {

@@ -4,11 +4,13 @@ import {
   COURSE_VIEW_STATE_NAME,
   COURSE_STUDENTS_VIEW_STATE_NAME,
   COURSE_ASSIGNMENTS_VIEW_STATE_NAME,
+  ASSIGNMENT_VIEW_STATE_NAME,
 } from "@/types/state";
 import { HomeViewState } from "@/state/homeViewState";
 import { CourseViewState } from "@/state/courseViewState";
 import { CourseStudentsViewState } from "@/state/courseStudentsViewState";
 import { CourseAssignmentsViewState } from "@/state/courseAssignmentsViewState";
+import { AssignmentViewState } from "@/state/assignmentViewState";
 
 export function createState(stateChange: StateChange): AppState {
   const { target } = stateChange;
@@ -21,6 +23,8 @@ export function createState(stateChange: StateChange): AppState {
       return new CourseStudentsViewState();
     case COURSE_ASSIGNMENTS_VIEW_STATE_NAME:
       return new CourseAssignmentsViewState();
+    case ASSIGNMENT_VIEW_STATE_NAME:
+      return new AssignmentViewState();
     default:
       throw new Error(`Unknown state: ${target}`);
   }

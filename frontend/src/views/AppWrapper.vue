@@ -7,6 +7,7 @@
   <CourseAssignmentsView
     v-else-if="stateName === COURSE_ASSIGNMENTS_VIEW_STATE_NAME"
   />
+  <AssignmentView v-else-if="stateName === ASSIGNMENT_VIEW_STATE_NAME" />
   <div v-else>Unknown state: {{ stateName }}</div>
 </template>
 
@@ -17,11 +18,13 @@ import HomeView from "@/views/HomeView.vue";
 import CourseView from "@/views/CourseView.vue";
 import CourseStudentsView from "@/views/CourseStudentsView.vue";
 import CourseAssignmentsView from "@/views/CourseAssignmentsView.vue";
+import AssignmentView from "@/views/AssignmentView.vue";
 import {
   HOME_VIEW_STATE_NAME,
   COURSE_VIEW_STATE_NAME,
   COURSE_STUDENTS_VIEW_STATE_NAME,
   COURSE_ASSIGNMENTS_VIEW_STATE_NAME,
+  ASSIGNMENT_VIEW_STATE_NAME,
 } from "@/types/state";
 
 const store = useAppStore();

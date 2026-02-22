@@ -13,6 +13,7 @@ export const useAssignmentStore = defineStore("assignment", {
     error: "" as string,
     loading: false,
     assignments: [] as Assignment[],
+    currentAssignment: null as Assignment | null,
   }),
   actions: {
     async getAssignments(): Promise<void> {
@@ -35,6 +36,22 @@ export const useAssignmentStore = defineStore("assignment", {
       if (result.ok) return result.data;
       this.error = `Failed to get assignment: ${result.error}`;
       return null;
+    },
+    async selectAssignment(id: string): Promise<void> {
+      this.loading = true;
+      this.error = "";
+      const result = await getAssignmentByIdApi(id);
+      this.loading = false;
+      if (result.ok) {
+        this.currentAssignment = result.data;
+        return;
+      }
+      this.error = `Failed to select assignment: ${result.error}`;
+      this.currentAssignment = null;
+    },
+    clearCurrentAssignment(): void {
+      this.currentAssignment = null;
+      this.error = "";
     },
     async getAssignmentsByCourseId(courseId: string): Promise<void> {
       this.loading = true;

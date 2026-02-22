@@ -31,6 +31,7 @@ export const STUDENTS_BUTTON_NAME = "StudentsButton";
 export const ASSIGNMENTS_BUTTON_NAME = "AssignmentsButton";
 export const EDIT_QUESTION_BUTTON_NAME = "EditQuestionButton";
 export const GRADE_BUTTON_NAME = "GradeButton";
+export const EXPORT_GRADES_BUTTON_NAME = "ExportGradesButton";
 
 // State names
 export const HOME_VIEW_STATE_NAME = "HomeView";
@@ -44,6 +45,8 @@ export const GRADE_ASSIGNMENT_VIEW_STATE_NAME = "GradeAssignmentView";
 /** A unique name for the transition where a button is pressed */
 export const BUTTON_PRESSED_TRANSITION = "button-pressed-transition";
 export const FORM_SUBMITTED_TRANSITION = "form-submitted-transition";
+export const ASSIGNMENT_BUTTON_PRESSED_TRANSITION =
+  "assignment-button-pressed-transition";
 
 export class ButtonPressedStateTransition extends AppTransition {
   button: string;
@@ -60,5 +63,14 @@ export class FormSubmittedStateTransition extends AppTransition {
   constructor(form: string) {
     super(FORM_SUBMITTED_TRANSITION);
     this.form = form;
+  }
+}
+
+export class AssignmentButtonPressedStateTransition extends AppTransition {
+  assignmentId: string;
+
+  constructor(assignmentId: string) {
+    super(ASSIGNMENT_BUTTON_PRESSED_TRANSITION);
+    this.assignmentId = assignmentId;
   }
 }
