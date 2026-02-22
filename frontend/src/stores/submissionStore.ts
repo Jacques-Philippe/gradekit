@@ -6,7 +6,6 @@ import {
   getSubmissionById as getSubmissionByIdApi,
   deleteSubmission as deleteSubmissionApi,
 } from "@/api/mock/submission";
-import { toErrorMessage } from "@/utils/error";
 
 export const useSubmissionStore = defineStore("submission", {
   state: () => ({
@@ -18,26 +17,23 @@ export const useSubmissionStore = defineStore("submission", {
     async getSubmissions(): Promise<void> {
       this.loading = true;
       this.error = "";
-      try {
-        this.submissions = await getSubmissionsApi();
-      } catch (err) {
-        this.error = `Failed to load submissions ${toErrorMessage(err)}`;
+      const result = await getSubmissionsApi();
+      if (result.ok) {
+        this.submissions = result.data;
+      } else {
+        this.error = `Failed to load submissions: ${result.error}`;
         this.submissions = [];
-      } finally {
-        this.loading = false;
       }
+      this.loading = false;
     },
     async getSubmissionById(id: string): Promise<Submission | null> {
       this.loading = true;
       this.error = "";
-      try {
-        return await getSubmissionByIdApi(id);
-      } catch (err) {
-        this.error = `Failed to load submission ${toErrorMessage(err)}`;
-        return null;
-      } finally {
-        this.loading = false;
-      }
+      const result = await getSubmissionByIdApi(id);
+      this.loading = false;
+      if (result.ok) return result.data;
+      this.error = `Failed to load submission: ${result.error}`;
+      return null;
     },
     async createSubmission(
       assignmentId: string,
@@ -45,26 +41,20 @@ export const useSubmissionStore = defineStore("submission", {
     ): Promise<Submission | null> {
       this.loading = true;
       this.error = "";
-      try {
-        return await createSubmissionApi(assignmentId, studentId);
-      } catch (err) {
-        this.error = `Failed to create submission ${toErrorMessage(err)}`;
-        return null;
-      } finally {
-        this.loading = false;
-      }
+      const result = await createSubmissionApi(assignmentId, studentId);
+      this.loading = false;
+      if (result.ok) return result.data;
+      this.error = `Failed to create submission: ${result.error}`;
+      return null;
     },
     async deleteSubmission(id: string): Promise<Submission | null> {
       this.loading = true;
       this.error = "";
-      try {
-        return await deleteSubmissionApi(id);
-      } catch (err) {
-        this.error = `Failed to delete submission ${toErrorMessage(err)}`;
-        return null;
-      } finally {
-        this.loading = false;
-      }
+      const result = await deleteSubmissionApi(id);
+      this.loading = false;
+      if (result.ok) return result.data;
+      this.error = `Failed to delete submission: ${result.error}`;
+      return null;
     },
     clearError() {
       this.error = "";

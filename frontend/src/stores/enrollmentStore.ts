@@ -8,7 +8,6 @@ import {
   deleteEnrollment as deleteEnrollmentApi,
   getEnrollmentsByCourse as getEnrollmentsByCourseApi,
 } from "@/api/mock/enrollment";
-import { toErrorMessage } from "@/utils/error";
 
 export const useEnrollmentStore = defineStore("enrollment", {
   state: () => ({
@@ -20,27 +19,23 @@ export const useEnrollmentStore = defineStore("enrollment", {
     async getEnrollments(): Promise<void> {
       this.loading = true;
       this.error = "";
-      try {
-        // mock API call returns id + name
-        this.enrollments = await getEnrollmentsApi();
-      } catch (err) {
-        this.error = `Failed to load enrollments ${toErrorMessage(err)}`;
+      const result = await getEnrollmentsApi();
+      if (result.ok) {
+        this.enrollments = result.data;
+      } else {
+        this.error = `Failed to load enrollments: ${result.error}`;
         this.enrollments = [];
-      } finally {
-        this.loading = false;
       }
+      this.loading = false;
     },
     async getEnrollmentById(id: string): Promise<Enrollment | null> {
       this.loading = true;
       this.error = "";
-      try {
-        return await getEnrollmentByIdApi(id);
-      } catch (err) {
-        this.error = `Failed to load enrollment ${toErrorMessage(err)}`;
-        return null;
-      } finally {
-        this.loading = false;
-      }
+      const result = await getEnrollmentByIdApi(id);
+      this.loading = false;
+      if (result.ok) return result.data;
+      this.error = `Failed to load enrollment: ${result.error}`;
+      return null;
     },
     async getEnrollmentByStudentAndCourse(
       studentId: string,
@@ -48,53 +43,47 @@ export const useEnrollmentStore = defineStore("enrollment", {
     ): Promise<Enrollment | null> {
       this.loading = true;
       this.error = "";
-      try {
-        return await getEnrollmentByStudentAndCourseApi(studentId, courseId);
-      } catch (err) {
-        this.error = `Failed to load enrollment ${toErrorMessage(err)}`;
-        return null;
-      } finally {
-        this.loading = false;
-      }
+      const result = await getEnrollmentByStudentAndCourseApi(
+        studentId,
+        courseId,
+      );
+      this.loading = false;
+      if (result.ok) return result.data;
+      this.error = `Failed to load enrollment: ${result.error}`;
+      return null;
     },
     async getEnrollmentsByCourse(courseId: string): Promise<void> {
       this.loading = true;
       this.error = "";
-      try {
-        this.enrollments = await getEnrollmentsByCourseApi(courseId);
-      } catch (err) {
-        this.error = `Failed to load enrollments ${toErrorMessage(err)}`;
+      const result = await getEnrollmentsByCourseApi(courseId);
+      if (result.ok) {
+        this.enrollments = result.data;
+      } else {
+        this.error = `Failed to load enrollments: ${result.error}`;
         this.enrollments = [];
-      } finally {
-        this.loading = false;
       }
+      this.loading = false;
     },
     async createEnrollment(studentId: string, courseId: string): Promise<void> {
       this.loading = true;
       this.error = "";
-
-      try {
-        const createdEnrollment = await createEnrollmentApi(
-          studentId,
-          courseId,
-        );
-        this.enrollments = [...this.enrollments, createdEnrollment];
-      } catch (err) {
-        this.error = `Failed to create enrollment ${toErrorMessage(err)}`;
-      } finally {
-        this.loading = false;
+      const result = await createEnrollmentApi(studentId, courseId);
+      this.loading = false;
+      if (result.ok) {
+        this.enrollments = [...this.enrollments, result.data];
+      } else {
+        this.error = `Failed to create enrollment: ${result.error}`;
       }
     },
     async deleteEnrollment(id: string): Promise<void> {
       this.loading = true;
       this.error = "";
-      try {
-        await deleteEnrollmentApi(id);
+      const result = await deleteEnrollmentApi(id);
+      this.loading = false;
+      if (result.ok) {
         this.enrollments = this.enrollments.filter((e) => e.id !== id);
-      } catch (err) {
-        this.error = `Failed to delete enrollment ${toErrorMessage(err)}`;
-      } finally {
-        this.loading = false;
+      } else {
+        this.error = `Failed to delete enrollment: ${result.error}`;
       }
     },
   },

@@ -1,4 +1,5 @@
 import { type Enrollment } from "@/types/enrollment";
+import { type ApiResult, err, ok } from "@/types/apiResult";
 
 let enrollments: Array<Enrollment> = [
   {
@@ -18,67 +19,67 @@ let enrollments: Array<Enrollment> = [
   },
 ];
 
-export async function getEnrollments(): Promise<Enrollment[]> {
+export async function getEnrollments(): Promise<ApiResult<Enrollment[]>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return enrollments;
+  return ok(enrollments);
 }
 
-// return full enrollment by id
-export async function getEnrollmentById(id: string): Promise<Enrollment> {
+export async function getEnrollmentById(
+  id: string,
+): Promise<ApiResult<Enrollment>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
   const enrollment = enrollments.find((e) => e.id === id);
-  if (!enrollment) throw new Error(`Enrollment with id ${id} not found`);
-  return { ...enrollment };
+  if (!enrollment) return err(`Enrollment with id ${id} not found`);
+  return ok({ ...enrollment });
 }
 
 export async function getEnrollmentByStudentAndCourse(
   studentId: string,
   courseId: string,
-): Promise<Enrollment> {
+): Promise<ApiResult<Enrollment>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
   const enrollment = enrollments.find(
     (e) => e.studentId === studentId && e.courseId === courseId,
   );
-  if (!enrollment)
-    throw new Error(
+  if (!enrollment) {
+    return err(
       `Enrollment with studentId ${studentId} and courseId ${courseId} not found`,
     );
-  return { ...enrollment };
+  }
+  return ok({ ...enrollment });
 }
 
 export async function getEnrollmentsByCourse(
   courseId: string,
-): Promise<Enrollment[]> {
+): Promise<ApiResult<Enrollment[]>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
   const enrollmentsForCourse = enrollments.filter(
     (e) => e.courseId === courseId,
   );
-  return [...enrollmentsForCourse];
+  return ok([...enrollmentsForCourse]);
 }
 
-// submit new enrollment
 export async function createEnrollment(
   studentId: string,
   courseId: string,
-): Promise<Enrollment> {
+): Promise<ApiResult<Enrollment>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
-  // create and add new enrollment
   const id = Math.random().toString(36).substring(2, 9);
   const enrollment: Enrollment = { id, studentId, courseId };
   enrollments = [...enrollments, enrollment];
-  return { ...enrollment };
+  return ok({ ...enrollment });
 }
 
 export async function deleteEnrollment(
   enrollmentId: string,
-): Promise<Enrollment> {
+): Promise<ApiResult<Enrollment>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
   const enrollment = enrollments.find((e) => e.id === enrollmentId);
   if (!enrollment) {
-    throw new Error(`Enrollment with id ${enrollmentId} not found`);
+    return err(`Enrollment with id ${enrollmentId} not found`);
   }
   enrollments = enrollments.filter((e) => e.id !== enrollmentId);
-  return { ...enrollment };
+  return ok({ ...enrollment });
 }

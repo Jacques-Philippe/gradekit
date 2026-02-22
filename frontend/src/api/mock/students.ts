@@ -1,60 +1,63 @@
 import type { Student } from "@/types/student";
+import { type ApiResult, err, ok } from "@/types/apiResult";
 
 let students: Array<Student> = [
   { id: "student1", fullName: "John Doe" },
   { id: "student2", fullName: "Jane Smith" },
   { id: "student3", fullName: "Bob Johnson" },
 ];
-// return id + name for dropdown/list
-export async function getStudents(): Promise<Student[]> {
+
+export async function getStudents(): Promise<ApiResult<Student[]>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return [...students];
+  return ok([...students]);
 }
 
 export async function getStudentsForIds(
   studentIds: string[],
-): Promise<Student[]> {
+): Promise<ApiResult<Student[]>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  return [...students.filter((s) => studentIds.includes(s.id))];
+  return ok([...students.filter((s) => studentIds.includes(s.id))]);
 }
 
-export async function getStudentById(id: string): Promise<Student> {
+export async function getStudentById(id: string): Promise<ApiResult<Student>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
   const student = students.find((s) => s.id === id);
-  if (!student) throw new Error(`Student with id ${id} not found`);
-  return { ...student };
+  if (!student) return err(`Student with id ${id} not found`);
+  return ok({ ...student });
 }
 
-export async function createStudent(fullName: string): Promise<Student> {
+export async function createStudent(
+  fullName: string,
+): Promise<ApiResult<Student>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
   const normalizedName = fullName.trim();
   if (!normalizedName) {
-    throw new Error("Student name is required");
+    return err("Student name is required");
   }
 
-  // check for duplicates
   const exists = students.some(
     (s) => s.fullName.toLowerCase() === normalizedName.toLowerCase(),
   );
   if (exists) {
-    throw new Error(`Student with name "${normalizedName}" already exists`);
+    return err(`Student with name "${normalizedName}" already exists`);
   }
 
-  // create and add new student
   const id = Math.random().toString(36).substring(2, 9);
   const student: Student = { id, fullName: normalizedName };
   students = [...students, student];
-  return { ...student };
+  return ok({ ...student });
 }
 
-export async function deleteStudent(studentId: string): Promise<Student> {
+export async function deleteStudent(
+  studentId: string,
+): Promise<ApiResult<Student>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
   const student = students.find((s) => s.id === studentId);
   if (!student) {
-    throw new Error(`Student with id ${studentId} not found`);
+    return err(`Student with id ${studentId} not found`);
   }
   students = students.filter((s) => s.id !== studentId);
-  return { ...student };
+  return ok({ ...student });
 }

@@ -7,7 +7,6 @@ import {
   getStudentById as getStudentByIdApi,
   deleteStudent as deleteStudentApi,
 } from "@/api/mock/students";
-import { toErrorMessage } from "@/utils/error";
 
 export const useStudentStore = defineStore("student", {
   state: () => ({
@@ -20,62 +19,53 @@ export const useStudentStore = defineStore("student", {
     async getStudents(): Promise<void> {
       this.loading = true;
       this.error = "";
-      try {
-        this.students = await getStudentsApi();
-      } catch (err) {
-        this.error = `Failed to load students ${toErrorMessage(err)}`;
+      const result = await getStudentsApi();
+      if (result.ok) {
+        this.students = result.data;
+      } else {
+        this.error = `Failed to load students: ${result.error}`;
         this.students = [];
-      } finally {
-        this.loading = false;
       }
+      this.loading = false;
     },
     async getStudentsForIdsApi(studentIds: string[]): Promise<void> {
       this.loading = true;
       this.error = "";
-      try {
-        this.students = await getStudentsForIdsApi(studentIds);
-      } catch (err) {
-        this.error = `Failed to load students ${toErrorMessage(err)}`;
+      const result = await getStudentsForIdsApi(studentIds);
+      if (result.ok) {
+        this.students = result.data;
+      } else {
+        this.error = `Failed to load students: ${result.error}`;
         this.students = [];
-      } finally {
-        this.loading = false;
       }
+      this.loading = false;
     },
     async getStudentById(id: string): Promise<Student | null> {
       this.loading = true;
       this.error = "";
-      try {
-        return await getStudentByIdApi(id);
-      } catch (err) {
-        this.error = `Failed to load student ${toErrorMessage(err)}`;
-        return null;
-      } finally {
-        this.loading = false;
-      }
+      const result = await getStudentByIdApi(id);
+      this.loading = false;
+      if (result.ok) return result.data;
+      this.error = `Failed to load student: ${result.error}`;
+      return null;
     },
     async createStudent(name: string): Promise<Student | null> {
       this.loading = true;
       this.error = "";
-      try {
-        return await createStudentApi(name);
-      } catch (err) {
-        this.error = `Failed to create student ${toErrorMessage(err)}`;
-        return null;
-      } finally {
-        this.loading = false;
-      }
+      const result = await createStudentApi(name);
+      this.loading = false;
+      if (result.ok) return result.data;
+      this.error = `Failed to create student: ${result.error}`;
+      return null;
     },
     async deleteStudent(id: string): Promise<Student | null> {
       this.loading = true;
       this.error = "";
-      try {
-        return await deleteStudentApi(id);
-      } catch (err) {
-        this.error = `Failed to delete student ${toErrorMessage(err)}`;
-        return null;
-      } finally {
-        this.loading = false;
-      }
+      const result = await deleteStudentApi(id);
+      this.loading = false;
+      if (result.ok) return result.data;
+      this.error = `Failed to delete student: ${result.error}`;
+      return null;
     },
     clearError() {
       this.error = "";

@@ -7,7 +7,6 @@ import {
   getAssignmentsByCourseId as getAssignmentsByCourseIdApi,
   deleteAssignment as deleteAssignmentApi,
 } from "@/api/mock/assignment";
-import { toErrorMessage } from "@/utils/error";
 
 export const useAssignmentStore = defineStore("assignment", {
   state: () => ({
@@ -19,64 +18,56 @@ export const useAssignmentStore = defineStore("assignment", {
     async getAssignments(): Promise<void> {
       this.loading = true;
       this.error = "";
-      try {
-        // mock API call returns id + name
-        this.assignments = await getAssignmentsApi();
-      } catch (err) {
-        this.error = `Failed to get assignments ${toErrorMessage(err)}`;
+      const result = await getAssignmentsApi();
+      if (result.ok) {
+        this.assignments = result.data;
+      } else {
+        this.error = `Failed to get assignments: ${result.error}`;
         this.assignments = [];
-      } finally {
-        this.loading = false;
       }
+      this.loading = false;
     },
     async getAssignmentById(id: string): Promise<Assignment | null> {
       this.loading = true;
       this.error = "";
-      try {
-        return await getAssignmentByIdApi(id);
-      } catch (err) {
-        this.error = `Failed to get assignment ${toErrorMessage(err)}`;
-        return null;
-      } finally {
-        this.loading = false;
-      }
+      const result = await getAssignmentByIdApi(id);
+      this.loading = false;
+      if (result.ok) return result.data;
+      this.error = `Failed to get assignment: ${result.error}`;
+      return null;
     },
     async getAssignmentsByCourseId(courseId: string): Promise<void> {
       this.loading = true;
       this.error = "";
-      try {
-        this.assignments = await getAssignmentsByCourseIdApi(courseId);
-      } catch (err) {
-        this.error = `Failed to get assignments for course ${toErrorMessage(
-          err,
-        )}`;
+      const result = await getAssignmentsByCourseIdApi(courseId);
+      if (result.ok) {
+        this.assignments = result.data;
+      } else {
+        this.error = `Failed to get assignments for course: ${result.error}`;
         this.assignments = [];
-      } finally {
-        this.loading = false;
       }
+      this.loading = false;
     },
     async createAssignment(name: string, description: string): Promise<void> {
       this.loading = true;
       this.error = "";
-      try {
-        const created = await createAssignmentApi(name, description);
-        this.assignments = [...this.assignments, created];
-      } catch (err) {
-        this.error = `Failed to create assignment ${toErrorMessage(err)}`;
-      } finally {
-        this.loading = false;
+      const result = await createAssignmentApi(name, description);
+      this.loading = false;
+      if (result.ok) {
+        this.assignments = [...this.assignments, result.data];
+      } else {
+        this.error = `Failed to create assignment: ${result.error}`;
       }
     },
     async deleteAssignment(id: string): Promise<void> {
       this.loading = true;
       this.error = "";
-      try {
-        await deleteAssignmentApi(id);
+      const result = await deleteAssignmentApi(id);
+      this.loading = false;
+      if (result.ok) {
         this.assignments = this.assignments.filter((a) => a.id !== id);
-      } catch (err) {
-        this.error = `Failed to delete assignment ${toErrorMessage(err)}`;
-      } finally {
-        this.loading = false;
+      } else {
+        this.error = `Failed to delete assignment: ${result.error}`;
       }
     },
   },
