@@ -34,6 +34,16 @@ export async function createSubmission(
 ): Promise<ApiResult<Submission>> {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
+  // if there already is a submission for this assignment and student, return an error
+  const existingSubmission = submissions.find(
+    (s) => s.assignmentId === assignmentId && s.studentId === studentId,
+  );
+  if (existingSubmission) {
+    return err(
+      `Submission for assignment ${assignmentId} and student ${studentId} already exists`,
+    );
+  }
+
   const id = Math.random().toString(36).substring(2, 9);
   const submission: Submission = { id, assignmentId, studentId };
   submissions = [...submissions, submission];
