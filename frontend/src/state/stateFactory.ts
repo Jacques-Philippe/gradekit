@@ -14,9 +14,9 @@ import { CourseViewState } from "@/state/courseViewState";
 import { CourseStudentsViewState } from "@/state/courseStudentsViewState";
 import { CourseAssignmentsViewState } from "@/state/courseAssignmentsViewState";
 import { AssignmentViewState } from "@/state/assignmentViewState";
-import { AssignmentQuestionsViewState } from "./assignmentQuestionsViewState";
-import { GradeAssignmentViewState } from "./gradeAssignmentViewState";
-import { QuestionViewState } from "./questionViewState";
+import { AssignmentQuestionsViewState } from "@/state/assignmentQuestionsViewState";
+import { GradeAssignmentViewState } from "@/state/gradeAssignmentViewState";
+import { QuestionViewState } from "@/state/questionViewState";
 
 export function createState(stateChange: StateChange): AppState {
   const { target } = stateChange;
