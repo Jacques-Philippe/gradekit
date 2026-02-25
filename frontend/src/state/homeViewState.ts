@@ -15,13 +15,9 @@ export class HomeViewState implements AppState {
     this.name = HOME_VIEW_STATE_NAME;
   }
 
-  setup() {
-    // any initialization logic for HomeView can go here
-  }
+  setup() {}
 
-  teardown() {
-    // any cleanup logic for HomeView can go here
-  }
+  teardown() {}
 
   handleTransition(transition: AppTransition): StateChange | null {
     if (transition.type === BUTTON_PRESSED_TRANSITION) {
