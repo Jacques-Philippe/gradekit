@@ -8,7 +8,7 @@ The purpose of this document is to keep an inventory of things to be done
    1. ~~User can click a course assignment and be redirected to the page of this assignment~~
    1. ~~User can click the Edit Questions button and be redirected to the Assignment Questions View~~
    1. ~~User can click back and be brought back to the CourseView page~~
-   1. User can click grade and be brought to the GradeAssignmentsView
+   1. ~~User can click grade and be brought to the GradeAssignmentsView~~
 1. Define AssignmentQuestionsView page
    1. User is able to press the `New question` button and is brought to the QuestionView page
    1. User is able to press the Question button and be brought to the QuestionView page to edit the question
