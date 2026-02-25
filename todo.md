@@ -42,34 +42,12 @@ The purpose of this document is to keep an inventory of things to be done
 
 1. Define data types for
    1. Student
-      - id
-      - fullName
    1. Course
-      - id
-      - name
-      - description?
    1. Criterion
-      - id
-      - title
-      - description
-      - totalPoints
    1. Assignment
-      - courseId
-      - id
-      - title
-      - description
    1. Submission
-      - id
-      - studentId
-      - assignmentId
    1. Enrollment
-      - id
-      - studentId
-      - courseId
-   1. AssignmentQuestion
-      - id
-      - assignmentId
-      - questionText
+   1. Question
    1. AssignmentCriteria
       - id
       - assignmentId
