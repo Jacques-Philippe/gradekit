@@ -32,7 +32,7 @@
       <div v-if="error" class="error">
         {{ error }}
       </div>
-      <BaseLoadingSpinner v-if="assignmentStore.loading" />
+      <BaseLoadingSpinner v-if="loading" />
       <!-- Assignment list, with deletion element -->
       <ul
         v-else-if="assignmentStore.assignments.length > 0"
@@ -42,7 +42,14 @@
           v-for="assignment in assignmentStore.assignments"
           :key="assignment.id"
         >
-          {{ assignment.title }}
+          <BaseButton
+            type="button"
+            class="assignment-button"
+            @click="selectAssignment(assignment)"
+            :aria-label="`Open assignment ${assignment.title}`"
+          >
+            {{ assignment.title }}
+          </BaseButton>
 
           <template #actions>
             <BaseButton
@@ -63,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import BackIcon from "@/assets/Chevron_Left_MD.svg";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseListRow from "@/components/base/BaseListRow.vue";
@@ -74,7 +81,11 @@ import TrashIcon from "@/assets/Trash_Full.svg";
 import { useAppStore } from "@/stores/appStore";
 import { useCourseStore } from "@/stores/courseStore";
 import { useAssignmentStore } from "@/stores/assignmentStore";
-import { ButtonPressedStateTransition, BACK_BUTTON_NAME } from "@/types/state";
+import {
+  ButtonPressedStateTransition,
+  BACK_BUTTON_NAME,
+  AssignmentButtonPressedStateTransition,
+} from "@/types/state";
 import type { Assignment } from "@/types/assignment";
 
 const assignmentForm = ref();
@@ -82,6 +93,8 @@ const assignmentForm = ref();
 const appStore = useAppStore();
 const courseStore = useCourseStore();
 const assignmentStore = useAssignmentStore();
+
+const loading = computed(() => assignmentStore.loading || courseStore.loading);
 
 const error = ref("");
 const confirmVisible = ref(false);
@@ -106,6 +119,17 @@ async function confirmDelete() {
     return;
   }
   assignmentToDelete.value = null;
+}
+
+async function selectAssignment(assignment: Assignment) {
+  await assignmentStore.selectAssignment(assignment.id);
+  if (!assignmentStore.error) {
+    appStore.transition(
+      new AssignmentButtonPressedStateTransition(assignment.id),
+    );
+  } else {
+    error.value = `Failed to select assignment: ${assignmentStore.error}`;
+  }
 }
 
 function goBack() {
@@ -138,3 +162,19 @@ onMounted(async () => {
   await assignmentStore.getAssignmentsByCourseId(courseStore.currentCourse.id);
 });
 </script>
+
+<style scoped>
+.assignment-button {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  justify-content: flex-start;
+}
+
+.assignment-button:hover {
+  background: transparent;
+  text-decoration: underline;
+}
+</style>

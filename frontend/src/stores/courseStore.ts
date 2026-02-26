@@ -6,6 +6,7 @@ import {
   getCourseById as getCourseByIdApi,
   deleteCourse as deleteCourseApi,
 } from "@/api/mock/courses";
+import { withLoading } from "@/utils/withLoading";
 
 export const useCourseStore = defineStore("course", {
   state: () => ({
@@ -16,63 +17,50 @@ export const useCourseStore = defineStore("course", {
   }),
   actions: {
     async getCourses(): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      const result = await getCoursesApi();
+      const result = await withLoading(
+        this,
+        "Failed to load courses",
+        getCoursesApi,
+      );
       if (result.ok) {
         this.courses = result.data;
       } else {
-        this.error = `Failed to load courses: ${result.error}`;
         this.courses = [];
       }
-      this.loading = false;
     },
     async getCourseById(id: string): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      const result = await getCourseByIdApi(id);
-      this.loading = false;
+      const result = await withLoading(this, "Failed to load course", () =>
+        getCourseByIdApi(id),
+      );
       if (result.ok) {
         this.currentCourse = result.data;
       } else {
-        this.error = `Failed to load course: ${result.error}`;
         this.currentCourse = null;
       }
-      this.loading = false;
     },
     async createCourse(name: string, description?: string): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      const result = await createCourseApi(name, description);
-      this.loading = false;
+      const result = await withLoading(this, "Failed to create course", () =>
+        createCourseApi(name, description),
+      );
       if (result.ok) {
         this.courses = [...this.courses, result.data];
-        return;
       }
-      this.error = `Failed to create course: ${result.error}`;
     },
     async deleteCourse(id: string): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      const result = await deleteCourseApi(id);
-      this.loading = false;
+      const result = await withLoading(this, "Failed to delete course", () =>
+        deleteCourseApi(id),
+      );
       if (result.ok) {
         this.courses = this.courses.filter((c) => c.id !== id);
-        return;
-      } else {
-        this.error = `Failed to delete course: ${result.error}`;
       }
     },
     async selectCourse(id: string): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      const result = await getCourseByIdApi(id);
-      this.loading = false;
+      const result = await withLoading(this, "Failed to select course", () =>
+        getCourseByIdApi(id),
+      );
       if (result.ok) {
         this.currentCourse = result.data;
-        return;
       }
-      this.error = `Failed to select course: ${result.error}`;
     },
     clearCurrentCourse(): void {
       this.currentCourse = null;

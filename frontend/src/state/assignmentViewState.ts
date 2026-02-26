@@ -4,19 +4,19 @@ import {
   BUTTON_PRESSED_TRANSITION,
   ButtonPressedStateTransition,
   BACK_BUTTON_NAME,
-  COURSE_VIEW_STATE_NAME,
-  HOME_VIEW_STATE_NAME,
-  ASSIGNMENTS_BUTTON_NAME,
-  STUDENTS_BUTTON_NAME,
+  EDIT_QUESTION_BUTTON_NAME,
+  GRADE_BUTTON_NAME,
+  ASSIGNMENT_VIEW_STATE_NAME,
   COURSE_ASSIGNMENTS_VIEW_STATE_NAME,
-  COURSE_STUDENTS_VIEW_STATE_NAME,
+  GRADE_ASSIGNMENT_VIEW_STATE_NAME,
+  ASSIGNMENT_QUESTIONS_VIEW_STATE_NAME,
 } from "@/types/state";
 
-export class CourseViewState implements AppState {
+export class AssignmentViewState implements AppState {
   readonly name: string;
 
   constructor() {
-    this.name = COURSE_VIEW_STATE_NAME;
+    this.name = ASSIGNMENT_VIEW_STATE_NAME;
   }
 
   setup() {}
@@ -27,14 +27,16 @@ export class CourseViewState implements AppState {
     if (transition.type === BUTTON_PRESSED_TRANSITION) {
       const buttonTransition = transition as ButtonPressedStateTransition;
       if (buttonTransition.button === BACK_BUTTON_NAME) {
-        return { target: HOME_VIEW_STATE_NAME };
-      } else if (buttonTransition.button === ASSIGNMENTS_BUTTON_NAME) {
         return { target: COURSE_ASSIGNMENTS_VIEW_STATE_NAME };
-      } else if (buttonTransition.button === STUDENTS_BUTTON_NAME) {
-        return { target: COURSE_STUDENTS_VIEW_STATE_NAME };
+      } else if (buttonTransition.button === GRADE_BUTTON_NAME) {
+        return { target: GRADE_ASSIGNMENT_VIEW_STATE_NAME };
+      } else if (buttonTransition.button === EDIT_QUESTION_BUTTON_NAME) {
+        return { target: ASSIGNMENT_QUESTIONS_VIEW_STATE_NAME };
       }
     }
-    console.warn(`Unhandled transition ${transition.type} in CourseViewState`);
+    console.warn(
+      `Unhandled transition ${transition.type} in AssignmentViewState`,
+    );
     // Otherwise no transition, stay in the same state
     return null;
   }

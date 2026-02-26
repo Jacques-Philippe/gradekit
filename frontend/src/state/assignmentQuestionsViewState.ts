@@ -1,6 +1,6 @@
 import type {
   AppState,
-  AssignmentButtonPressedStateTransition,
+  QuestionButtonPressedStateTransition,
   StateChange,
 } from "@/types/state";
 import {
@@ -8,17 +8,17 @@ import {
   BUTTON_PRESSED_TRANSITION,
   ButtonPressedStateTransition,
   BACK_BUTTON_NAME,
-  COURSE_VIEW_STATE_NAME,
-  COURSE_ASSIGNMENTS_VIEW_STATE_NAME,
-  ASSIGNMENT_BUTTON_PRESSED_TRANSITION,
+  ASSIGNMENT_QUESTIONS_VIEW_STATE_NAME,
   ASSIGNMENT_VIEW_STATE_NAME,
+  QUESTION_BUTTON_PRESSED_TRANSITION,
+  QUESTION_VIEW_STATE_NAME,
 } from "@/types/state";
 
-export class CourseAssignmentsViewState implements AppState {
+export class AssignmentQuestionsViewState implements AppState {
   readonly name: string;
 
   constructor() {
-    this.name = COURSE_ASSIGNMENTS_VIEW_STATE_NAME;
+    this.name = ASSIGNMENT_QUESTIONS_VIEW_STATE_NAME;
   }
 
   setup() {}
@@ -29,18 +29,18 @@ export class CourseAssignmentsViewState implements AppState {
     if (transition.type === BUTTON_PRESSED_TRANSITION) {
       const buttonTransition = transition as ButtonPressedStateTransition;
       if (buttonTransition.button === BACK_BUTTON_NAME) {
-        return { target: COURSE_VIEW_STATE_NAME };
+        return { target: ASSIGNMENT_VIEW_STATE_NAME };
       }
-    } else if (transition.type === ASSIGNMENT_BUTTON_PRESSED_TRANSITION) {
-      const assignmentButtonTransition =
-        transition as AssignmentButtonPressedStateTransition;
+    } else if (transition.type === QUESTION_BUTTON_PRESSED_TRANSITION) {
+      const questionButtonTransition =
+        transition as QuestionButtonPressedStateTransition;
       return {
-        target: ASSIGNMENT_VIEW_STATE_NAME,
-        payload: { assignmentId: assignmentButtonTransition.assignmentId },
+        target: QUESTION_VIEW_STATE_NAME,
+        payload: { questionId: questionButtonTransition.questionId },
       };
     }
     console.warn(
-      `Unhandled transition ${transition.type} in CourseAssignmentsViewState`,
+      `Unhandled transition ${transition.type} in AssignmentQuestionsViewState`,
     );
     // Otherwise no transition, stay in the same state
     return null;

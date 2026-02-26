@@ -6,55 +6,60 @@ import {
   getCriterionById as getCriterionByIdApi,
   deleteCriterion as deleteCriterionApi,
 } from "@/api/mock/criterion";
+import { withLoading } from "@/utils/withLoading";
 
 export const useCriterionStore = defineStore("criterion", {
   state: () => ({
     error: "" as string,
     loading: false,
     criteria: [] as Criterion[],
+    criterion: null as Criterion | null,
   }),
   actions: {
     async getCriteria(): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      const result = await getCriteriaApi();
+      const result = await withLoading(
+        this,
+        "Failed to load criteria",
+        getCriteriaApi,
+      );
       if (result.ok) {
         this.criteria = result.data;
       } else {
-        this.error = `Failed to load criteria: ${result.error}`;
         this.criteria = [];
       }
-      this.loading = false;
     },
-    async getCriterionById(id: string): Promise<Criterion | null> {
-      this.loading = true;
-      this.error = "";
-      const result = await getCriterionByIdApi(id);
-      this.loading = false;
-      if (result.ok) return result.data;
-      this.error = `Failed to load criterion: ${result.error}`;
-      return null;
+    async getCriterionById(id: string): Promise<void> {
+      const result = await withLoading(this, "Failed to load criterion", () =>
+        getCriterionByIdApi(id),
+      );
+      if (result.ok) {
+        this.criterion = result.data;
+      } else {
+        this.criterion = null;
+      }
     },
     async createCriterion(
       name: string,
       totalPoints: number,
       description?: string,
-    ): Promise<Criterion | null> {
-      this.loading = true;
-      this.error = "";
-      const result = await createCriterionApi(name, totalPoints, description);
-      this.loading = false;
-      if (result.ok) return result.data;
-      this.error = `Failed to create criterion: ${result.error}`;
-      return null;
+    ): Promise<void> {
+      const result = await withLoading(this, "Failed to create criterion", () =>
+        createCriterionApi(name, totalPoints, description),
+      );
+      if (result.ok) {
+        this.criteria = [...this.criteria, result.data];
+      }
     },
     async deleteCriterion(id: string): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      const result = await deleteCriterionApi(id);
-      this.loading = false;
-      if (result.ok) return;
-      this.error = `Failed to delete criterion: ${result.error}`;
+      const result = await withLoading(this, "Failed to delete criterion", () =>
+        deleteCriterionApi(id),
+      );
+      if (result.ok) {
+        this.criteria = this.criteria.filter((c) => c.id !== id);
+        if (this.criterion?.id === id) {
+          this.criterion = null;
+        }
+      }
     },
   },
 });
