@@ -9,7 +9,9 @@
       <p v-if="!courseStore.currentCourse" id="no-course-selected-warning">
         No current course selected
       </p>
-      <div v-if="courseStore.currentCourse && questionStore.currentQuestion">
+      <div
+        v-if="courseStore.currentCourse && assignmentStore.currentAssignment"
+      >
         <h1>Course {{ courseStore.currentCourse.name }}</h1>
         <h2>Assignment {{ assignmentStore.currentAssignment?.title }}</h2>
       </div>
