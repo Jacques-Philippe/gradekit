@@ -1,13 +1,16 @@
 <template>
-  <div class="course-view">
+  <div class="question-view">
     <!-- Navigation bar -->
     <nav class="nav-bar">
       <BaseButton @click="goBack" aria-label="Back">
         <BackIcon />
       </BaseButton>
 
-      <p v-if="!courseStore.currentCourse" id="no-course-selected-warning">
-        No current course selected
+      <p
+        v-if="!questionStore.currentQuestion"
+        id="no-question-selected-warning"
+      >
+        No current question selected
       </p>
       <div v-if="courseStore.currentCourse && questionStore.currentQuestion">
         <h1>Course {{ courseStore.currentCourse.name }}</h1>

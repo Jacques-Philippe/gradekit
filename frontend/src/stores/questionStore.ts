@@ -5,6 +5,7 @@ import {
   createQuestion as createQuestionApi,
   deleteQuestion as deleteQuestionApi,
 } from "@/api/mock/question";
+import { withLoading } from "@/utils/withLoading";
 
 export const useQuestionStore = defineStore("question", {
   state: () => ({
@@ -15,59 +16,32 @@ export const useQuestionStore = defineStore("question", {
   }),
   actions: {
     async getQuestionsByAssignmentId(assignmentId: string): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      try {
-        const result = await getQuestionsByAssignmentIdApi(assignmentId);
-        if (result.ok) {
-          this.questions = result.data;
-        } else {
-          this.error = `Failed to load questions: ${result.error}`;
-          this.questions = [];
-        }
-      } catch {
-        this.error = "Failed to load questions: unexpected error";
+      const result = await withLoading(this, "Failed to load questions", () =>
+        getQuestionsByAssignmentIdApi(assignmentId),
+      );
+      if (result.ok) {
+        this.questions = result.data;
+      } else {
         this.questions = [];
-      } finally {
-        this.loading = false;
       }
     },
     async createQuestion(
       assignmentId: string,
       questionText: string,
     ): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      try {
-        const result = await createQuestionApi(assignmentId, questionText);
-        this.loading = false;
-        if (result.ok) {
-          this.questions = [...this.questions, result.data];
-        } else {
-          this.error = `Failed to create question: ${result.error}`;
-        }
-      } catch {
-        this.error = "Failed to create questions: unexpected error";
-        this.questions = [];
-      } finally {
-        this.loading = false;
+      const result = await withLoading(this, "Failed to create question", () =>
+        createQuestionApi(assignmentId, questionText),
+      );
+      if (result.ok) {
+        this.questions = [...this.questions, result.data];
       }
     },
     async deleteQuestion(id: string): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      try {
-        const result = await deleteQuestionApi(id);
-        this.loading = false;
-        if (result.ok) {
-          this.questions = this.questions.filter((q) => q.id !== id);
-        } else {
-          this.error = `Failed to delete question: ${result.error}`;
-        }
-      } catch {
-        this.error = "Failed to delete question: unexpected error";
-      } finally {
-        this.loading = false;
+      const result = await withLoading(this, "Failed to delete question", () =>
+        deleteQuestionApi(id),
+      );
+      if (result.ok) {
+        this.questions = this.questions.filter((q) => q.id !== id);
       }
     },
     setCurrentQuestion(question: Question | null): void {
