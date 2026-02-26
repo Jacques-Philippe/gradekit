@@ -29,23 +29,23 @@
           class="question-list"
         >
           <BaseListRow
-            v-for="assignment in questionStore.questions"
-            :key="assignment.id"
+            v-for="question in questionStore.questions"
+            :key="question.id"
           >
             <BaseButton
               type="button"
-              class="assignment-button"
-              @click="selectQuestion(assignment)"
-              :aria-label="`Open assignment ${assignment.questionText}`"
+              class="question-button"
+              @click="selectQuestion(question)"
+              :aria-label="`Open question ${question.questionText}`"
             >
-              {{ assignment.questionText }}
+              {{ question.questionText }}
             </BaseButton>
 
             <template #actions>
               <BaseButton
                 variant="danger"
-                @click="askDelete(assignment)"
-                aria-label="Delete assignment"
+                @click="askDelete(question)"
+                aria-label="Delete question"
               >
                 <TrashIcon />
               </BaseButton>
