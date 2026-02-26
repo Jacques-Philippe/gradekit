@@ -8,82 +8,79 @@ import {
   deleteEnrollment as deleteEnrollmentApi,
   getEnrollmentsByCourse as getEnrollmentsByCourseApi,
 } from "@/api/mock/enrollment";
+import { withLoading } from "@/utils/withLoading";
 
 export const useEnrollmentStore = defineStore("enrollment", {
   state: () => ({
     error: "" as string,
     loading: false,
     enrollments: [] as Enrollment[],
+    enrollment: null as Enrollment | null,
   }),
   actions: {
     async getEnrollments(): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      const result = await getEnrollmentsApi();
+      const result = await withLoading(
+        this,
+        "Failed to load enrollments",
+        getEnrollmentsApi,
+      );
       if (result.ok) {
         this.enrollments = result.data;
       } else {
-        this.error = `Failed to load enrollments: ${result.error}`;
         this.enrollments = [];
       }
-      this.loading = false;
     },
-    async getEnrollmentById(id: string): Promise<Enrollment | null> {
-      this.loading = true;
-      this.error = "";
-      const result = await getEnrollmentByIdApi(id);
-      this.loading = false;
-      if (result.ok) return result.data;
-      this.error = `Failed to load enrollment: ${result.error}`;
-      return null;
+    async getEnrollmentById(id: string): Promise<void> {
+      const result = await withLoading(this, "Failed to load enrollment", () =>
+        getEnrollmentByIdApi(id),
+      );
+      if (result.ok) {
+        this.enrollment = result.data;
+      } else {
+        this.enrollment = null;
+      }
     },
     async getEnrollmentByStudentAndCourse(
       studentId: string,
       courseId: string,
-    ): Promise<Enrollment | null> {
-      this.loading = true;
-      this.error = "";
-      const result = await getEnrollmentByStudentAndCourseApi(
-        studentId,
-        courseId,
+    ): Promise<void> {
+      const result = await withLoading(this, "Failed to load enrollment", () =>
+        getEnrollmentByStudentAndCourseApi(studentId, courseId),
       );
-      this.loading = false;
-      if (result.ok) return result.data;
-      this.error = `Failed to load enrollment: ${result.error}`;
-      return null;
+      if (result.ok) {
+        this.enrollment = result.data;
+      } else {
+        this.enrollment = null;
+      }
     },
     async getEnrollmentsByCourse(courseId: string): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      const result = await getEnrollmentsByCourseApi(courseId);
+      const result = await withLoading(this, "Failed to load enrollments", () =>
+        getEnrollmentsByCourseApi(courseId),
+      );
       if (result.ok) {
         this.enrollments = result.data;
       } else {
-        this.error = `Failed to load enrollments: ${result.error}`;
         this.enrollments = [];
       }
-      this.loading = false;
     },
     async createEnrollment(studentId: string, courseId: string): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      const result = await createEnrollmentApi(studentId, courseId);
-      this.loading = false;
+      const result = await withLoading(
+        this,
+        "Failed to create enrollment",
+        () => createEnrollmentApi(studentId, courseId),
+      );
       if (result.ok) {
         this.enrollments = [...this.enrollments, result.data];
-      } else {
-        this.error = `Failed to create enrollment: ${result.error}`;
       }
     },
     async deleteEnrollment(id: string): Promise<void> {
-      this.loading = true;
-      this.error = "";
-      const result = await deleteEnrollmentApi(id);
-      this.loading = false;
+      const result = await withLoading(
+        this,
+        "Failed to delete enrollment",
+        () => deleteEnrollmentApi(id),
+      );
       if (result.ok) {
         this.enrollments = this.enrollments.filter((e) => e.id !== id);
-      } else {
-        this.error = `Failed to delete enrollment: ${result.error}`;
       }
     },
   },

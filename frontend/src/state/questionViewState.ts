@@ -3,16 +3,16 @@ import {
   AppTransition,
   BUTTON_PRESSED_TRANSITION,
   ButtonPressedStateTransition,
-  COURSE_BUTTON_NAME,
-  HOME_VIEW_STATE_NAME,
-  COURSE_VIEW_STATE_NAME,
+  BACK_BUTTON_NAME,
+  QUESTION_VIEW_STATE_NAME,
+  ASSIGNMENT_QUESTIONS_VIEW_STATE_NAME,
 } from "@/types/state";
 
-export class HomeViewState implements AppState {
+export class QuestionViewState implements AppState {
   readonly name: string;
 
   constructor() {
-    this.name = HOME_VIEW_STATE_NAME;
+    this.name = QUESTION_VIEW_STATE_NAME;
   }
 
   setup() {}
@@ -22,11 +22,13 @@ export class HomeViewState implements AppState {
   handleTransition(transition: AppTransition): StateChange | null {
     if (transition.type === BUTTON_PRESSED_TRANSITION) {
       const buttonTransition = transition as ButtonPressedStateTransition;
-      if (buttonTransition.button === COURSE_BUTTON_NAME) {
-        return { target: COURSE_VIEW_STATE_NAME };
+      if (buttonTransition.button === BACK_BUTTON_NAME) {
+        return { target: ASSIGNMENT_QUESTIONS_VIEW_STATE_NAME };
       }
     }
-    console.warn(`Unhandled transition ${transition.type} in HomeViewState`);
+    console.warn(
+      `Unhandled transition ${transition.type} in QuestionViewState`,
+    );
     // Otherwise no transition, stay in the same state
     return null;
   }
