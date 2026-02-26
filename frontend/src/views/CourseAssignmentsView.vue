@@ -121,10 +121,10 @@ async function confirmDelete() {
   assignmentToDelete.value = null;
 }
 
-async function selectAssignment(_assignment: Assignment) {
-  await assignmentStore.selectAssignment(_assignment.id);
+async function selectAssignment(assignment: Assignment) {
+  await assignmentStore.selectAssignment(assignment.id);
   appStore.transition(
-    new AssignmentButtonPressedStateTransition(_assignment.id),
+    new AssignmentButtonPressedStateTransition(assignment.id),
   );
 }
 
