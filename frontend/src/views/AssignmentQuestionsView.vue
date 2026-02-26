@@ -26,7 +26,7 @@
         <BaseLoadingSpinner v-if="loading" />
         <ul
           v-else-if="questionStore.questions.length > 0"
-          class="assignment-list"
+          class="question-list"
         >
           <BaseListRow
             v-for="assignment in questionStore.questions"
