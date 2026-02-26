@@ -36,6 +36,8 @@ export const useEnrollmentStore = defineStore("enrollment", {
       );
       if (result.ok) {
         this.enrollment = result.data;
+      } else {
+        this.enrollment = null;
       }
     },
     async getEnrollmentByStudentAndCourse(

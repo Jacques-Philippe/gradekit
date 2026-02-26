@@ -16,8 +16,8 @@
         confirmText="Remove"
         @confirm="confirmDelete"
       />
-      <div v-if="!assignmentStore.currentAssignment" class="error">
-        No assignment selected
+      <div v-if="error || !assignmentStore.currentAssignment" class="error">
+        {{ error || "No assignment selected" }}
       </div>
       <div v-else>
         <h1>{{ assignmentStore.currentAssignment.title }}</h1>
