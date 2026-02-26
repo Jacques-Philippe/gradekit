@@ -3,7 +3,7 @@
     <!-- Navigation bar -->
     <nav class="nav-bar">
       <BaseButton @click="goBack" aria-label="Back">
-        <HouseIcon />
+        <BackIcon />
       </BaseButton>
 
       <p v-if="!courseStore.currentCourse" id="no-course-selected-warning">
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import HouseIcon from "@/assets/House_01.svg";
+import BackIcon from "@/assets/Chevron_Left_MD.svg";
 import BaseButton from "@/components/base/BaseButton.vue";
 import { useCourseStore } from "@/stores/courseStore";
 import { useAssignmentStore } from "@/stores/assignmentStore";
