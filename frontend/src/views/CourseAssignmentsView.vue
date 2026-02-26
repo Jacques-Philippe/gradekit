@@ -123,9 +123,13 @@ async function confirmDelete() {
 
 async function selectAssignment(assignment: Assignment) {
   await assignmentStore.selectAssignment(assignment.id);
-  appStore.transition(
-    new AssignmentButtonPressedStateTransition(assignment.id),
-  );
+  if (!assignmentStore.error) {
+    appStore.transition(
+      new AssignmentButtonPressedStateTransition(assignment.id),
+    );
+  } else {
+    error.value = `Failed to select assignment: ${assignmentStore.error}`;
+  }
 }
 
 function goBack() {
