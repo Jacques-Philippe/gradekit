@@ -32,7 +32,7 @@
       <div v-if="error" class="error">
         {{ error }}
       </div>
-      <BaseLoadingSpinner v-if="assignmentStore.loading" />
+      <BaseLoadingSpinner v-if="loading" />
       <!-- Assignment list, with deletion element -->
       <ul
         v-else-if="assignmentStore.assignments.length > 0"
@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import BackIcon from "@/assets/Chevron_Left_MD.svg";
 import BaseButton from "@/components/base/BaseButton.vue";
 import BaseListRow from "@/components/base/BaseListRow.vue";
@@ -93,6 +93,8 @@ const assignmentForm = ref();
 const appStore = useAppStore();
 const courseStore = useCourseStore();
 const assignmentStore = useAssignmentStore();
+
+const loading = computed(() => assignmentStore.loading || courseStore.loading);
 
 const error = ref("");
 const confirmVisible = ref(false);

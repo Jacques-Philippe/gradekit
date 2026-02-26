@@ -23,7 +23,7 @@
         <h1>{{ assignmentStore.currentAssignment.title }}</h1>
         <h2 class="section-title">Questions</h2>
 
-        <BaseLoadingSpinner v-if="questionStore.loading" />
+        <BaseLoadingSpinner v-if="loading" />
         <ul
           v-else-if="questionStore.questions.length > 0"
           class="assignment-list"
