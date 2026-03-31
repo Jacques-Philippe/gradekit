@@ -4,19 +4,21 @@ Goal: a TA can generate a report PDF per student for a finalized assignment.
 
 ---
 
-## 1. Backend — PDF generation
+## 1. Backend — PDF generation with Typst
 
-- [ ] Install PDF library: `pip install reportlab` (or `weasyprint`) and freeze
+- [ ] Install Typst — add `typst` binary to the backend Docker image (or install via `pip install typst` if using the Python wrapper) and freeze
+- [ ] Create `backend/templates/report.typ` — a Typst template that accepts structured grade data and renders:
+  - Student name, assignment title, and date
+  - Per-question breakdown: question text, each criterion with score awarded / total points, and notes
+  - Overall total score / total possible points
 - [ ] Create `backend/services/report.py` with a `generate_report(submission_id)` function that:
   - Fetches the submission, student, assignment, questions, criteria, and all graded question criteria
-  - Takes the original submission PDF
-  - Appends a feedback section after the submission content with:
-    - Student name and assignment title
-    - Per-question breakdown: question text, each criterion with score awarded / total points, and notes
-    - Overall total score / total possible points
-  - Writes the combined PDF to disk and returns the file path
+  - Renders `report.typ` with the grade data via Typst CLI to produce a feedback PDF
+  - Merges the original submission PDF (unmodified) with the generated feedback PDF using a PDF merge library (`pip install pypdf`)
+  - Writes the merged PDF to a separate output directory — the original submission file is never modified
+  - Returns the output file path
 - [ ] `POST /assignments/{assignment_id}/export` — triggers report generation for all finalized submissions; returns a list of download URLs
-- [ ] `GET /reports/{filename}` — serves a generated report PDF
+- [ ] `GET /reports/{filename}` — serves a generated report PDF from the output directory
 
 ---
 

@@ -102,7 +102,8 @@ Main grading screen for one student's submission. Split layout:
 - Live score summary (running total) shown at the bottom
 - **Autosave** — scores and notes are saved automatically after the TA stops typing (debounced); a subtle "Saved" indicator confirms the save
 - **Undo** — Ctrl+Z undoes score and note changes within the current session; undo history is cleared on finalization or when the session ends
-- Finalize button — saves grades and returns to GradeAssignmentView
+- Finalize button — saves grades and returns to GradeAssignmentView; triggers generation of the student's report PDF via Typst
+- The generated report PDF is stored separately from the original submission PDF — input sources are never modified
 
 ---
 
