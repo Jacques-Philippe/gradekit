@@ -4,19 +4,27 @@ Goal: a TA can generate a report PDF per student for a finalized assignment.
 
 ---
 
-## 1. Backend — PDF generation
+## 1. Backend — PDF generation with Typst
 
-- [ ] Install PDF library: `pip install reportlab` (or `weasyprint`) and freeze
+- [ ] Install Typst — add `typst` binary to the backend Docker image (or install via `pip install typst` if using the Python wrapper) and freeze
+- [ ] Create `backend/templates/report.typ` — a Typst template that accepts structured grade data and renders:
+  - Student name, assignment title, and date
+  - Per-question breakdown: question text, each criterion with score awarded / total points, and notes
+  - Overall total score / total possible points
+- [ ] Add a `Report` model (`backend/models/report.py`) — `id` (opaque UUID), `submission_id` (FK), `file_path` (server-side only, never exposed to the client)
 - [ ] Create `backend/services/report.py` with a `generate_report(submission_id)` function that:
   - Fetches the submission, student, assignment, questions, criteria, and all graded question criteria
-  - Takes the original submission PDF
-  - Appends a feedback section after the submission content with:
-    - Student name and assignment title
-    - Per-question breakdown: question text, each criterion with score awarded / total points, and notes
-    - Overall total score / total possible points
-  - Writes the combined PDF to disk and returns the file path
-- [ ] `POST /assignments/{assignment_id}/export` — triggers report generation for all finalized submissions; returns a list of download URLs
-- [ ] `GET /reports/{filename}` — serves a generated report PDF
+  - Renders `report.typ` with the grade data via Typst CLI to produce a feedback PDF
+  - Merges the original submission PDF (unmodified) with the generated feedback PDF using a PDF merge library (`pip install pypdf`)
+  - Writes the merged PDF to a fixed server-side storage root — the original submission file is never modified
+  - Creates a `Report` record mapping a new UUID to the output file path; returns the UUID
+- [ ] `POST /assignments/{assignment_id}/export` — triggers report generation for all finalized submissions; guarded by `get_assignment_for_ta`; returns a list of `{ studentName, reportId }` objects (no file paths)
+- [ ] `GET /reports/{report_id}` — serves a generated report PDF:
+  - Accepts only a UUID-shaped `report_id`; reject any input that is not a valid UUID with 400
+  - Looks up the `Report` record by ID — if not found, return 404
+  - Verifies the authenticated TA owns the course the report's submission belongs to — if not, return 403
+  - Resolves the file path exclusively from the database record; the `report_id` parameter is never used to construct a file path directly
+  - Streams the file from the fixed storage root
 
 ---
 
