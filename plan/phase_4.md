@@ -12,24 +12,36 @@ Goal: a TA can open a student's submission, score each criterion per question, l
 
 ---
 
-## 2. Backend — Submission endpoints
+## 2. Backend — Authorization helper
 
-- [ ] `GET /assignments/{assignment_id}/submissions` — list all submissions for an assignment, including grading status per student
-- [ ] `POST /assignments/{assignment_id}/submissions/{student_id}` — create a submission record for a student
-- [ ] `POST /submissions/{id}/upload` — upload the student's assignment PDF; store on disk and save path
-- [ ] `GET /submissions/{id}/pdf` — serve the submission PDF file
-
----
-
-## 3. Backend — Grading endpoints
-
-- [ ] `GET /submissions/{submission_id}/grades` — list all graded question criteria for a submission
-- [ ] `PUT /submissions/{submission_id}/questions/{question_id}/criteria/{criterion_id}` — upsert score and notes for a criterion on a question
-- [ ] `POST /submissions/{submission_id}/finalize` — mark the submission as graded
+- [ ] Create `backend/auth/guards.py` with a reusable `get_submission_for_ta(submission_id, current_user)` dependency that:
+  - Loads the submission by ID
+  - Walks the chain: submission → assignment → course → `course.owner_id`
+  - Raises 403 if `course.owner_id != current_user.id`
+  - Returns the submission on success
+- [ ] Similarly create `get_assignment_for_ta(assignment_id, current_user)` for assignment-scoped routes
+- [ ] All submission and grading route handlers use these dependencies rather than re-implementing ownership checks inline
 
 ---
 
-## 4. Frontend — GradeAssignmentView
+## 3. Backend — Submission endpoints
+
+- [ ] `GET /assignments/{assignment_id}/submissions` — list all submissions for an assignment; guarded by `get_assignment_for_ta`
+- [ ] `POST /assignments/{assignment_id}/submissions/{student_id}` — create a submission record; guarded by `get_assignment_for_ta`; verify the student is enrolled in the assignment's course before creating
+- [ ] `POST /submissions/{id}/upload` — upload the student's assignment PDF; store on disk and save path; guarded by `get_submission_for_ta`
+- [ ] `GET /submissions/{id}/pdf` — serve the submission PDF file; guarded by `get_submission_for_ta`
+
+---
+
+## 4. Backend — Grading endpoints
+
+- [ ] `GET /submissions/{submission_id}/grades` — list all graded question criteria; guarded by `get_submission_for_ta`
+- [ ] `PUT /submissions/{submission_id}/questions/{question_id}/criteria/{criterion_id}` — upsert score and notes; guarded by `get_submission_for_ta`; verify the question and criterion belong to the same assignment before writing
+- [ ] `POST /submissions/{submission_id}/finalize` — mark the submission as graded; guarded by `get_submission_for_ta`
+
+---
+
+## 5. Frontend — GradeAssignmentView
 
 - [ ] Implement `GradeAssignmentView.vue` — lists all student submissions with graded / not graded status
 - [ ] "Keep Grading" button navigates to the first ungraded submission
@@ -37,7 +49,7 @@ Goal: a TA can open a student's submission, score each criterion per question, l
 
 ---
 
-## 5. Frontend — GradeSubmissionView
+## 6. Frontend — GradeSubmissionView
 
 - [ ] Implement `GradeSubmissionView.vue` with a three-area layout:
   - **Question selector:** list of all questions for the assignment
