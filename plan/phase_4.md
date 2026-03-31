@@ -39,13 +39,19 @@ Goal: a TA can open a student's submission, score each criterion per question, l
 
 ## 5. Frontend — GradeSubmissionView
 
-- [ ] Implement `GradeSubmissionView.vue` with a split layout:
+- [ ] Implement `GradeSubmissionView.vue` with a three-area layout:
+  - **Question selector:** list of all questions for the assignment
+    - Active question is highlighted with an accent border or background
+    - Graded questions show a checkmark; ungraded questions are visually distinct (e.g. muted, hollow indicator)
+    - On mount, automatically select the first ungraded question
+    - Clicking a question makes it active
   - **Left panel:** PDF viewer rendering the student's submission (`GET /submissions/{id}/pdf`)
-  - **Right panel:** per-question accordion or list
-    - Each question shows its linked criteria with a score input (0 to criterion total_points)
-    - Notes textarea per question
+    - Clicking the PDF drops an annotation marker linked to the active question
+  - **Right panel:** grading panel for the active question
+    - Criteria list with score inputs (clamped to 0 – criterion total_points)
+    - Notes textarea
 - [ ] Live running total updates as scores are entered
-- [ ] Auto-save scores and notes on input (debounced) or explicit save button per question
+- [ ] Auto-save scores and notes on input (debounced)
 - [ ] "Finalize" button calls `POST /submissions/{id}/finalize`, then navigates back to GradeAssignmentView
 
 ---
