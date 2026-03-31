@@ -100,6 +100,8 @@ Main grading screen for one student's submission. Split layout:
   - List of criteria with score inputs (0 to criterion total_points)
   - Optional notes field for written feedback
 - Live score summary (running total) shown at the bottom
+- **Autosave** — scores and notes are saved automatically after the TA stops typing (debounced); a subtle "Saved" indicator confirms the save
+- **Undo** — Ctrl+Z undoes score and note changes within the current session; undo history is cleared on finalization or when the session ends
 - Finalize button — saves grades and returns to GradeAssignmentView
 
 ---

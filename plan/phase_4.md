@@ -51,7 +51,9 @@ Goal: a TA can open a student's submission, score each criterion per question, l
     - Criteria list with score inputs (clamped to 0 – criterion total_points)
     - Notes textarea
 - [ ] Live running total updates as scores are entered
-- [ ] Auto-save scores and notes on input (debounced)
+- [ ] Autosave — debounce score and note changes, fire save 1–2 seconds after the TA stops typing; show a brief "Saved" indicator after each successful save
+- [ ] Undo — maintain an in-session undo stack for score and note changes (Ctrl+Z); number inputs need explicit undo handling since browsers do not reliably support Ctrl+Z on them
+- [ ] Clear the undo stack when the submission is finalized or the user navigates away
 - [ ] "Finalize" button calls `POST /submissions/{id}/finalize`, then navigates back to GradeAssignmentView
 
 ---
