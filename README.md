@@ -4,30 +4,42 @@
 
 A local-first, web-based grading application designed to help university Teaching Assistants grade assignments faster, more consistently, and with less mental overhead.
 
-### Target User
-
-A single TA grading one course during one semester.
-
-#### Core Problem It Solves
-
-- Rubric-based grading is slow and inconsistent in existing tools
-- Repetitive feedback wastes time
-- Grading decisions are hard to defend during disputes
-- LMS tools are heavy, inflexible, or require institutional access
-
 ### Key Principles
 
 - Local-first: runs on the TA’s own machine
-- Simple setup: no accounts, no SSO, no university IT involvement
+- Simple setup: local accounts only — no SSO, no university IT involvement
 - Focused scope: grading only, not a full LMS
 - Opinionated UX: optimized for the grading workflow
 
 ## Flow
 
+### Authentication
+
+GradeKit uses local accounts to protect the TA's data. There are no external identity providers — credentials are stored and verified on the local machine.
+
+#### Register
+
+1. Navigate to the Register screen
+2. Enter a username and password
+3. Submit — the account is created and the user is logged in automatically
+
+#### Login
+
+1. Navigate to the Login screen
+2. Enter username and password
+3. On success, a session token is issued and persisted — the user remains logged in across browser sessions until they explicitly log out
+
+#### Logout
+
+1. Select Logout from the app
+2. The session token is cleared — the user is returned to the Login screen
+
 ### Setup
 
-1. Create course
-2. Add students
+1. Create courses
+2. Add students to a course — two supported flows:
+   - **Option A (manual):** Create students one at a time directly inside the course
+   - **Option B (import):** Upload a CSV roster to bulk-create and enroll students in one step
 3. Create assignment
 4. Create questions
 5. Assign/Create criteria for each question
@@ -36,17 +48,20 @@ A single TA grading one course during one semester.
 
 1. Select course
 1. Select assignment
-1. Select next student to grade
+1. Select next student to grade — the student's submitted assignment PDF is displayed in a viewer
 1. For each question
-   1. Add criteria fulfillment
-   1. Add feedback
-   1. Finalize grading for student
+   1. Apply criteria scores
+   1. Leave a note on the question — the TA types feedback while referring to the PDF
+1. Finalize grading for student
 1. Continue to next student
 1. (For all grading complete) Finalize grading for assignment
 
 ### Export
 
-Export grades per assignment
+1. Generate a report PDF per student
+   - Includes a modified version of the original submission PDF
+   - Each question's notes are appended as a feedback section
+   - Total score and per-question breakdown are included
 
 ## On grading criteria
 
@@ -83,33 +98,10 @@ For a TA, grading is a mix of:
 
 6. TA saves and moves to the next student
 
-## A concrete example (end-to-end)
-
-**Assignment:** Programming Lab
-**Student:** Alice
-
-| Criterion     | Max | Awarded | Feedback                                       |
-| ------------- | --- | ------- | ---------------------------------------------- |
-| Compiles      | 5   | 5       | Compiles successfully.                         |
-| Correct logic | 10  | 7       | Logic is mostly correct, but fails edge cases. |
-| Style         | 5   | 3       | Inconsistent naming and formatting.            |
-
-**Total:** 15 / 20
-
-## Project structure
-
-This project will be made up of a monorepo with the following structure
-
-```text
-./
-    frontend    # where the web application lives
-    backend     # where the server lives
-```
-
 ## Technology
 
 - Frontend: Vue.js (Vue 3 + TypeScript)
-- Backend: ASP.NET Core (.NET 8)
+- Backend: Python (FastAPI)
 - Database: SQLite
 - Deployment: single local instance, self-hosted
 
