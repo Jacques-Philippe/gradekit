@@ -53,7 +53,7 @@ Goal: a running frontend and backend that can talk to each other, with a health 
 
 ## 5. Pre-commit hooks
 
-- [ ] Create `.pre-commit-config.yaml` at the repo root with the following hooks:
+- [x] Create `.pre-commit-config.yaml` at the repo root with the following hooks:
   - **Python:** `ruff` for linting, `black` for formatting
   - **Frontend:** `prettier` for formatting (via a local script hook)
   - **General:** `trailing-whitespace`, `end-of-file-fixer`, `check-yaml`

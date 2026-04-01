@@ -20,3 +20,17 @@ repos:
         language: system
         pass_filenames: false
         files: ^frontend/
+
+      - id: ruff-check
+        name: Python lint (ruff)
+        entry: ruff check .
+        language: system
+        pass_filenames: false
+        files: ^backend/
+
+      - id: ruff-format
+        name: Python format (ruff)
+        entry: ruff format .
+        language: system
+        pass_filenames: false
+        files: ^backend/
