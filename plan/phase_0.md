@@ -57,9 +57,9 @@ Goal: a running frontend and backend that can talk to each other, with a health 
   - **Python:** `ruff` for linting, `black` for formatting
   - **Frontend:** `prettier` for formatting (via a local script hook)
   - **General:** `trailing-whitespace`, `end-of-file-fixer`, `check-yaml`
-- [ ] Install linting dependencies: `pip install ruff black` and freeze with `pip freeze > requirements.txt`
-- [ ] Run `pre-commit install` to activate hooks
-- [ ] Run `pre-commit run --all-files` and fix any initial violations
+- [x] Install linting dependencies: `pip install ruff black` and freeze with `pip freeze > requirements.txt`
+- [x] Run `pre-commit install` to activate hooks
+- [x] Run `pre-commit run --all-files` and fix any initial violations
 
 ---
 
