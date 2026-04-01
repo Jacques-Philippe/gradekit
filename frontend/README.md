@@ -21,8 +21,9 @@ We use Pinia to manage the application state store.
 
 # Dev get started
 
-1. install dependencies
+1. Install dependencies
    ```bash
    cd frontend
    npm install
    ```
+1. Create an .env file from `.env.example`. **Note it must have name** `env.development` for Vite to auto-load it
