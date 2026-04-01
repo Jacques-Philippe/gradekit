@@ -43,7 +43,7 @@ Goal: a running frontend and backend that can talk to each other, with a health 
 
 ## 4. Docker Compose — development environment
 
-- [ ] Create `docker-compose.yml` at the repo root with two services:
+- [x] Create `docker-compose.yml` at the repo root with two services:
   - `frontend`: Node image, mounts `./frontend`, runs `npm run dev`, exposes port 5173
   - `backend`: Python image, mounts `./backend`, runs `uvicorn main:app --reload`, exposes port 8000
 - [ ] Confirm both services start with `docker compose up`
