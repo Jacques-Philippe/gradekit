@@ -37,7 +37,7 @@ Goal: a running frontend and backend that can talk to each other, with a health 
 - [x] Confirm `frontend/` Vite dev server runs with `npm run dev`
 - [x] Add a `VITE_API_URL` environment variable to `frontend/.env.development` pointing to the local backend (e.g. `http://localhost:8000`)
 - [x] Call `GET /health` from the frontend on app load and log the response to confirm the two services can communicate
-- [ ] Configure Vite dev server proxy so frontend requests to `/api` are forwarded to the backend (avoids CORS issues in development)
+- [x] Configure Vite dev server proxy so frontend requests to `/api` are forwarded to the backend (avoids CORS issues in development)
 
 ---
 
