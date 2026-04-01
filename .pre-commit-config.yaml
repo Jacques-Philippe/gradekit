@@ -34,3 +34,10 @@ repos:
         language: system
         pass_filenames: false
         files: ^backend/
+
+      - id: check-venvs
+        name: Check requirements.txt vs .venv
+        entry: python scripts/check_venvs.py
+        language: system
+        pass_filenames: false
+        always_run: true
