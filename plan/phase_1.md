@@ -21,10 +21,10 @@ Goal: a TA can register an account, log in, and stay logged in across browser se
 - [x] `GET /auth/me` — protected endpoint, returns current user from JWT (used to validate persisted token on frontend load)
 - [ ] Write unit tests for auth endpoints:
   - `POST /auth/register` — succeeds with valid credentials, returns a token
-  - `POST /auth/register` — fails with 400 if username is already taken
+  - `POST /auth/register` — fails with 400 if username is already taken, response body contains `"The username is already taken"`
   - `POST /auth/login` — succeeds with correct credentials, returns a token
-  - `POST /auth/login` — fails with 401 if username does not exist
-  - `POST /auth/login` — fails with 401 if password is wrong
+  - `POST /auth/login` — fails with 401 if username does not exist, response body contains `"Username does not exist"`
+  - `POST /auth/login` — fails with 401 if password is wrong, response body contains `"Invalid password"`
   - `GET /auth/me` — returns current user when a valid token is provided
   - `GET /auth/me` — fails with 401 when no token is provided
   - `GET /auth/me` — fails with 401 when token is expired or invalid

@@ -27,7 +27,7 @@ class TokenResponse(BaseModel):
 def register(body: RegisterRequest, db: Session = Depends(get_db)):
     existing = db.query(User).filter(User.username == body.username).first()
     if existing:
-        raise HTTPException(status_code=400, detail="Username already taken")
+        raise HTTPException(status_code=400, detail="The username is already taken")
 
     user = User(username=body.username, hashed_password=hash_password(body.password))
     db.add(user)
@@ -45,8 +45,10 @@ class LoginRequest(BaseModel):
 @router.post("/login", response_model=TokenResponse)
 def login(body: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == body.username).first()
-    if not user or not verify_password(body.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+    if not user:
+        raise HTTPException(status_code=401, detail="Username does not exist")
+    if not verify_password(body.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid password")
 
     return TokenResponse(token=create_access_token(user.id, user.username))
 
