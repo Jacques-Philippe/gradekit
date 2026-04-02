@@ -20,3 +20,24 @@ repos:
         language: system
         pass_filenames: false
         files: ^frontend/
+
+      - id: ruff-check
+        name: Python lint (ruff)
+        entry: ruff check .
+        language: system
+        pass_filenames: false
+        files: ^backend/
+
+      - id: ruff-format
+        name: Python format (ruff)
+        entry: ruff format .
+        language: system
+        pass_filenames: false
+        files: ^backend/
+
+      - id: check-venvs
+        name: Check requirements.txt vs .venv
+        entry: python scripts/check_venvs.py
+        language: system
+        pass_filenames: false
+        always_run: true
