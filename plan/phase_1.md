@@ -6,9 +6,9 @@ Goal: a TA can register an account, log in, and stay logged in across browser se
 
 ## 1. Backend — Database setup
 
-- [ ] Install SQLAlchemy and database dependencies: `pip install sqlalchemy alembic` and freeze
-- [ ] Create `backend/database.py` with SQLite connection and session setup
-- [ ] Create `backend/models/user.py` with a `User` model: `id`, `username`, `hashed_password`
+- [x] Install SQLAlchemy and database dependencies: `pip install sqlalchemy alembic` and freeze
+- [x] Create `backend/database.py` with SQLite connection and session setup
+- [x] Create `backend/models/user.py` with a `User` model: `id`, `username`, `hashed_password`
 - [ ] Run initial Alembic migration to create the `users` table
 
 ---
