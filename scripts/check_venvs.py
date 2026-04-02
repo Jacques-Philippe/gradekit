@@ -78,7 +78,11 @@ def check(requirements: Path, venv: Path) -> list[str]:
         return errors
 
     required = required_packages(requirements)
-    installed = installed_packages(venv)
+    try:
+        installed = installed_packages(venv)
+    except (FileNotFoundError, subprocess.CalledProcessError) as exc:
+        errors.append(f"  unable to inspect venv: {venv} ({exc})")
+        return errors
 
     missing = {k: v for k, v in required.items() if k not in installed}
     wrong_version = {
@@ -88,10 +92,16 @@ def check(requirements: Path, venv: Path) -> list[str]:
     }
     # pip and setuptools are always present in a venv — not application dependencies
     VENV_BUILTINS = {"pip", "setuptools", "wheel"}
-    extra = {k: v for k, v in installed.items() if k not in required and k not in VENV_BUILTINS}
+    extra = {
+        k: v
+        for k, v in installed.items()
+        if k not in required and k not in VENV_BUILTINS
+    }
 
     for name, version in missing.items():
-        errors.append(f"  MISSING   {name}=={version} (in requirements.txt, not in venv)")
+        errors.append(
+            f"  MISSING   {name}=={version} (in requirements.txt, not in venv)"
+        )
 
     for name, (req_ver, inst_ver) in wrong_version.items():
         errors.append(
@@ -99,7 +109,9 @@ def check(requirements: Path, venv: Path) -> list[str]:
         )
 
     for name, version in extra.items():
-        errors.append(f"  EXTRA     {name}=={version} (in venv, not in requirements.txt)")
+        errors.append(
+            f"  EXTRA     {name}=={version} (in venv, not in requirements.txt)"
+        )
 
     return errors
 
