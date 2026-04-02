@@ -54,10 +54,10 @@ Goal: a running frontend and backend that can talk to each other, with a health 
 ## 5. Pre-commit hooks
 
 - [x] Create `.pre-commit-config.yaml` at the repo root with the following hooks:
-  - **Python:** `ruff` for linting, `black` for formatting
+  - **Python:** `ruff check` for linting, `ruff format` for formatting
   - **Frontend:** `prettier` for formatting (via a local script hook)
   - **General:** `trailing-whitespace`, `end-of-file-fixer`, `check-yaml`
-- [x] Install linting dependencies: `pip install ruff black` and freeze with `pip freeze > requirements.txt`
+- [x] Install linting dependencies: `pip install ruff` and freeze with `pip freeze > requirements.txt`
 - [x] Run `pre-commit install` to activate hooks
 - [x] Run `pre-commit run --all-files` and fix any initial violations
 
