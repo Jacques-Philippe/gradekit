@@ -26,4 +26,4 @@ We use Pinia to manage the application state store.
    cd frontend
    npm install
    ```
-1. Create an .env file from `.env.example`. **Note it must have name** `env.development` for Vite to auto-load it
+1. Create an .env file from `.env.example`. **Note it must have name** `.env.development` for Vite to auto-load it
