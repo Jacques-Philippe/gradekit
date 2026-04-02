@@ -19,6 +19,27 @@ GradeKit is a local-first web application for Teaching Assistants to grade stude
 
 ---
 
+## Python Formatting
+
+**Always format Python files with ruff after making edits.**
+
+```bash
+cd backend && ruff format .
+```
+
+Also run the linter to catch issues:
+
+```bash
+cd backend && ruff check .
+```
+
+### When to format
+
+- After editing any `.py` file in `backend/`
+- Before completing a task that involved Python changes
+
+---
+
 ## UI Design
 
 When designing or implementing UI components, refer to `DESIGN.md` for the visual language of this project.
