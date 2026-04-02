@@ -15,10 +15,10 @@ Goal: a TA can register an account, log in, and stay logged in across browser se
 
 ## 2. Backend — Auth endpoints
 
-- [ ] Install auth dependencies: `pip install passlib[bcrypt] python-jose[cryptography]` and freeze
-- [ ] `POST /auth/register` — accepts `username` + `password`, hashes password, creates user, returns JWT
-- [ ] `POST /auth/login` — verifies credentials, returns JWT on success, 401 on failure
-- [ ] `GET /auth/me` — protected endpoint, returns current user from JWT (used to validate persisted token on frontend load)
+- [x] Install auth dependencies: `pip install passlib[bcrypt] python-jose[cryptography]` and freeze
+- [x] `POST /auth/register` — accepts `username` + `password`, hashes password, creates user, returns JWT
+- [x] `POST /auth/login` — verifies credentials, returns JWT on success, 401 on failure
+- [x] `GET /auth/me` — protected endpoint, returns current user from JWT (used to validate persisted token on frontend load)
 - [ ] Write unit tests for auth endpoints:
   - `POST /auth/register` — succeeds with valid credentials, returns a token
   - `POST /auth/register` — fails with 400 if username is already taken
