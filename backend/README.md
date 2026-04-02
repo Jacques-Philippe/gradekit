@@ -1,6 +1,6 @@
 # Overview
 
-This directory contains the server responsuible for serving content to the frontend application
+This directory contains the server responsible for serving content to the frontend application
 
 # Run the server
 
