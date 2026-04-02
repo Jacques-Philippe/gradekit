@@ -1,0 +1,38 @@
+<template>
+  <form @submit.prevent="submit">
+    <h1>Log in</h1>
+    <input
+      v-model="username"
+      type="text"
+      placeholder="Username"
+      autocomplete="username"
+    />
+    <input
+      v-model="password"
+      type="password"
+      placeholder="Password"
+      autocomplete="current-password"
+    />
+    <p v-if="auth.error">{{ auth.error }}</p>
+    <button type="submit" :disabled="auth.loading">Log in</button>
+    <p>
+      Don't have an account? <router-link to="/register">Register</router-link>
+    </p>
+  </form>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/authStore";
+
+const auth = useAuthStore();
+const router = useRouter();
+const username = ref("");
+const password = ref("");
+
+async function submit() {
+  const ok = await auth.login(username.value, password.value);
+  if (ok) router.push("/");
+}
+</script>

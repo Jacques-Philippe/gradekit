@@ -36,7 +36,7 @@ Goal: a TA can register an account, log in, and stay logged in across browser se
 - [x] Create `authStore.ts` — state: `token`, `user`; actions: `login`, `register`, `logout`, `restoreSession`
 - [x] Persist `token` to `localStorage` so sessions survive page refreshes
 - [x] On app load, if a token exists in `localStorage`, call `GET /auth/me` to validate it — if invalid, clear token and redirect to LoginView
-- [ ] Attach `Authorization: Bearer <token>` header to all API requests
+- [x] Attach `Authorization: Bearer <token>` header to all API requests
 - [ ] Write unit tests for `authStore`:
   - `login` — sets `token` and `user` on success
   - `login` — sets `error` and leaves `token` null on failure

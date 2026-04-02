@@ -1,17 +1,9 @@
 import { type ApiResult, err, ok } from "@/types/apiResult";
+import { parseError } from "@/api/apiFetch";
 
 export interface AuthUser {
   id: number;
   username: string;
-}
-
-async function parseError(res: Response): Promise<string> {
-  try {
-    const body = await res.json();
-    return body.detail ?? res.statusText;
-  } catch {
-    return res.statusText;
-  }
 }
 
 export async function apiRegister(
