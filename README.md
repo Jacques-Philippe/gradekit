@@ -107,6 +107,19 @@ For a TA, grading is a mix of:
 
 ## Developer Get Started
 
+### Docker-compose install
+
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+1. Clone the repo
+1. Start both services:
+   ```bash
+   docker compose up
+   ```
+1. The app is available at `http://localhost:5173/gradekit/`
+1. The backend API is available at `http://localhost:8000`
+
+### Standalone install
+
 1. Clone the repo
 1. Install the requirements for the python virtual environment
    ```bash

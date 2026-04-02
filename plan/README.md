@@ -8,4 +8,4 @@
 | [3](phase_3.md) | Assignment Setup            | Assignments, questions, criteria                                           |
 | [4](phase_4.md) | Grading                     | Submissions, PDF viewer, scoring, notes, live totals                       |
 | [5](phase_5.md) | Export                      | Report PDF generation per student                                          |
-| [6](phase_6.md) | Polish                      | Error states, empty states, loading states, UX hardening                   |
+| [6](phase_6.md) | Polish                      | Error states, empty states, loading states, and UX hardening               |
