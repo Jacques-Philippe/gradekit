@@ -19,7 +19,7 @@ All course endpoints require authentication via Bearer token (`Depends(get_curre
 
 - [x] `GET /courses` — list all courses for the authenticated user
 - [x] `POST /courses` — create a course
-- [ ] `GET /courses/{id}` — get a single course (must be owned by the authenticated user)
+- [x] `GET /courses/{id}` — get a single course (must be owned by the authenticated user)
 - [ ] `DELETE /courses/{id}` — delete a course (must be owned by the authenticated user)
 
 ---

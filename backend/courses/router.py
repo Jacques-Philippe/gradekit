@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, field_validator
 from sqlalchemy.orm import Session
 
@@ -53,6 +53,20 @@ def create_course(
     db.add(course)
     db.commit()
     db.refresh(course)
+    return CourseResponse(
+        id=course.id, name=course.name, description=course.description
+    )
+
+
+@router.get("/{course_id}", response_model=CourseResponse)
+def get_course(
+    course_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    course = db.get(Course, course_id)
+    if course is None or course.owner_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Course not found")
     return CourseResponse(
         id=course.id, name=course.name, description=course.description
     )
