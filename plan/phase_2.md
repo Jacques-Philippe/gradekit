@@ -43,6 +43,10 @@ The top bar is a persistent shell component rendered across all authenticated vi
 - [x] Mount `TopBar.vue` in `AppWrapper.vue` above the router view, visible only when authenticated (`authStore.token !== null`)
 - [x] Style per `DESIGN.md`: dark navy background (`~#1a2844`), white text, consistent padding
 - [x] Move the logout button out of `HomeView.vue` — it belongs in the top bar
+- [ ] Replace username + logout button with an avatar circle (top-right) showing the first letter of the logged-in username
+  - Clicking the avatar opens a dropdown menu
+  - Dropdown contains a "Logout" option that calls `authStore.logout` and navigates to Login
+  - Dropdown closes when clicking outside
 
 ---
 
