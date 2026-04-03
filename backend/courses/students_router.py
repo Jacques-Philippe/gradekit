@@ -1,5 +1,7 @@
 import csv
 import io
+import json
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from pydantic import BaseModel, field_validator
@@ -7,10 +9,14 @@ from sqlalchemy.orm import Session
 
 from auth.security import get_current_user
 from database import get_db
+from models.activity import Activity
+from models.activity_type import ActivityType
 from models.course import Course
 from models.enrollment import Enrollment
 from models.student import Student
 from models.user import User
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/courses/{course_id}/students")
 
@@ -71,13 +77,31 @@ def create_student(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    get_owned_course(course_id, current_user, db)
+    course = get_owned_course(course_id, current_user, db)
     student = Student(full_name=body.full_name)
     db.add(student)
     db.flush()
     db.add(Enrollment(course_id=course_id, student_id=student.id))
     db.commit()
     db.refresh(student)
+    try:
+        db.add(
+            Activity(
+                user_id=current_user.id,
+                event_type=ActivityType.STUDENT_ADDED,
+                payload=json.dumps(
+                    {
+                        "course_id": course_id,
+                        "course_name": course.name,
+                        "student_id": student.id,
+                        "student_name": student.full_name,
+                    }
+                ),
+            )
+        )
+        db.commit()
+    except Exception:
+        logger.exception("Failed to record STUDENT_ADDED activity")
     return StudentResponse(id=student.id, full_name=student.full_name)
 
 

@@ -141,7 +141,7 @@ A lightweight audit log that records user-scoped events as they happen. Later ph
 Wire event recording into the existing write endpoints (fire-and-forget — a failure to record must never fail the main operation):
 
 - [x] `POST /courses` — record `COURSE_CREATED` with `{ course_id, course_name }`
-- [ ] `POST /courses/{course_id}/students` — record `STUDENT_ADDED` with `{ course_id, course_name, student_id, student_name }`
+- [x] `POST /courses/{course_id}/students` — record `STUDENT_ADDED` with `{ course_id, course_name, student_id, student_name }`
 - [ ] `POST /courses/{course_id}/students/import` — record `STUDENTS_IMPORTED` with `{ course_id, course_name, count }` (one event for the whole import, not one per row)
 - [ ] `DELETE /courses/{course_id}/students/{student_id}` — record `STUDENT_REMOVED` with `{ course_id, course_name, student_id, student_name }`
 

@@ -264,3 +264,30 @@ def test_import_students_requires_authentication(client):
         files=csv_file("full_name\nJane Doe\n"),
     )
     assert response.status_code == 401
+
+
+def test_add_student_records_activity(client, db_session):
+    import json
+    from models.activity import Activity
+    from models.activity_type import ActivityType
+
+    token = register_and_login(client)
+    course_id = create_course(client, token)
+    response = client.post(
+        f"/courses/{course_id}/students",
+        json={"full_name": "Jane Doe"},
+        headers=auth(token),
+    )
+    student_id = response.json()["id"]
+
+    events = (
+        db_session.query(Activity)
+        .filter(Activity.event_type == ActivityType.STUDENT_ADDED)
+        .all()
+    )
+    assert len(events) == 1
+    payload = json.loads(events[0].payload)
+    assert payload["course_id"] == course_id
+    assert payload["course_name"] == "CS101"
+    assert payload["student_id"] == student_id
+    assert payload["student_name"] == "Jane Doe"
