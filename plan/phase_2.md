@@ -177,19 +177,19 @@ Assignments are fully implemented in Phase 3, but the `due_date` field is planne
 
 ### Endpoint
 
-- [ ] `GET /deadlines` — returns all upcoming assignments (where `due_date >= now`) across all courses owned by the authenticated user, ordered by `due_date` ascending (most urgent first)
+- [x] `GET /deadlines` — returns all upcoming assignments (where `due_date >= now`) across all courses owned by the authenticated user, ordered by `due_date` ascending (most urgent first)
   - Response shape: `[{ assignment_id, assignment_title, course_id, course_name, due_date }]`
   - Excludes assignments with no `due_date` set
   - Requires authentication
 
 ### Tests (`backend/tests/test_deadlines.py`)
 
-- [ ] Returns assignments ordered by `due_date` ascending
-- [ ] Excludes assignments with no `due_date`
-- [ ] Excludes assignments whose `due_date` is in the past
-- [ ] Only returns deadlines for the authenticated user's courses
-- [ ] Returns an empty list when no upcoming deadlines exist
-- [ ] Requires authentication
+- [x] Returns assignments ordered by `due_date` ascending
+- [x] Excludes assignments with no `due_date`
+- [x] Excludes assignments whose `due_date` is in the past
+- [x] Only returns deadlines for the authenticated user's courses
+- [x] Returns an empty list when no upcoming deadlines exist
+- [x] Requires authentication
 
 ---
 
