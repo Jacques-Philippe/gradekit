@@ -61,7 +61,7 @@ Goal: a TA can register an account, log in, and stay logged in across browser se
   - Displays an error message when login fails
   - Error message is cleared when the form is submitted again
   - Submit button is disabled while the request is in flight
-- [ ] Write unit tests for `RegisterView`:
+- [x] Write unit tests for `RegisterView`:
   - Renders username and password fields and a submit button
   - Calls `authStore.register` with the entered credentials on submit
   - Navigates to HomeView when registration succeeds

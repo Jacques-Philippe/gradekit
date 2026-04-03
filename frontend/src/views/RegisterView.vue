@@ -13,7 +13,7 @@
       placeholder="Password"
       autocomplete="new-password"
     />
-    <p v-if="auth.error">{{ auth.error }}</p>
+    <p v-if="auth.error" data-testid="error">{{ auth.error }}</p>
     <button type="submit" :disabled="auth.loading">Register</button>
     <p>
       Already have an account?

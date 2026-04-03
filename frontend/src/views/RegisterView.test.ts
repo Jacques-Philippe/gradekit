@@ -1,18 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mount, flushPromises } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
-import LoginView from "@/views/LoginView.vue";
+import RegisterView from "@/views/RegisterView.vue";
 import { useAuthStore } from "@/stores/authStore";
 import { Routes } from "@/router/routes";
 import { makeTestRouter } from "@/router/routerTestHelper";
 
-async function mountLoginView() {
+async function mountRegisterView() {
   const pinia = createPinia();
   setActivePinia(pinia);
   const router = makeTestRouter();
-  await router.push(Routes.Login);
+  await router.push(Routes.Register);
   await router.isReady();
-  const wrapper = mount(LoginView, {
+  const wrapper = mount(RegisterView, {
     global: { plugins: [pinia, router] },
   });
   return { wrapper, router, store: useAuthStore() };
@@ -22,28 +22,28 @@ beforeEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("LoginView", () => {
+describe("RegisterView", () => {
   it("renders username and password fields and a submit button", async () => {
-    const { wrapper } = await mountLoginView();
+    const { wrapper } = await mountRegisterView();
     expect(wrapper.find('input[type="text"]').exists()).toBe(true);
     expect(wrapper.find('input[type="password"]').exists()).toBe(true);
     expect(wrapper.find('button[type="submit"]').exists()).toBe(true);
   });
 
-  it("calls authStore.login with the entered credentials on submit", async () => {
-    const { wrapper, store } = await mountLoginView();
-    vi.spyOn(store, "login").mockResolvedValue(false);
+  it("calls authStore.register with the entered credentials on submit", async () => {
+    const { wrapper, store } = await mountRegisterView();
+    vi.spyOn(store, "register").mockResolvedValue(false);
 
     await wrapper.find('input[type="text"]').setValue("alice");
     await wrapper.find('input[type="password"]').setValue("secret");
     await wrapper.find("form").trigger("submit");
 
-    expect(store.login).toHaveBeenCalledWith("alice", "secret");
+    expect(store.register).toHaveBeenCalledWith("alice", "secret");
   });
 
-  it("navigates to HomeView when login succeeds", async () => {
-    const { wrapper, store, router } = await mountLoginView();
-    vi.spyOn(store, "login").mockResolvedValue(true);
+  it("navigates to HomeView when registration succeeds", async () => {
+    const { wrapper, store, router } = await mountRegisterView();
+    vi.spyOn(store, "register").mockResolvedValue(true);
 
     await wrapper.find("form").trigger("submit");
     await flushPromises();
@@ -51,10 +51,10 @@ describe("LoginView", () => {
     expect(router.currentRoute.value.path).toBe(Routes.Home);
   });
 
-  it("displays an error message when login fails", async () => {
-    const { wrapper, store } = await mountLoginView();
-    vi.spyOn(store, "login").mockImplementation(async () => {
-      store.error = "Username does not exist";
+  it("displays an error message when registration fails", async () => {
+    const { wrapper, store } = await mountRegisterView();
+    vi.spyOn(store, "register").mockImplementation(async () => {
+      store.error = "The username is already taken";
       return false;
     });
 
@@ -62,16 +62,16 @@ describe("LoginView", () => {
     await flushPromises();
 
     expect(wrapper.find("[data-testid='error']").text()).toBe(
-      "Username does not exist",
+      "The username is already taken",
     );
   });
 
   it("error message is cleared when the form is submitted again", async () => {
-    const { wrapper, store } = await mountLoginView();
+    const { wrapper, store } = await mountRegisterView();
     let callCount = 0;
-    vi.spyOn(store, "login").mockImplementation(async () => {
+    vi.spyOn(store, "register").mockImplementation(async () => {
       if (callCount++ === 0) {
-        store.error = "Username does not exist";
+        store.error = "The username is already taken";
         return false;
       }
       store.error = "";
@@ -81,7 +81,7 @@ describe("LoginView", () => {
     await wrapper.find("form").trigger("submit");
     await flushPromises();
     expect(wrapper.find("[data-testid='error']").text()).toBe(
-      "Username does not exist",
+      "The username is already taken",
     );
 
     await wrapper.find("form").trigger("submit");
@@ -90,8 +90,8 @@ describe("LoginView", () => {
   });
 
   it("submit button is disabled while the request is in flight", async () => {
-    const { wrapper, store } = await mountLoginView();
-    vi.spyOn(store, "login").mockImplementation(async () => {
+    const { wrapper, store } = await mountRegisterView();
+    vi.spyOn(store, "register").mockImplementation(async () => {
       store.loading = true;
       await new Promise((r) => setTimeout(r, 50));
       store.loading = false;
@@ -100,7 +100,6 @@ describe("LoginView", () => {
 
     wrapper.find("form").trigger("submit");
     await flushPromises();
-    // During in-flight: loading was true
     store.loading = true;
     await wrapper.vm.$nextTick();
     expect(
