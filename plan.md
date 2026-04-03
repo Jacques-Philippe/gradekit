@@ -23,12 +23,12 @@ Account creation for first-time setup.
 
 ### HomeView
 
-Landing page after login. Entry point to the two main workflows: setup and grading.
+Landing page after login. Dashboard giving the TA a quick overview of their work.
 
-- Search bar (inline, above the course list) — filters visible courses and assignments by name
-- List of courses
-- Button to create a new course
-- Logout button
+- **Global search bar** (prominent, at the top) — searches across both courses and assignments by name; results appear inline as the TA types
+- **Recent activity feed** — chronological list of recent events in the application (e.g. "Student Jane Doe's submission graded", "Assignment Midterm added to CS101"); most recent first
+- **Recently worked-on courses** — a short list of the courses the TA most recently interacted with, for quick re-entry; each item navigates to CourseView
+- **Incoming deadlines** — list of upcoming assignment deadlines across all courses, sorted by most urgent first
 
 ---
 

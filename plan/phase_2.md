@@ -59,11 +59,32 @@ The top bar is a persistent shell component rendered across all authenticated vi
 
 ## 5. Frontend — HomeView
 
-- [ ] Implement `HomeView.vue` — fetches and lists all courses on mount
-- [ ] Courses are displayed as cards (white card, `~8px` border radius, subtle border and box shadow per `DESIGN.md`)
-- [ ] Inline search bar that filters the course list by name
-- [ ] "Create Course" button — inline form or modal to enter course name
-- [ ] Each course card navigates to CourseView
+### Global search bar
+
+- [ ] Prominent search input at the top of the page
+- [ ] As the TA types, results appear inline below the input — matching courses and assignments grouped by type
+- [ ] Clicking a course result navigates to CourseView; clicking an assignment result navigates to AssignmentView (placeholder route for now)
+- [ ] Results are cleared when the input is emptied or focus is lost
+
+### Recently worked-on courses
+
+- [ ] On mount, fetch `GET /courses` and display the 5 most recently updated courses as cards
+- [ ] Each card shows the course name and navigates to CourseView on click
+- [ ] Cards use the `DESIGN.md` style (white, `~8px` radius, subtle border and box shadow)
+- [ ] "Create Course" button above or alongside the list — inline form or modal to enter course name; on success re-fetches the list
+
+### Recent activity feed
+
+- [ ] On mount, fetch `GET /activity` and render events as a chronological list, most recent first
+- [ ] Each item shows the event message and a human-readable relative timestamp (e.g. "2 hours ago")
+- [ ] Shows a placeholder message when there are no events yet
+
+### Incoming deadlines
+
+- [ ] On mount, fetch `GET /deadlines` and render as a list sorted by `due_date` ascending
+- [ ] Each item shows the assignment title, course name, and formatted due date
+- [ ] Shows a placeholder message when there are no upcoming deadlines
+- [ ] Deadlines within 24 hours are visually highlighted (e.g. red or amber text)
 
 ---
 
@@ -99,7 +120,70 @@ Style `LoginView.vue` and `RegisterView.vue` to match the visual language in `DE
 
 ---
 
-## 9. Internationalisation (i18n)
+## 9. Backend — Activity feed
+
+A lightweight audit log that records user-scoped events as they happen. Later phases will add more event types (grading, assignment creation); phase 2 covers course and student events.
+
+### Model & migration
+
+- [ ] Create `backend/models/activity.py` — `id`, `owner_id` (FK to user), `message` (plain-text description of the event), `created_at` (datetime, default `utcnow`)
+- [ ] Run Alembic migration to create the `activity` table
+
+### Recording events
+
+Wire event recording into the existing write endpoints (fire-and-forget — a failure to record must never fail the main operation):
+
+- [ ] `POST /courses` — record `"Course '{name}' created"`
+- [ ] `POST /courses/{course_id}/students` — record `"Student '{full_name}' added to '{course name}'"`
+- [ ] `POST /courses/{course_id}/students/import` — record `"{n} student(s) imported into '{course name}'"` (one event for the whole import, not one per row)
+- [ ] `DELETE /courses/{course_id}/students/{student_id}` — record `"Student '{full_name}' removed from '{course name}'"`
+
+### Endpoint
+
+- [ ] `GET /activity` — returns the 20 most recent activity events for the authenticated user, ordered most recent first
+  - Response shape: `[{ id, message, created_at }]`
+  - Requires authentication
+
+### Tests (`backend/tests/test_activity.py`)
+
+- [ ] Creating a course records an activity event with the course name in the message
+- [ ] Adding a student records an activity event with the student name and course name
+- [ ] Importing students records a single activity event with the count and course name
+- [ ] Removing a student records an activity event
+- [ ] `GET /activity` returns events in reverse chronological order
+- [ ] `GET /activity` only returns the authenticated user's events (not other users')
+- [ ] `GET /activity` returns at most 20 events
+- [ ] `GET /activity` requires authentication
+
+---
+
+## 10. Backend — Assignment deadline field
+
+Assignments are fully implemented in Phase 3, but the `due_date` field is planned here so the HomeView deadlines panel has data to work with from the start.
+
+### Model
+
+- [ ] When creating `backend/models/assignment.py` (Phase 3), include `due_date: Mapped[datetime | None]` — nullable ISO 8601 datetime, optional at creation time
+
+### Endpoint
+
+- [ ] `GET /deadlines` — returns all upcoming assignments (where `due_date >= now`) across all courses owned by the authenticated user, ordered by `due_date` ascending (most urgent first)
+  - Response shape: `[{ assignment_id, assignment_title, course_id, course_name, due_date }]`
+  - Excludes assignments with no `due_date` set
+  - Requires authentication
+
+### Tests (`backend/tests/test_deadlines.py`)
+
+- [ ] Returns assignments ordered by `due_date` ascending
+- [ ] Excludes assignments with no `due_date`
+- [ ] Excludes assignments whose `due_date` is in the past
+- [ ] Only returns deadlines for the authenticated user's courses
+- [ ] Returns an empty list when no upcoming deadlines exist
+- [ ] Requires authentication
+
+---
+
+## 12. Internationalisation (i18n)
 
 Use `vue-i18n` to extract all user-visible strings from the frontend into locale message files.
 
