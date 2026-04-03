@@ -91,23 +91,23 @@ describe("RegisterView", () => {
 
   it("submit button is disabled while the request is in flight", async () => {
     const { wrapper, store } = await mountRegisterView();
-    vi.spyOn(store, "register").mockImplementation(async () => {
+    let resolve!: (value: boolean) => void;
+    const deferred = new Promise<boolean>((r) => (resolve = r));
+    vi.spyOn(store, "register").mockImplementation(() => {
       store.loading = true;
-      await new Promise((r) => setTimeout(r, 50));
-      store.loading = false;
-      return true;
+      return deferred.finally(() => {
+        store.loading = false;
+      });
     });
 
     wrapper.find("form").trigger("submit");
-    await flushPromises();
-    store.loading = true;
     await wrapper.vm.$nextTick();
     expect(
       wrapper.find("button[type='submit']").attributes("disabled"),
     ).toBeDefined();
 
-    store.loading = false;
-    await wrapper.vm.$nextTick();
+    resolve(true);
+    await flushPromises();
     expect(
       wrapper.find("button[type='submit']").attributes("disabled"),
     ).toBeUndefined();
