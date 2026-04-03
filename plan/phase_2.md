@@ -61,10 +61,10 @@ The top bar is a persistent shell component rendered across all authenticated vi
 
 ### Global search bar
 
-- [ ] Prominent search input at the top of the page
-- [ ] As the TA types, results appear inline below the input — matching courses and assignments grouped by type
-- [ ] Clicking a course result navigates to CourseView; clicking an assignment result navigates to AssignmentView (placeholder route for now)
-- [ ] Results are cleared when the input is emptied or focus is lost
+- [x] Prominent search input at the top of the page
+- [x] As the TA types, results appear inline below the input — matching courses and assignments grouped by type
+- [x] Clicking a course result navigates to CourseView; clicking an assignment result navigates to AssignmentView (placeholder route for now)
+- [x] Results are cleared when the input is emptied or focus is lost
 
 ### Recently worked-on courses
 

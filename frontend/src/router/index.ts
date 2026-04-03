@@ -20,6 +20,16 @@ const routes = [
     name: "Home",
     component: () => import("@/views/HomeView.vue"),
   },
+  {
+    path: Routes.Course,
+    name: "Course",
+    component: { template: "<div>CourseView placeholder</div>" },
+  },
+  {
+    path: Routes.Assignment,
+    name: "Assignment",
+    component: { template: "<div>AssignmentView placeholder</div>" },
+  },
 ];
 
 export const router = createRouter({
