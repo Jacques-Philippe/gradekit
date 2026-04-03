@@ -157,7 +157,7 @@
           <button
             class="btn-remove"
             :disabled="removingId === student.id"
-            @click="removeStudent(student.id)"
+            @click="confirmingStudent = student"
             :data-testid="`remove-student-${student.id}`"
           >
             Remove
@@ -168,6 +168,37 @@
         No students enrolled yet.
       </p>
     </section>
+    <!-- Remove confirmation modal -->
+    <div
+      v-if="confirmingStudent"
+      class="modal-backdrop"
+      data-testid="remove-modal"
+      @click.self="confirmingStudent = null"
+    >
+      <div class="modal">
+        <p class="modal-message">
+          Remove <strong>{{ confirmingStudent.full_name }}</strong> from this
+          course?
+        </p>
+        <div class="modal-actions">
+          <button
+            class="btn-danger"
+            :disabled="removingId !== null"
+            @click="confirmRemove"
+            data-testid="confirm-remove-btn"
+          >
+            Remove
+          </button>
+          <button
+            class="btn-cancel"
+            @click="confirmingStudent = null"
+            data-testid="cancel-remove-btn"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -207,6 +238,7 @@ const importError = ref("");
 const importResult = ref<ImportResult | null>(null);
 
 // Remove
+const confirmingStudent = ref<Student | null>(null);
 const removingId = ref<number | null>(null);
 
 onMounted(async () => {
@@ -291,10 +323,13 @@ async function confirmImport() {
   pendingFile.value = null;
 }
 
-async function removeStudent(studentId: number) {
+async function confirmRemove() {
+  if (!confirmingStudent.value) return;
+  const studentId = confirmingStudent.value.id;
   removingId.value = studentId;
   const result = await apiDeleteStudent(courseId, studentId);
   removingId.value = null;
+  confirmingStudent.value = null;
   if (!result.ok) return;
   students.value = students.value.filter((s) => s.id !== studentId);
 }
@@ -524,5 +559,51 @@ async function removeStudent(studentId: number) {
   font-size: 13px;
   color: #9ca3af;
   margin: 0;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 24px;
+  width: 340px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+.modal-message {
+  font-size: 14px;
+  color: #111827;
+  margin: 0 0 20px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.btn-danger {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 </style>

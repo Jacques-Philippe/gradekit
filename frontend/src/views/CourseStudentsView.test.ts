@@ -64,7 +64,31 @@ describe("CourseStudentsView", () => {
     );
   });
 
-  it("removes a student when remove button is clicked", async () => {
+  it("clicking remove opens the confirmation modal", async () => {
+    const wrapper = mount(CourseStudentsView, {
+      global: { plugins: [pinia, router] },
+    });
+    await flushPromises();
+    expect(wrapper.find("[data-testid='remove-modal']").exists()).toBe(false);
+    await wrapper.find("[data-testid='remove-student-10']").trigger("click");
+    expect(wrapper.find("[data-testid='remove-modal']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='remove-modal']").text()).toContain(
+      "Alice Smith",
+    );
+  });
+
+  it("cancels removal when Cancel is clicked in the modal", async () => {
+    const wrapper = mount(CourseStudentsView, {
+      global: { plugins: [pinia, router] },
+    });
+    await flushPromises();
+    await wrapper.find("[data-testid='remove-student-10']").trigger("click");
+    await wrapper.find("[data-testid='cancel-remove-btn']").trigger("click");
+    expect(wrapper.find("[data-testid='remove-modal']").exists()).toBe(false);
+    expect(wrapper.find("[data-testid='student-row-10']").exists()).toBe(true);
+  });
+
+  it("removes a student after confirming in the modal", async () => {
     vi.spyOn(studentsApi, "apiDeleteStudent").mockResolvedValue({
       ok: true,
       data: undefined,
@@ -74,7 +98,9 @@ describe("CourseStudentsView", () => {
     });
     await flushPromises();
     await wrapper.find("[data-testid='remove-student-10']").trigger("click");
+    await wrapper.find("[data-testid='confirm-remove-btn']").trigger("click");
     await flushPromises();
+    expect(wrapper.find("[data-testid='remove-modal']").exists()).toBe(false);
     expect(wrapper.find("[data-testid='student-row-10']").exists()).toBe(false);
     expect(wrapper.find("[data-testid='student-row-11']").exists()).toBe(true);
   });
