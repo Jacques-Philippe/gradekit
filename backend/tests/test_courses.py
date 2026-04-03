@@ -20,6 +20,48 @@ def test_list_courses_requires_authentication(client):
     assert response.status_code == 401
 
 
+def test_create_course_succeeds(client):
+    token = register_and_login(client)
+    response = client.post(
+        "/courses",
+        json={"name": "Math 101", "description": "Intro to math"},
+        headers=auth(token),
+    )
+    assert response.status_code == 201
+    data = response.json()
+    assert data["name"] == "Math 101"
+    assert data["description"] == "Intro to math"
+    assert "id" in data
+
+
+def test_create_course_without_description(client):
+    token = register_and_login(client)
+    response = client.post("/courses", json={"name": "Math 101"}, headers=auth(token))
+    assert response.status_code == 201
+    assert response.json()["description"] is None
+
+
+def test_create_course_appears_in_list(client):
+    token = register_and_login(client)
+    client.post("/courses", json={"name": "Math 101"}, headers=auth(token))
+    response = client.get("/courses", headers=auth(token))
+    assert len(response.json()) == 1
+    assert response.json()[0]["name"] == "Math 101"
+
+
+def test_create_course_requires_authentication(client):
+    response = client.post("/courses", json={"name": "Math 101"})
+    assert response.status_code == 401
+
+
+def test_create_course_rejects_blank_name(client):
+    token = register_and_login(client)
+    response = client.post("/courses", json={"name": "   "}, headers=auth(token))
+    assert response.status_code == 422
+    messages = [e["msg"] for e in response.json()["detail"]]
+    assert any("Course name cannot be blank" in msg for msg in messages)
+
+
 def test_list_courses_only_returns_own_courses(client, db_session):
     from models.course import Course
 

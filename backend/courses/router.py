@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from sqlalchemy.orm import Session
 
 from auth.security import get_current_user
@@ -8,6 +8,20 @@ from models.course import Course
 from models.user import User
 
 router = APIRouter(prefix="/courses")
+
+
+class CreateCourseRequest(BaseModel):
+    name: str
+    description: str | None = None
+
+    @field_validator("name")
+    @classmethod
+    def name_not_blank(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Course name cannot be blank")
+        if len(v.strip()) > 255:
+            raise ValueError("Course name cannot exceed 255 characters")
+        return v.strip()
 
 
 class CourseResponse(BaseModel):
@@ -25,3 +39,20 @@ def list_courses(
     return [
         CourseResponse(id=c.id, name=c.name, description=c.description) for c in courses
     ]
+
+
+@router.post("", response_model=CourseResponse, status_code=201)
+def create_course(
+    body: CreateCourseRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    course = Course(
+        name=body.name, description=body.description, owner_id=current_user.id
+    )
+    db.add(course)
+    db.commit()
+    db.refresh(course)
+    return CourseResponse(
+        id=course.id, name=course.name, description=course.description
+    )
