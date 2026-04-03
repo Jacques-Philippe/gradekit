@@ -175,3 +175,92 @@ def test_remove_student_returns_404_for_other_users_course(client):
 def test_remove_student_requires_authentication(client):
     response = client.delete("/courses/1/students/1")
     assert response.status_code == 401
+
+
+def csv_file(content: str):
+    return {"file": ("students.csv", content.encode(), "text/csv")}
+
+
+def test_import_students_succeeds(client):
+    token = register_and_login(client)
+    course_id = create_course(client, token)
+    response = client.post(
+        f"/courses/{course_id}/students/import",
+        files=csv_file("full_name\nJane Doe\nJohn Smith\n"),
+        headers=auth(token),
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["created"]) == 2
+    assert data["errors"] == []
+    names = [s["full_name"] for s in data["created"]]
+    assert names == ["Jane Doe", "John Smith"]
+
+
+def test_import_students_appear_in_list(client):
+    token = register_and_login(client)
+    course_id = create_course(client, token)
+    client.post(
+        f"/courses/{course_id}/students/import",
+        files=csv_file("full_name\nJane Doe\nJohn Smith\n"),
+        headers=auth(token),
+    )
+    response = client.get(f"/courses/{course_id}/students", headers=auth(token))
+    assert len(response.json()) == 2
+
+
+def test_import_students_partial_errors(client):
+    token = register_and_login(client)
+    course_id = create_course(client, token)
+    response = client.post(
+        f"/courses/{course_id}/students/import",
+        files=csv_file("full_name\nJane Doe\n   \nJohn Smith\n"),
+        headers=auth(token),
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["created"]) == 2
+    assert len(data["errors"]) == 1
+    assert data["errors"][0]["row"] == 3
+    assert "blank" in data["errors"][0]["reason"].lower()
+
+
+def test_import_students_missing_column_returns_422(client):
+    token = register_and_login(client)
+    course_id = create_course(client, token)
+    response = client.post(
+        f"/courses/{course_id}/students/import",
+        files=csv_file("name\nJane Doe\n"),
+        headers=auth(token),
+    )
+    assert response.status_code == 422
+
+
+def test_import_students_returns_404_for_nonexistent_course(client):
+    token = register_and_login(client)
+    response = client.post(
+        "/courses/999/students/import",
+        files=csv_file("full_name\nJane Doe\n"),
+        headers=auth(token),
+    )
+    assert response.status_code == 404
+
+
+def test_import_students_returns_404_for_other_users_course(client):
+    token_alice = register_and_login(client, "alice", "secret")
+    token_bob = register_and_login(client, "bob", "secret")
+    course_id = create_course(client, token_alice)
+    response = client.post(
+        f"/courses/{course_id}/students/import",
+        files=csv_file("full_name\nJane Doe\n"),
+        headers=auth(token_bob),
+    )
+    assert response.status_code == 404
+
+
+def test_import_students_requires_authentication(client):
+    response = client.post(
+        "/courses/1/students/import",
+        files=csv_file("full_name\nJane Doe\n"),
+    )
+    assert response.status_code == 401

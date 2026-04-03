@@ -1,4 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+import csv
+import io
+
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from pydantic import BaseModel, field_validator
 from sqlalchemy.orm import Session
 
@@ -26,6 +29,16 @@ class CreateStudentRequest(BaseModel):
 class StudentResponse(BaseModel):
     id: int
     full_name: str
+
+
+class ImportRowError(BaseModel):
+    row: int
+    reason: str
+
+
+class ImportResponse(BaseModel):
+    created: list[StudentResponse]
+    errors: list[ImportRowError]
 
 
 def get_owned_course(course_id: int, current_user: User, db: Session) -> Course:
@@ -85,3 +98,33 @@ def remove_student(
         raise HTTPException(status_code=404, detail="Student not found in course")
     db.delete(enrollment)
     db.commit()
+
+
+@router.post("/import", response_model=ImportResponse)
+def import_students(
+    course_id: int,
+    file: UploadFile,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    get_owned_course(course_id, current_user, db)
+    content = file.file.read().decode("utf-8")
+    reader = csv.DictReader(io.StringIO(content))
+    if "full_name" not in (reader.fieldnames or []):
+        raise HTTPException(
+            status_code=422, detail="CSV must have a 'full_name' column"
+        )
+    created = []
+    errors = []
+    for row_num, row in enumerate(reader, start=2):
+        full_name = (row.get("full_name") or "").strip()
+        if not full_name:
+            errors.append(ImportRowError(row=row_num, reason="Name cannot be blank"))
+            continue
+        student = Student(full_name=full_name)
+        db.add(student)
+        db.flush()
+        db.add(Enrollment(course_id=course_id, student_id=student.id))
+        created.append(StudentResponse(id=student.id, full_name=student.full_name))
+    db.commit()
+    return ImportResponse(created=created, errors=errors)
