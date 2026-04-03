@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import type { Pinia } from "pinia";
 import type { Router } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
-import { createTestRouter } from "@/router/routerTestHelper";
+import { makeTestRouter } from "@/router/routerTestHelper";
 import { setupTestPinia } from "@/utils/piniaTestHelper";
 
 describe("HomeView", () => {
@@ -12,7 +12,7 @@ describe("HomeView", () => {
 
   beforeEach(async () => {
     pinia = setupTestPinia();
-    router = createTestRouter();
+    router = makeTestRouter();
     await router.push("/");
     await router.isReady();
   });
