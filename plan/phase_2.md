@@ -31,17 +31,29 @@ Goal: a TA can create courses, add students manually or via CSV import, and view
 
 ---
 
-## 4. Frontend — HomeView
+## 4. Frontend — TopBar
+
+The top bar is a persistent shell component rendered across all authenticated views via `AppWrapper.vue`.
+
+- [ ] Create `TopBar.vue` — full-width bar, fixed to the top
+  - **Left:** product name "GradeKit" in bold
+  - **Right:** logged-in username + "Logout" button that calls `authStore.logout` and navigates to Login
+- [ ] Mount `TopBar.vue` in `AppWrapper.vue` above the router view, visible only when authenticated (`authStore.token !== null`)
+- [ ] Style per `DESIGN.md`: dark navy background (`~#1a2844`), white text, consistent padding
+- [ ] Move the logout button out of `HomeView.vue` — it belongs in the top bar
+
+---
+
+## 5. Frontend — HomeView
 
 - [ ] Implement `HomeView.vue` — fetches and lists all courses on mount
 - [ ] Inline search bar that filters the course list by name
 - [ ] "Create Course" button — inline form or modal to enter course name
 - [ ] Each course row navigates to CourseView
-- [ ] Logout button calls `authStore.logout`
 
 ---
 
-## 5. Frontend — CourseView
+## 6. Frontend — CourseView
 
 - [ ] Implement `CourseView.vue` — shows course name, students section, assignments section (assignments list placeholder for Phase 3)
 - [ ] Students section lists enrolled students
@@ -50,12 +62,26 @@ Goal: a TA can create courses, add students manually or via CSV import, and view
 
 ---
 
-## 6. Frontend — CourseStudentsView
+## 7. Frontend — CourseStudentsView
 
 - [ ] Implement `CourseStudentsView.vue` with two modes:
   - **Manual:** full name field + add button → calls `POST /courses/{id}/students`
   - **Import:** file input for CSV → preview parsed names → confirm → calls `POST /courses/{id}/students/import`
 - [ ] Show the current enrolled student list, with a remove button per row
+
+---
+
+## 8. Frontend — Auth page polish
+
+Style `LoginView.vue` and `RegisterView.vue` to match the visual language in `DESIGN.md`.
+
+- [ ] Center the form card on the page — white card, `~8px` border radius, subtle border and box shadow, on an off-white (`~#f5f6f8`) background
+- [ ] Add the "GradeKit" product name as a heading above the form
+- [ ] Style inputs: full width, bordered, `~8px` radius, comfortable padding
+- [ ] Style the submit button: dark navy (`~#1a2844`), white text, full width, `~8px` radius
+- [ ] Style inline error: red text below the submit button
+- [ ] Style the cross-link ("Already have an account? Login" / "Don't have an account? Register") in muted gray below the error
+- [ ] Disable the submit button and show a loading state while the request is in flight
 
 ---
 
@@ -67,3 +93,4 @@ Goal: a TA can create courses, add students manually or via CSV import, and view
 - TA can upload a CSV and see a preview before confirming import
 - After import, all valid rows appear in the enrolled list
 - TA can remove a student from a course
+- Login and Register pages are visually consistent with the app design system
