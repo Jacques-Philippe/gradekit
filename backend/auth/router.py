@@ -33,6 +33,10 @@ class RegisterRequest(BaseModel):
     def password_not_blank(cls, v: str) -> str:
         if not v.strip():
             raise ValueError("Password cannot be blank")
+        if len(v.encode()) > 72:
+            raise ValueError(
+                "Password must be at most 72 characters when UTF-8 encoded"
+            )
         return v
 
 
@@ -74,6 +78,10 @@ class LoginRequest(BaseModel):
     def password_not_blank(cls, v: str) -> str:
         if not v.strip():
             raise ValueError("Password cannot be blank")
+        if len(v.encode()) > 72:
+            raise ValueError(
+                "Password must be at most 72 characters when UTF-8 encoded"
+            )
         return v
 
 

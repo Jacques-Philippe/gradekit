@@ -107,6 +107,26 @@ def test_login_rejects_blank_credentials(client, payload, expected_message):
     assert any(expected_message in msg for msg in messages)
 
 
+def test_register_rejects_password_over_72_bytes(client):
+    long_password = "a" * 73
+    response = client.post(
+        "/auth/register", json={"username": "alice", "password": long_password}
+    )
+    assert response.status_code == 422
+    messages = [e["msg"] for e in response.json()["detail"]]
+    assert any("72" in msg for msg in messages)
+
+
+def test_login_rejects_password_over_72_bytes(client):
+    long_password = "a" * 73
+    response = client.post(
+        "/auth/login", json={"username": "alice", "password": long_password}
+    )
+    assert response.status_code == 422
+    messages = [e["msg"] for e in response.json()["detail"]]
+    assert any("72" in msg for msg in messages)
+
+
 def test_register_fails_if_username_taken(client):
     client.post("/auth/register", json={"username": "alice", "password": "secret"})
     response = client.post(
