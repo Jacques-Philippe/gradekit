@@ -1,6 +1,10 @@
-from fastapi import FastAPI
+from dotenv import load_dotenv
 
-from auth.router import router as auth_router
+load_dotenv()
+
+from fastapi import FastAPI  # noqa: E402
+
+from auth.router import router as auth_router  # noqa: E402
 
 app = FastAPI()
 

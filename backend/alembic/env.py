@@ -2,14 +2,16 @@ import os
 import sys
 from logging.config import fileConfig
 
+from dotenv import load_dotenv
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
 
-from database import Base
+from database import Base  # noqa: E402
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -24,6 +26,9 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 
 target_metadata = Base.metadata
+
+db_url = os.getenv("DATABASE_URL", config.get_main_option("sqlalchemy.url"))
+config.set_main_option("sqlalchemy.url", db_url)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
