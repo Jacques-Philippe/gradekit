@@ -1,30 +1,32 @@
 <template>
   <div class="auth-page">
     <div class="auth-card">
-      <p class="brand">GradeKit</p>
-      <h1>Log in</h1>
+      <p class="brand">{{ t("brand") }}</p>
+      <h1>{{ t("login.heading") }}</h1>
       <form @submit.prevent="submit">
         <input
           v-model="username"
           type="text"
-          placeholder="Username"
+          :placeholder="t('login.username_placeholder')"
           autocomplete="username"
         />
         <input
           v-model="password"
           type="password"
-          placeholder="Password"
+          :placeholder="t('login.password_placeholder')"
           autocomplete="current-password"
         />
         <p v-if="auth.error" data-testid="error" class="error">
           {{ auth.error }}
         </p>
         <button type="submit" :disabled="auth.loading">
-          {{ auth.loading ? "Logging in…" : "Log in" }}
+          {{ auth.loading ? t("login.submitting") : t("login.submit") }}
         </button>
         <p class="switch-link">
-          Don't have an account?
-          <router-link :to="Routes.Register">Register</router-link>
+          {{ t("login.switch") }}
+          <router-link :to="Routes.Register">{{
+            t("login.switch_link")
+          }}</router-link>
         </p>
       </form>
     </div>
@@ -34,8 +36,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/authStore";
 import { Routes } from "@/router/routes";
+
+const { t } = useI18n();
 
 const auth = useAuthStore();
 const router = useRouter();

@@ -206,6 +206,7 @@ Use `vue-i18n` to extract all user-visible strings from the frontend into locale
 - [ ] Replace hard-coded strings in `HomeView.vue` with `t()` calls (once implemented in section 5)
 - [ ] Replace hard-coded strings in `CourseView.vue` with `t()` calls (once implemented in section 6)
 - [ ] Replace hard-coded strings in `CourseStudentsView.vue` with `t()` calls (once implemented in section 7)
+- [ ] Also localize the error messages coming from the backend
 - [ ] User is able to switch languages through a languages modal which is accessed by clicking a Languages button in the dropdown accessible via avatar click in the topbar.
 
 ---

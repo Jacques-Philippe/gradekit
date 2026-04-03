@@ -1,0 +1,72 @@
+{
+  "brand": "GradeKit",
+  "login": {
+    "heading": "Log in",
+    "username_placeholder": "Username",
+    "password_placeholder": "Password",
+    "submit": "Log in",
+    "submitting": "Logging in\u2026",
+    "switch": "Don't have an account?",
+    "switch_link": "Register"
+  },
+  "register": {
+    "heading": "Create account",
+    "username_placeholder": "Username",
+    "password_placeholder": "Password",
+    "submit": "Register",
+    "submitting": "Creating account\u2026",
+    "switch": "Already have an account?",
+    "switch_link": "Log in"
+  },
+  "topbar": {
+    "logout": "Logout"
+  },
+  "home": {
+    "search_placeholder": "Search courses and assignments\u2026",
+    "search_courses": "Courses",
+    "search_assignments": "Assignments",
+    "no_courses_found": "No courses found",
+    "no_assignments_found": "No assignments found",
+    "recently_worked_on": "Recently worked on",
+    "new_course": "+ New Course",
+    "create": "Create",
+    "cancel": "Cancel",
+    "no_recent_activity": "No recent activity yet.",
+    "incoming_deadlines": "Incoming deadlines",
+    "no_deadlines": "No upcoming deadlines.",
+    "recent_activity": "Recent activity",
+    "no_activity": "No activity yet.",
+    "activity_course_created": "Created course \"{name}\"",
+    "activity_student_added": "Added {student} to {course}",
+    "activity_student_removed": "Removed {student} from {course}",
+    "activity_students_imported": "Imported {count} student | Imported {count} students"
+  },
+  "course": {
+    "loading": "Loading\u2026",
+    "students_heading": "Students",
+    "add_student": "Add Student",
+    "import_csv": "Import CSV",
+    "no_students": "No students enrolled yet.",
+    "assignments_heading": "Assignments",
+    "assignments_placeholder": "Assignments coming in Phase 3."
+  },
+  "course_students": {
+    "back": "\u2190 Back",
+    "title": "Manage Students",
+    "tab_manual": "Add Manually",
+    "tab_import": "Import CSV",
+    "name_placeholder": "Student full name",
+    "add": "Add",
+    "confirm_import": "Confirm Import",
+    "cancel": "Cancel",
+    "preview_label": "Preview \u2014 {count} student found | Preview \u2014 {count} students found",
+    "enrolled_heading": "Enrolled students",
+    "no_students": "No students enrolled yet.",
+    "remove": "Remove",
+    "remove_confirm": "Remove {name} from this course?",
+    "import_success": "Imported {count} student. | Imported {count} students.",
+    "import_skipped": "{count} row skipped. | {count} rows skipped.",
+    "parse_error_no_column": "CSV must have a 'full_name' column.",
+    "parse_error_no_rows": "No valid rows found in CSV."
+  }
+}
