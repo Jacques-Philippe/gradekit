@@ -113,10 +113,15 @@ For a TA, grading is a mix of:
 1. Clone the repo
 1. Start both services:
    ```bash
-   docker compose up
+   docker compose up --build --remove-orphans
    ```
 1. The app is available at `http://localhost:5173/gradekit/`
 1. The backend API is available at `http://localhost:8000`
+
+You can stop the service with
+```bash
+docker compose down
+```
 
 ### Standalone install
 
