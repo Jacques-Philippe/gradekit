@@ -134,7 +134,7 @@ A lightweight audit log that records user-scoped events as they happen. Later ph
   - `payload` — `Text` column storing a JSON-serialised dict of context data (e.g. `{"course_id": 1, "course_name": "CS101", "student_name": "Jane Doe"}`); schema is event-type-specific and intentionally untyped at the DB level
   - `created_at` (datetime, default `utcnow`)
 - [x] Create `backend/models/activity_type.py` — Python `Enum` class defining all valid `event_type` values; import this wherever events are recorded to avoid magic strings
-- [ ] Run Alembic migration to create the `activity` table
+- [x] Run Alembic migration to create the `activity` table
 
 ### Recording events
 
