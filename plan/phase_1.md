@@ -73,8 +73,8 @@ Goal: a TA can register an account, log in, and stay logged in across browser se
 
 ## 5. Frontend — Route protection
 
-- [ ] Add a navigation guard that redirects unauthenticated users to LoginView
-- [ ] Redirect authenticated users away from LoginView and RegisterView to HomeView
+- [x] Add a navigation guard that redirects unauthenticated users to LoginView
+- [x] Redirect authenticated users away from LoginView and RegisterView to HomeView
 
 ---
 
