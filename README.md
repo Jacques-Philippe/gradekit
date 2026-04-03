@@ -105,6 +105,18 @@ For a TA, grading is a mix of:
 - Database: SQLite
 - Deployment: single local instance, self-hosted
 
+## Application Structure
+
+GradeKit is split into four services that run together via Docker Compose.
+
+**Frontend (`frontend/`)** is a Vue 3 + TypeScript single-page application built with Vite. It uses the Composition API throughout, Pinia for state management, and Vue Router for client-side navigation. The frontend communicates with the backend exclusively through a JSON REST API, proxied via Vite's dev server during development.
+
+**Backend (`backend/`)** is a Python server built with FastAPI. It exposes a REST API consumed by the frontend, handles authentication via JWT bearer tokens, and persists all data to a local SQLite database using SQLAlchemy as the ORM. Database migrations are managed with Alembic. Long-running jobs (PDF generation) are offloaded to the worker by enqueuing tasks via Redis.
+
+**PDF Generator Worker (`pdf-worker/`)** is a Python worker process built with [`arq`](https://arq-docs.helpmanual.io/). `arq` was chosen over Celery for its async-native design (matching FastAPI's async model), simpler API, and built-in Redis job status tracking — Celery's additional features (multiple broker support, complex task graphs) are not needed for this use case. The worker listens for jobs on Redis and executes them asynchronously — generating student report PDFs using Typst. The API returns a job ID immediately; the frontend polls `GET /jobs/{id}` to check status and retrieve the result.
+
+**Redis** acts as the message broker between the backend and the worker. Job payloads and status are stored in Redis; no separate job table is needed in SQLite.
+
 ## Developer Get Started
 
 ### Docker-compose install
