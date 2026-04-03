@@ -43,7 +43,7 @@ The top bar is a persistent shell component rendered across all authenticated vi
 - [x] Mount `TopBar.vue` in `AppWrapper.vue` above the router view, visible only when authenticated (`authStore.token !== null`)
 - [x] Style per `DESIGN.md`: dark navy background (`~#1a2844`), white text, consistent padding
 - [x] Move the logout button out of `HomeView.vue` — it belongs in the top bar
-- [ ] Replace username + logout button with an avatar circle (top-right) showing the first letter of the logged-in username
+- [x] Replace username + logout button with an avatar circle (top-right) showing the first letter of the logged-in username
   - Clicking the avatar opens a dropdown menu
   - Dropdown contains a "Logout" option that calls `authStore.logout` and navigates to Login
   - Dropdown closes when clicking outside
@@ -88,6 +88,21 @@ Style `LoginView.vue` and `RegisterView.vue` to match the visual language in `DE
 - [x] Style inline error: red text below the submit button
 - [x] Style the cross-link ("Already have an account? Login" / "Don't have an account? Register") in muted gray below the error
 - [x] Disable the submit button and show a loading state while the request is in flight
+
+---
+
+## 9. Internationalisation (i18n)
+
+Use `vue-i18n` to extract all user-visible strings from the frontend into locale message files.
+
+- [ ] Install `vue-i18n` and register it on the Vue app in `main.ts`
+- [ ] Create `frontend/src/locales/en.json` — English locale file containing all strings
+- [ ] Create `frontend/src/i18n.ts` — initialises and exports the `i18n` instance (default locale `en`, fallback locale `en`)
+- [ ] Replace hard-coded strings in `LoginView.vue` and `RegisterView.vue` with `t()` calls
+- [ ] Replace hard-coded strings in `TopBar.vue` with `t()` calls
+- [ ] Replace hard-coded strings in `HomeView.vue` with `t()` calls (once implemented in section 5)
+- [ ] Replace hard-coded strings in `CourseView.vue` with `t()` calls (once implemented in section 6)
+- [ ] Replace hard-coded strings in `CourseStudentsView.vue` with `t()` calls (once implemented in section 7)
 
 ---
 

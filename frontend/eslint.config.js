@@ -29,6 +29,10 @@ export default [
       },
       globals: {
         window: "readonly",
+        document: "readonly",
+        HTMLElement: "readonly",
+        MouseEvent: "readonly",
+        Node: "readonly",
         KeyboardEvent: "readonly",
       },
     },
