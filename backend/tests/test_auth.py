@@ -29,7 +29,7 @@ def test_login_fails_if_username_does_not_exist(client):
         "/auth/login", json={"username": "ghost", "password": "secret"}
     )
     assert response.status_code == 401
-    assert response.json()["detail"] == "Username does not exist"
+    assert response.json()["detail"] == "Invalid credentials"
 
 
 def test_login_fails_if_password_wrong(client):
@@ -38,7 +38,7 @@ def test_login_fails_if_password_wrong(client):
         "/auth/login", json={"username": "alice", "password": "wrong"}
     )
     assert response.status_code == 401
-    assert response.json()["detail"] == "Invalid password"
+    assert response.json()["detail"] == "Invalid credentials"
 
 
 def test_me_returns_current_user(client):

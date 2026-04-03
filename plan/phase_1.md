@@ -23,8 +23,8 @@ Goal: a TA can register an account, log in, and stay logged in across browser se
   - [x] `POST /auth/register` — succeeds with valid credentials, returns a token
   - [x] `POST /auth/register` — fails with 400 if username is already taken, response body contains `"The username is already taken"`
   - [x] `POST /auth/login` — succeeds with correct credentials, returns a token
-  - [x] `POST /auth/login` — fails with 401 if username does not exist, response body contains `"Username does not exist"`
-  - [x] `POST /auth/login` — fails with 401 if password is wrong, response body contains `"Invalid password"`
+  - [x] `POST /auth/login` — fails with 401 if username does not exist, response body contains `"Invalid credentials"`
+  - [x] `POST /auth/login` — fails with 401 if password is wrong, response body contains `"Invalid credentials"`
   - [x] `GET /auth/me` — returns current user when a valid token is provided
   - [x] `GET /auth/me` — fails with 401 when no token is provided
   - [x] `GET /auth/me` — fails with 401 when token is expired or invalid

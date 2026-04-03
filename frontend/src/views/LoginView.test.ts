@@ -54,7 +54,7 @@ describe("LoginView", () => {
   it("displays an error message when login fails", async () => {
     const { wrapper, store } = await mountLoginView();
     vi.spyOn(store, "login").mockImplementation(async () => {
-      store.error = "Username does not exist";
+      store.error = "Invalid credentials";
       return false;
     });
 
@@ -62,7 +62,7 @@ describe("LoginView", () => {
     await flushPromises();
 
     expect(wrapper.find("[data-testid='error']").text()).toBe(
-      "Username does not exist",
+      "Invalid credentials",
     );
   });
 
@@ -71,7 +71,7 @@ describe("LoginView", () => {
     let callCount = 0;
     vi.spyOn(store, "login").mockImplementation(async () => {
       if (callCount++ === 0) {
-        store.error = "Username does not exist";
+        store.error = "Invalid credentials";
         return false;
       }
       store.error = "";
@@ -81,7 +81,7 @@ describe("LoginView", () => {
     await wrapper.find("form").trigger("submit");
     await flushPromises();
     expect(wrapper.find("[data-testid='error']").text()).toBe(
-      "Username does not exist",
+      "Invalid credentials",
     );
 
     await wrapper.find("form").trigger("submit");

@@ -33,7 +33,7 @@ describe("login", () => {
   it("sets error and leaves token null on failure", async () => {
     vi.mocked(authApi.apiLogin).mockResolvedValue({
       ok: false,
-      error: "Username does not exist",
+      error: "Invalid credentials",
     });
 
     const store = useAuthStore();
@@ -42,7 +42,7 @@ describe("login", () => {
     expect(result).toBe(false);
     expect(store.token).toBeNull();
     expect(store.user).toBeNull();
-    expect(store.error).toBe("Username does not exist");
+    expect(store.error).toBe("Invalid credentials");
   });
 
   it("does not persist token when /auth/me fails after login", async () => {
