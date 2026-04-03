@@ -69,9 +69,9 @@ The top bar is a persistent shell component rendered across all authenticated vi
 
 ### Recently worked-on courses
 
-- [ ] On mount, fetch `GET /courses` and `GET /activity` (see section 9); derive the 5 most recently worked-on courses by finding the latest activity event per course, sorted by `created_at` descending
-- [ ] Each card shows the course name and navigates to CourseView on click
-- [ ] Cards use the `DESIGN.md` style (white, `~8px` radius, subtle border and box shadow)
+- [x] On mount, fetch `GET /courses` and `GET /activity` (see section 9); derive the 5 most recently worked-on courses by finding the latest activity event per course, sorted by `created_at` descending
+- [x] Each card shows the course name and navigates to CourseView on click
+- [x] Cards use the `DESIGN.md` style (white, `~8px` radius, subtle border and box shadow)
 - [ ] "Create Course" button above or alongside the list — inline form or modal to enter course name; on success re-fetches the list
 
 ### Recent activity feed

@@ -36,6 +36,21 @@
         </div>
       </div>
     </div>
+    <section class="recent-section">
+      <h2 class="section-heading">Recently worked on</h2>
+      <div v-if="recentCourses.length" class="course-cards">
+        <button
+          v-for="course in recentCourses"
+          :key="course.id"
+          class="course-card"
+          @click="navigateToCourse(course.id)"
+          :data-testid="`recent-course-${course.id}`"
+        >
+          {{ course.name }}
+        </button>
+      </div>
+      <p v-else class="empty-state">No recent activity yet.</p>
+    </section>
   </div>
 </template>
 
@@ -43,6 +58,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { apiGetCourses, type Course } from "@/api/courses";
+import { apiGetActivity } from "@/api/activity";
 import { courseRoute } from "@/router/routes";
 
 const router = useRouter();
@@ -50,6 +66,7 @@ const router = useRouter();
 const query = ref("");
 const showResults = ref(false);
 const courses = ref<Course[]>([]);
+const recentCourses = ref<Course[]>([]);
 
 const matchingCourses = computed(() =>
   courses.value.filter((c) =>
@@ -58,8 +75,31 @@ const matchingCourses = computed(() =>
 );
 
 onMounted(async () => {
-  const result = await apiGetCourses();
-  if (result.ok) courses.value = result.data;
+  const [coursesResult, activityResult] = await Promise.all([
+    apiGetCourses(),
+    apiGetActivity(),
+  ]);
+  if (coursesResult.ok) courses.value = coursesResult.data;
+  if (coursesResult.ok && activityResult.ok) {
+    const courseMap = new Map(coursesResult.data.map((c) => [c.id, c]));
+    const latestByCourse = new Map<number, string>();
+    for (const event of activityResult.data) {
+      const payload = JSON.parse(event.payload) as { course_id?: number };
+      const courseId = payload.course_id;
+      if (courseId !== undefined && !latestByCourse.has(courseId)) {
+        latestByCourse.set(courseId, event.created_at);
+      }
+    }
+    recentCourses.value = [...latestByCourse.keys()]
+      .filter((id) => courseMap.has(id))
+      .sort((a, b) => {
+        const ta = latestByCourse.get(a)!;
+        const tb = latestByCourse.get(b)!;
+        return tb.localeCompare(ta);
+      })
+      .slice(0, 5)
+      .map((id) => courseMap.get(id)!);
+  }
 });
 
 function navigateToCourse(id: number) {
@@ -149,6 +189,48 @@ function onFocusOut() {
 
 .no-results {
   padding: 6px 14px;
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.recent-section {
+  margin-top: 32px;
+}
+
+.section-heading {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2844;
+  margin: 0 0 12px;
+}
+
+.course-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.course-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  padding: 16px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+  cursor: pointer;
+  text-align: left;
+  min-width: 160px;
+  transition: box-shadow 0.15s;
+}
+
+.course-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state {
   font-size: 13px;
   color: #9ca3af;
   margin: 0;
