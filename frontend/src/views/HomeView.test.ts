@@ -130,6 +130,81 @@ describe("HomeView", () => {
     expect(wrapper.text()).toContain("No recent activity yet.");
   });
 
+  it("renders activity feed events", async () => {
+    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
+    await flushPromises();
+    expect(wrapper.find("[data-testid='activity-feed']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='activity-event-1']").exists()).toBe(
+      true,
+    );
+    expect(wrapper.find("[data-testid='activity-event-2']").exists()).toBe(
+      true,
+    );
+  });
+
+  it("shows formatted event messages", async () => {
+    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
+    await flushPromises();
+    const feed = wrapper.find("[data-testid='activity-feed']");
+    expect(feed.text()).toContain("Added");
+    expect(feed.text()).toContain("Created course");
+  });
+
+  it("shows empty state when activity is empty", async () => {
+    vi.spyOn(activityApi, "apiGetActivity").mockResolvedValue({
+      ok: true,
+      data: [],
+    });
+    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
+    await flushPromises();
+    expect(wrapper.find("[data-testid='activity-empty']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='activity-feed']").exists()).toBe(false);
+  });
+
+  it("shows create course button", async () => {
+    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
+    expect(wrapper.find("[data-testid='open-create-course']").exists()).toBe(
+      true,
+    );
+  });
+
+  it("shows create form when button is clicked", async () => {
+    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
+    await wrapper.find("[data-testid='open-create-course']").trigger("click");
+    expect(wrapper.find("[data-testid='create-course-form']").exists()).toBe(
+      true,
+    );
+  });
+
+  it("hides form on cancel", async () => {
+    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
+    await wrapper.find("[data-testid='open-create-course']").trigger("click");
+    await wrapper.find("[data-testid='create-course-cancel']").trigger("click");
+    expect(wrapper.find("[data-testid='create-course-form']").exists()).toBe(
+      false,
+    );
+  });
+
+  it("creates a course and updates the recent list", async () => {
+    const newCourse = { id: 3, name: "New Course", description: null };
+    vi.spyOn(coursesApi, "apiCreateCourse").mockResolvedValue({
+      ok: true,
+      data: newCourse,
+    });
+    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
+    await flushPromises();
+    await wrapper.find("[data-testid='open-create-course']").trigger("click");
+    await wrapper
+      .find("[data-testid='create-course-input']")
+      .setValue("New Course");
+    await wrapper.find("[data-testid='create-course-form']").trigger("submit");
+    await flushPromises();
+    expect(wrapper.find("[data-testid='create-course-form']").exists()).toBe(
+      false,
+    );
+    expect(wrapper.find("[data-testid='recent-course-3']").exists()).toBe(true);
+  });
+
   it("navigates to course when a recent course card is clicked", async () => {
     const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
     await flushPromises();

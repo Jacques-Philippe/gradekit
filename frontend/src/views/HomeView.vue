@@ -37,7 +37,55 @@
       </div>
     </div>
     <section class="recent-section">
-      <h2 class="section-heading">Recently worked on</h2>
+      <div class="section-header">
+        <h2 class="section-heading">Recently worked on</h2>
+        <button
+          v-if="!showCreateForm"
+          class="btn-create"
+          @click="showCreateForm = true"
+          data-testid="open-create-course"
+        >
+          + New Course
+        </button>
+      </div>
+      <form
+        v-if="showCreateForm"
+        class="create-form"
+        @submit.prevent="submitCreateCourse"
+        data-testid="create-course-form"
+      >
+        <input
+          v-model="newCourseName"
+          class="create-input"
+          type="text"
+          placeholder="Course name"
+          autofocus
+          data-testid="create-course-input"
+        />
+        <button
+          type="submit"
+          class="btn-primary"
+          :disabled="createPending"
+          data-testid="create-course-submit"
+        >
+          Create
+        </button>
+        <button
+          type="button"
+          class="btn-cancel"
+          @click="cancelCreate"
+          data-testid="create-course-cancel"
+        >
+          Cancel
+        </button>
+        <p
+          v-if="createError"
+          class="form-error"
+          data-testid="create-course-error"
+        >
+          {{ createError }}
+        </p>
+      </form>
       <div v-if="recentCourses.length" class="course-cards">
         <button
           v-for="course in recentCourses"
@@ -51,14 +99,38 @@
       </div>
       <p v-else class="empty-state">No recent activity yet.</p>
     </section>
+
+    <section class="recent-section">
+      <h2 class="section-heading">Recent activity</h2>
+      <ul
+        v-if="activityFeed.length"
+        class="activity-list"
+        data-testid="activity-feed"
+      >
+        <li
+          v-for="event in activityFeed"
+          :key="event.id"
+          class="activity-item"
+          :data-testid="`activity-event-${event.id}`"
+        >
+          <span class="activity-message">{{ formatEventMessage(event) }}</span>
+          <span class="activity-time">{{
+            relativeTime(event.created_at)
+          }}</span>
+        </li>
+      </ul>
+      <p v-else class="empty-state" data-testid="activity-empty">
+        No activity yet.
+      </p>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { apiGetCourses, type Course } from "@/api/courses";
-import { apiGetActivity } from "@/api/activity";
+import { apiGetCourses, apiCreateCourse, type Course } from "@/api/courses";
+import { apiGetActivity, type ActivityEvent } from "@/api/activity";
 import { courseRoute } from "@/router/routes";
 
 const router = useRouter();
@@ -67,6 +139,11 @@ const query = ref("");
 const showResults = ref(false);
 const courses = ref<Course[]>([]);
 const recentCourses = ref<Course[]>([]);
+const activityFeed = ref<ActivityEvent[]>([]);
+const showCreateForm = ref(false);
+const newCourseName = ref("");
+const createPending = ref(false);
+const createError = ref("");
 
 const matchingCourses = computed(() =>
   courses.value.filter((c) =>
@@ -80,6 +157,7 @@ onMounted(async () => {
     apiGetActivity(),
   ]);
   if (coursesResult.ok) courses.value = coursesResult.data;
+  if (activityResult.ok) activityFeed.value = activityResult.data;
   if (coursesResult.ok && activityResult.ok) {
     const courseMap = new Map(coursesResult.data.map((c) => [c.id, c]));
     const latestByCourse = new Map<number, string>();
@@ -102,6 +180,37 @@ onMounted(async () => {
   }
 });
 
+function relativeTime(isoString: string): string {
+  const diffMs = Date.now() - new Date(isoString).getTime();
+  const diffMins = Math.floor(diffMs / 60_000);
+  if (diffMins < 1) return "just now";
+  if (diffMins < 60)
+    return `${diffMins} minute${diffMins === 1 ? "" : "s"} ago`;
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24)
+    return `${diffHours} hour${diffHours === 1 ? "" : "s"} ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  return `${diffDays} day${diffDays === 1 ? "" : "s"} ago`;
+}
+
+function formatEventMessage(event: ActivityEvent): string {
+  const p = JSON.parse(event.payload) as Record<string, unknown>;
+  switch (event.event_type) {
+    case "COURSE_CREATED":
+      return `Created course "${p.course_name}"`;
+    case "STUDENT_ADDED":
+      return `Added ${p.student_name} to ${p.course_name}`;
+    case "STUDENT_REMOVED":
+      return `Removed ${p.student_name} from ${p.course_name}`;
+    case "STUDENTS_IMPORTED": {
+      const count = (p.students as unknown[]).length;
+      return `Imported ${count} student${count === 1 ? "" : "s"} into ${p.course_name}`;
+    }
+    default:
+      return event.event_type;
+  }
+}
+
 function navigateToCourse(id: number) {
   query.value = "";
   showResults.value = false;
@@ -110,6 +219,28 @@ function navigateToCourse(id: number) {
 
 function onFocusOut() {
   showResults.value = false;
+}
+
+function cancelCreate() {
+  showCreateForm.value = false;
+  newCourseName.value = "";
+  createError.value = "";
+}
+
+async function submitCreateCourse() {
+  const name = newCourseName.value.trim();
+  if (!name) return;
+  createPending.value = true;
+  createError.value = "";
+  const result = await apiCreateCourse(name);
+  createPending.value = false;
+  if (!result.ok) {
+    createError.value = result.error;
+    return;
+  }
+  courses.value = [...courses.value, result.data];
+  recentCourses.value = [result.data, ...recentCourses.value].slice(0, 5);
+  cancelCreate();
 }
 </script>
 
@@ -234,5 +365,117 @@ function onFocusOut() {
   font-size: 13px;
   color: #9ca3af;
   margin: 0;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.section-header .section-heading {
+  margin-bottom: 0;
+}
+
+.btn-create {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a2844;
+  background: transparent;
+  border: 1px solid #1a2844;
+  border-radius: 6px;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+.btn-create:hover {
+  background: #f5f6f8;
+}
+
+.create-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.create-input {
+  flex: 1;
+  min-width: 180px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  outline: none;
+}
+
+.create-input:focus {
+  border-color: #1a2844;
+}
+
+.btn-primary {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  background: #1a2844;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  padding: 8px 14px;
+  font-size: 14px;
+  background: #f5f6f8;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.form-error {
+  width: 100%;
+  font-size: 13px;
+  color: #dc2626;
+  margin: 0;
+}
+
+.activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 13px;
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.activity-message {
+  color: #111827;
+}
+
+.activity-time {
+  color: #9ca3af;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 </style>
