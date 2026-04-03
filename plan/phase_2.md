@@ -26,7 +26,7 @@ All course endpoints require authentication via Bearer token (`Depends(get_curre
 
 ## 3. Backend — Student endpoints
 
-- [ ] `GET /courses/{course_id}/students` — list enrolled students for a course
+- [x] `GET /courses/{course_id}/students` — list enrolled students for a course
 - [ ] `POST /courses/{course_id}/students` — create and enroll a student in one step
 - [ ] `DELETE /courses/{course_id}/students/{student_id}` — remove a student from a course
 - [ ] `POST /courses/{course_id}/students/import` — accepts a CSV file, bulk-creates and enrolls students; returns list of created students and any rows that failed to parse
