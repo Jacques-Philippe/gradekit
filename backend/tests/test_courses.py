@@ -93,6 +93,37 @@ def test_get_course_requires_authentication(client):
     assert response.status_code == 401
 
 
+def test_delete_course_succeeds(client):
+    token = register_and_login(client)
+    created = client.post("/courses", json={"name": "Math 101"}, headers=auth(token))
+    course_id = created.json()["id"]
+    response = client.delete(f"/courses/{course_id}", headers=auth(token))
+    assert response.status_code == 204
+    assert client.get(f"/courses/{course_id}", headers=auth(token)).status_code == 404
+
+
+def test_delete_course_returns_404_for_nonexistent(client):
+    token = register_and_login(client)
+    response = client.delete("/courses/999", headers=auth(token))
+    assert response.status_code == 404
+
+
+def test_delete_course_returns_404_for_other_users_course(client):
+    token_alice = register_and_login(client, "alice", "secret")
+    token_bob = register_and_login(client, "bob", "secret")
+    created = client.post(
+        "/courses", json={"name": "Alice's Course"}, headers=auth(token_alice)
+    )
+    course_id = created.json()["id"]
+    response = client.delete(f"/courses/{course_id}", headers=auth(token_bob))
+    assert response.status_code == 404
+
+
+def test_delete_course_requires_authentication(client):
+    response = client.delete("/courses/1")
+    assert response.status_code == 401
+
+
 def test_list_courses_only_returns_own_courses(client, db_session):
     from models.course import Course
 
