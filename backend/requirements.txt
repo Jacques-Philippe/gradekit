@@ -34,6 +34,7 @@ python-jose==3.5.0
 pytokens==0.4.1
 PyYAML==6.0.3
 rsa==4.9.1
+ruff==0.15.9
 six==1.17.0
 SQLAlchemy==2.0.48
 starlette==1.0.0
