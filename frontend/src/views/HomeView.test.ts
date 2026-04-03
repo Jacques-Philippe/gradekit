@@ -7,6 +7,7 @@ import { makeTestRouter } from "@/router/routerTestHelper";
 import { setupTestPinia } from "@/utils/piniaTestHelper";
 import * as coursesApi from "@/api/courses";
 import * as activityApi from "@/api/activity";
+import * as deadlinesApi from "@/api/deadlines";
 
 const COURSES = [
   { id: 1, name: "CS101", description: null },
@@ -28,6 +29,23 @@ const ACTIVITY = [
   },
 ];
 
+const DEADLINES = [
+  {
+    assignment_id: 1,
+    assignment_title: "Homework 1",
+    course_id: 1,
+    course_name: "CS101",
+    due_date: "2099-12-31T23:59:00Z",
+  },
+  {
+    assignment_id: 2,
+    assignment_title: "Midterm",
+    course_id: 2,
+    course_name: "Math 201",
+    due_date: "2099-11-01T10:00:00Z",
+  },
+];
+
 describe("HomeView", () => {
   let pinia: Pinia;
   let router: Router;
@@ -44,6 +62,10 @@ describe("HomeView", () => {
     vi.spyOn(activityApi, "apiGetActivity").mockResolvedValue({
       ok: true,
       data: ACTIVITY,
+    });
+    vi.spyOn(deadlinesApi, "apiGetDeadlines").mockResolvedValue({
+      ok: true,
+      data: DEADLINES,
     });
   });
 
@@ -211,5 +233,59 @@ describe("HomeView", () => {
     await wrapper.find("[data-testid='recent-course-2']").trigger("click");
     await flushPromises();
     expect(router.currentRoute.value.path).toBe("/courses/2");
+  });
+
+  it("renders deadline items", async () => {
+    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
+    await flushPromises();
+    expect(wrapper.find("[data-testid='deadlines-list']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='deadline-1']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='deadline-2']").exists()).toBe(true);
+  });
+
+  it("shows assignment title and course name in each deadline row", async () => {
+    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
+    await flushPromises();
+    const item = wrapper.find("[data-testid='deadline-1']");
+    expect(item.text()).toContain("Homework 1");
+    expect(item.text()).toContain("CS101");
+  });
+
+  it("shows empty state when there are no deadlines", async () => {
+    vi.spyOn(deadlinesApi, "apiGetDeadlines").mockResolvedValue({
+      ok: true,
+      data: [],
+    });
+    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
+    await flushPromises();
+    expect(wrapper.find("[data-testid='deadlines-empty']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='deadlines-list']").exists()).toBe(false);
+  });
+
+  it("marks deadlines within 24 hours as urgent", async () => {
+    const soonIso = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+    vi.spyOn(deadlinesApi, "apiGetDeadlines").mockResolvedValue({
+      ok: true,
+      data: [
+        {
+          assignment_id: 99,
+          assignment_title: "Final",
+          course_id: 1,
+          course_name: "CS101",
+          due_date: soonIso,
+        },
+      ],
+    });
+    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
+    await flushPromises();
+    const item = wrapper.find("[data-testid='deadline-99']");
+    expect(item.classes()).toContain("deadline-urgent");
+  });
+
+  it("does not mark far-future deadlines as urgent", async () => {
+    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
+    await flushPromises();
+    const item = wrapper.find("[data-testid='deadline-1']");
+    expect(item.classes()).not.toContain("deadline-urgent");
   });
 });

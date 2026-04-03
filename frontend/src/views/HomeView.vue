@@ -101,6 +101,34 @@
     </section>
 
     <section class="recent-section">
+      <h2 class="section-heading">Incoming deadlines</h2>
+      <ul
+        v-if="deadlines.length"
+        class="deadline-list"
+        data-testid="deadlines-list"
+      >
+        <li
+          v-for="d in deadlines"
+          :key="d.assignment_id"
+          class="deadline-item"
+          :class="{ 'deadline-urgent': isUrgent(d.due_date) }"
+          :data-testid="`deadline-${d.assignment_id}`"
+        >
+          <span class="deadline-title">{{ d.assignment_title }}</span>
+          <span class="deadline-course">{{ d.course_name }}</span>
+          <span
+            class="deadline-date"
+            :class="{ 'deadline-date-urgent': isUrgent(d.due_date) }"
+            >{{ formatDueDate(d.due_date) }}</span
+          >
+        </li>
+      </ul>
+      <p v-else class="empty-state" data-testid="deadlines-empty">
+        No upcoming deadlines.
+      </p>
+    </section>
+
+    <section class="recent-section">
       <h2 class="section-heading">Recent activity</h2>
       <ul
         v-if="activityFeed.length"
@@ -131,6 +159,7 @@ import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { apiGetCourses, apiCreateCourse, type Course } from "@/api/courses";
 import { apiGetActivity, type ActivityEvent } from "@/api/activity";
+import { apiGetDeadlines, type Deadline } from "@/api/deadlines";
 import { courseRoute } from "@/router/routes";
 
 const router = useRouter();
@@ -140,6 +169,7 @@ const showResults = ref(false);
 const courses = ref<Course[]>([]);
 const recentCourses = ref<Course[]>([]);
 const activityFeed = ref<ActivityEvent[]>([]);
+const deadlines = ref<Deadline[]>([]);
 const showCreateForm = ref(false);
 const newCourseName = ref("");
 const createPending = ref(false);
@@ -152,10 +182,12 @@ const matchingCourses = computed(() =>
 );
 
 onMounted(async () => {
-  const [coursesResult, activityResult] = await Promise.all([
+  const [coursesResult, activityResult, deadlinesResult] = await Promise.all([
     apiGetCourses(),
     apiGetActivity(),
+    apiGetDeadlines(),
   ]);
+  if (deadlinesResult.ok) deadlines.value = deadlinesResult.data;
   if (coursesResult.ok) courses.value = coursesResult.data;
   if (activityResult.ok) activityFeed.value = activityResult.data;
   if (coursesResult.ok && activityResult.ok) {
@@ -179,6 +211,19 @@ onMounted(async () => {
       .map((id) => courseMap.get(id)!);
   }
 });
+
+function isUrgent(isoString: string): boolean {
+  return new Date(isoString).getTime() - Date.now() <= 24 * 60 * 60 * 1000;
+}
+
+function formatDueDate(isoString: string): string {
+  return new Date(isoString).toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
 function relativeTime(isoString: string): string {
   const diffMs = Date.now() - new Date(isoString).getTime();
@@ -477,5 +522,47 @@ async function submitCreateCourse() {
   color: #9ca3af;
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+.deadline-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.deadline-item {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 13px;
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.deadline-title {
+  font-weight: 500;
+  color: #111827;
+  flex: 1;
+}
+
+.deadline-course {
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.deadline-date {
+  color: #6b7280;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.deadline-date-urgent {
+  color: #dc2626;
+  font-weight: 500;
 }
 </style>

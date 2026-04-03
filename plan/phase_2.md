@@ -82,10 +82,10 @@ The top bar is a persistent shell component rendered across all authenticated vi
 
 ### Incoming deadlines
 
-- [ ] On mount, fetch `GET /deadlines` and render as a list sorted by `due_date` ascending
-- [ ] Each item shows the assignment title, course name, and formatted due date
-- [ ] Shows a placeholder message when there are no upcoming deadlines
-- [ ] Deadlines within 24 hours are visually highlighted (e.g. red or amber text)
+- [x] On mount, fetch `GET /deadlines` and render as a list sorted by `due_date` ascending
+- [x] Each item shows the assignment title, course name, and formatted due date
+- [x] Shows a placeholder message when there are no upcoming deadlines
+- [x] Deadlines within 24 hours are visually highlighted (e.g. red or amber text)
 
 ---
 
