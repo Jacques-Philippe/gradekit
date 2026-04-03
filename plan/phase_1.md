@@ -54,7 +54,7 @@ Goal: a TA can register an account, log in, and stay logged in across browser se
 - [x] Create `RegisterView.vue` — username + password form, calls `POST /auth/register`, navigates to HomeView on success; displays error message on 400 (e.g. username taken)
 - [x] Link the two views to each other ("Don't have an account? Register")
 - [x] Error messages are shown inline below the form, cleared on the next submit attempt
-- [ ] Write unit tests for `LoginView`:
+- [x] Write unit tests for `LoginView`:
   - Renders username and password fields and a submit button
   - Calls `authStore.login` with the entered credentials on submit
   - Navigates to HomeView when login succeeds

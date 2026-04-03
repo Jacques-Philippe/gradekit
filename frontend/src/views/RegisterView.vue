@@ -16,7 +16,8 @@
     <p v-if="auth.error">{{ auth.error }}</p>
     <button type="submit" :disabled="auth.loading">Register</button>
     <p>
-      Already have an account? <router-link to="/login">Log in</router-link>
+      Already have an account?
+      <router-link :to="Routes.Login">Log in</router-link>
     </p>
   </form>
 </template>
@@ -25,6 +26,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
+import { Routes } from "@/router/routes";
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -33,6 +35,6 @@ const password = ref("");
 
 async function submit() {
   const ok = await auth.register(username.value, password.value);
-  if (ok) router.push("/");
+  if (ok) router.push(Routes.Home);
 }
 </script>

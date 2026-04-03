@@ -1,21 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
+import { Routes } from "@/router/routes";
 
 const routes = [
   {
-    path: "/login",
+    path: Routes.Login,
     name: "Login",
     component: () => import("@/views/LoginView.vue"),
     meta: { public: true },
   },
   {
-    path: "/register",
+    path: Routes.Register,
     name: "Register",
     component: () => import("@/views/RegisterView.vue"),
     meta: { public: true },
   },
   {
-    path: "/",
+    path: Routes.Home,
     name: "Home",
     component: () => import("@/views/HomeView.vue"),
   },
