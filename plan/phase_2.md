@@ -75,13 +75,13 @@ The top bar is a persistent shell component rendered across all authenticated vi
 
 Style `LoginView.vue` and `RegisterView.vue` to match the visual language in `DESIGN.md`.
 
-- [ ] Center the form card on the page — white card, `~8px` border radius, subtle border and box shadow, on an off-white (`~#f5f6f8`) background
-- [ ] Add the "GradeKit" product name as a heading above the form
-- [ ] Style inputs: full width, bordered, `~8px` radius, comfortable padding
-- [ ] Style the submit button: dark navy (`~#1a2844`), white text, full width, `~8px` radius
-- [ ] Style inline error: red text below the submit button
-- [ ] Style the cross-link ("Already have an account? Login" / "Don't have an account? Register") in muted gray below the error
-- [ ] Disable the submit button and show a loading state while the request is in flight
+- [x] Center the form card on the page — white card, `~8px` border radius, subtle border and box shadow, on an off-white (`~#f5f6f8`) background
+- [x] Add the "GradeKit" product name as a heading above the form
+- [x] Style inputs: full width, bordered, `~8px` radius, comfortable padding
+- [x] Style the submit button: dark navy (`~#1a2844`), white text, full width, `~8px` radius
+- [x] Style inline error: red text below the submit button
+- [x] Style the cross-link ("Already have an account? Login" / "Don't have an account? Register") in muted gray below the error
+- [x] Disable the submit button and show a loading state while the request is in flight
 
 ---
 
