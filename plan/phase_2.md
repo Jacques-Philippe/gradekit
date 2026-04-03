@@ -91,10 +91,10 @@ The top bar is a persistent shell component rendered across all authenticated vi
 
 ## 6. Frontend — CourseView
 
-- [ ] Implement `CourseView.vue` — shows course name, students section, assignments section (assignments list placeholder for Phase 3)
-- [ ] Students section lists enrolled students
-- [ ] "Add Student" button navigates to CourseStudentsView
-- [ ] "Import CSV" button navigates to CourseStudentsView (import tab)
+- [x] Implement `CourseView.vue` — shows course name, students section, assignments section (assignments list placeholder for Phase 3)
+- [x] Students section lists enrolled students
+- [x] "Add Student" button navigates to CourseStudentsView
+- [x] "Import CSV" button navigates to CourseStudentsView (import tab)
 
 ---
 

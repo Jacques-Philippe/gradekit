@@ -7,6 +7,12 @@ export interface Course {
   description: string | null;
 }
 
+export async function apiGetCourse(id: number): Promise<ApiResult<Course>> {
+  const res = await apiFetch(`/courses/${id}`);
+  if (!res.ok) return err(await parseError(res));
+  return ok(await res.json());
+}
+
 export async function apiGetCourses(): Promise<ApiResult<Course[]>> {
   const res = await apiFetch("/courses");
   if (!res.ok) return err(await parseError(res));
