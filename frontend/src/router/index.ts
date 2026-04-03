@@ -28,7 +28,7 @@ const routes = [
   {
     path: Routes.CourseStudents,
     name: "CourseStudents",
-    component: { template: "<div>CourseStudentsView placeholder</div>" },
+    component: () => import("@/views/CourseStudentsView.vue"),
   },
   {
     path: Routes.Assignment,

@@ -100,10 +100,11 @@ The top bar is a persistent shell component rendered across all authenticated vi
 
 ## 7. Frontend — CourseStudentsView
 
-- [ ] Implement `CourseStudentsView.vue` with two modes:
+- [x] Implement `CourseStudentsView.vue` with two modes:
   - **Manual:** full name field + add button → calls `POST /courses/{id}/students`
   - **Import:** file input for CSV → preview parsed names → confirm → calls `POST /courses/{id}/students/import`
-- [ ] Show the current enrolled student list, with a remove button per row
+- [x] Show the current enrolled student list, with a remove button per row
+- [ ] Add a confirmation modal before deleting a student
 
 ---
 
