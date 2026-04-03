@@ -147,21 +147,21 @@ Wire event recording into the existing write endpoints (fire-and-forget — a fa
 
 ### Endpoint
 
-- [ ] `GET /activity` — returns the 20 most recent activity events for the authenticated user, ordered most recent first
+- [x] `GET /activity` — returns the 20 most recent activity events for the authenticated user, ordered most recent first
   - Response shape: `[{ id, event_type, payload, created_at }]`
   - Optional `?event_type=` query parameter to filter by type
   - Requires authentication
 
 ### Tests (`backend/tests/test_activity.py`)
 
-- [ ] Creating a course records a `COURSE_CREATED` event with the correct payload
-- [ ] Adding a student records a `STUDENT_ADDED` event with the correct payload
-- [ ] Importing students records a single `STUDENTS_IMPORTED` event with the correct count in the payload
-- [ ] Removing a student records a `STUDENT_REMOVED` event with the correct payload
-- [ ] `GET /activity` returns events in reverse chronological order
-- [ ] `GET /activity` only returns the authenticated user's events (not other users')
-- [ ] `GET /activity` returns at most 20 events
-- [ ] `GET /activity` requires authentication
+- [x] Creating a course records a `COURSE_CREATED` event with the correct payload
+- [x] Adding a student records a `STUDENT_ADDED` event with the correct payload
+- [x] Importing students records a single `STUDENTS_IMPORTED` event with the list of imported students in the payload
+- [x] Removing a student records a `STUDENT_REMOVED` event with the correct payload
+- [x] `GET /activity` returns events in reverse chronological order
+- [x] `GET /activity` only returns the authenticated user's events (not other users')
+- [x] `GET /activity` returns at most 20 events
+- [x] `GET /activity` requires authentication
 
 ---
 
