@@ -19,6 +19,7 @@ GradeKit is a local-first web application for Teaching Assistants to grade stude
 
 ---
 
+
 ## UI Design
 
 When designing or implementing UI components, refer to `DESIGN.md` for the visual language of this project.

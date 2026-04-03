@@ -15,3 +15,38 @@ This directory contains the server responsible for serving content to the fronte
    ```bash
    uvicorn main:app --reload
    ```
+
+# Database migrations (Alembic)
+
+All commands must be run from the `backend/` directory with the venv activated.
+
+## Create a new migration after changing a model
+
+```bash
+alembic revision --autogenerate -m "describe your change"
+```
+
+## Apply all pending migrations
+
+```bash
+alembic upgrade head
+```
+
+## Roll back one migration
+
+```bash
+alembic downgrade -1
+```
+
+## Migration history
+
+```bash
+alembic history
+```
+
+## Initial migration (already applied)
+
+```bash
+alembic revision --autogenerate -m "create users table"
+alembic upgrade head
+```

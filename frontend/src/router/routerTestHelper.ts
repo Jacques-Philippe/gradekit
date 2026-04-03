@@ -1,30 +1,13 @@
 import { createRouter, createMemoryHistory } from "vue-router";
-import type { RouteRecordRaw } from "vue-router";
-import { defineComponent } from "vue";
+import { Routes } from "@/router/routes";
 
-// Dummy component for testing routes
-const DummyComponent = defineComponent({ template: "<div>Dummy</div>" });
-
-const defaultRoutes: RouteRecordRaw[] = [
-  {
-    path: "/course/:id",
-    name: "course",
-    component: DummyComponent,
-  },
-  {
-    path: "/",
-    name: "Home",
-    component: DummyComponent,
-  },
-];
-
-/**
- * Helper to create a test router for mounting components
- */
-export function createTestRouter(routes: RouteRecordRaw[] = defaultRoutes) {
-  const router = createRouter({
+export function makeTestRouter() {
+  return createRouter({
     history: createMemoryHistory(),
-    routes,
+    routes: [
+      { path: Routes.Home, component: { template: "<div>Home</div>" } },
+      { path: Routes.Login, component: { template: "<div>Login</div>" } },
+      { path: Routes.Register, component: { template: "<div>Register</div>" } },
+    ],
   });
-  return router;
 }

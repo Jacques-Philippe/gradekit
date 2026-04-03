@@ -74,7 +74,9 @@ def check(requirements: Path, venv: Path) -> list[str]:
         return errors
 
     if not venv.exists():
-        print(f"  SKIP — .venv not found at {venv.relative_to(REPO_ROOT)}, skipping check")
+        print(
+            f"  SKIP — .venv not found at {venv.relative_to(REPO_ROOT)}, skipping check"
+        )
         return errors
 
     required = required_packages(requirements)
