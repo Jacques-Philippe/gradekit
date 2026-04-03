@@ -16,7 +16,11 @@ export async function apiFetch(
 export async function parseError(res: Response): Promise<string> {
   try {
     const body = await res.json();
-    return body.detail ?? res.statusText;
+    const detail = body.detail;
+    if (detail == null) return res.statusText;
+    if (typeof detail === "string") return detail;
+    if (Array.isArray(detail)) return detail.map(String).join(", ");
+    return JSON.stringify(detail);
   } catch {
     return res.statusText;
   }
