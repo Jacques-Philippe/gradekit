@@ -125,3 +125,53 @@ def test_create_student_returns_404_for_other_users_course(client):
 def test_create_student_requires_authentication(client):
     response = client.post("/courses/1/students", json={"full_name": "Jane Doe"})
     assert response.status_code == 401
+
+
+def add_student(client, token, course_id, full_name="Jane Doe"):
+    res = client.post(
+        f"/courses/{course_id}/students",
+        json={"full_name": full_name},
+        headers=auth(token),
+    )
+    return res.json()["id"]
+
+
+def test_remove_student_succeeds(client):
+    token = register_and_login(client)
+    course_id = create_course(client, token)
+    student_id = add_student(client, token, course_id)
+    response = client.delete(
+        f"/courses/{course_id}/students/{student_id}", headers=auth(token)
+    )
+    assert response.status_code == 204
+    listed = client.get(f"/courses/{course_id}/students", headers=auth(token))
+    assert listed.json() == []
+
+
+def test_remove_student_returns_404_for_nonexistent_student(client):
+    token = register_and_login(client)
+    course_id = create_course(client, token)
+    response = client.delete(f"/courses/{course_id}/students/999", headers=auth(token))
+    assert response.status_code == 404
+
+
+def test_remove_student_returns_404_for_nonexistent_course(client):
+    token = register_and_login(client)
+    response = client.delete("/courses/999/students/1", headers=auth(token))
+    assert response.status_code == 404
+
+
+def test_remove_student_returns_404_for_other_users_course(client):
+    token_alice = register_and_login(client, "alice", "secret")
+    token_bob = register_and_login(client, "bob", "secret")
+    course_id = create_course(client, token_alice)
+    student_id = add_student(client, token_alice, course_id)
+    response = client.delete(
+        f"/courses/{course_id}/students/{student_id}", headers=auth(token_bob)
+    )
+    assert response.status_code == 404
+
+
+def test_remove_student_requires_authentication(client):
+    response = client.delete("/courses/1/students/1")
+    assert response.status_code == 401

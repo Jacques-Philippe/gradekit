@@ -66,3 +66,22 @@ def create_student(
     db.commit()
     db.refresh(student)
     return StudentResponse(id=student.id, full_name=student.full_name)
+
+
+@router.delete("/{student_id}", status_code=204)
+def remove_student(
+    course_id: int,
+    student_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    get_owned_course(course_id, current_user, db)
+    enrollment = (
+        db.query(Enrollment)
+        .filter(Enrollment.course_id == course_id, Enrollment.student_id == student_id)
+        .first()
+    )
+    if enrollment is None:
+        raise HTTPException(status_code=404, detail="Student not found in course")
+    db.delete(enrollment)
+    db.commit()
