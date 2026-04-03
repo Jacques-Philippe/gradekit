@@ -111,6 +111,15 @@ For a TA, grading is a mix of:
 
 1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 1. Clone the repo
+1. Create the backend environment file:
+   ```bash
+   cp backend/.env.example backend/.env
+   ```
+   Then open `backend/.env` and set a secure value for `SECRET_KEY`.
+1. Create the frontend environment file:
+   ```bash
+   cp frontend/.env.example frontend/.env.development
+   ```
 1. Start both services:
    ```bash
    docker compose up --build --remove-orphans
