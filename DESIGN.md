@@ -2,6 +2,7 @@
 
 Derived from a reference screenshot of a TA assignment detail view.
 
+Must work on mobile and desktop.
 ---
 
 ## Layout

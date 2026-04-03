@@ -60,9 +60,10 @@ The top bar is a persistent shell component rendered across all authenticated vi
 ## 5. Frontend — HomeView
 
 - [ ] Implement `HomeView.vue` — fetches and lists all courses on mount
+- [ ] Courses are displayed as cards (white card, `~8px` border radius, subtle border and box shadow per `DESIGN.md`)
 - [ ] Inline search bar that filters the course list by name
 - [ ] "Create Course" button — inline form or modal to enter course name
-- [ ] Each course row navigates to CourseView
+- [ ] Each course card navigates to CourseView
 
 ---
 
