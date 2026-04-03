@@ -23,7 +23,7 @@ services:
       - ./backend/.env
     ports:
       - "8000:8000"
-    command: sh -c "pip install -r requirements.txt -q && uvicorn main:app --host 0.0.0.0 --reload"
+    command: sh -c "pip install -r requirements.txt -q && alembic upgrade head && uvicorn main:app --host 0.0.0.0 --reload"
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 5s

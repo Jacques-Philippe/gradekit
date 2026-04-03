@@ -19,7 +19,10 @@ export async function parseError(res: Response): Promise<string> {
     const detail = body.detail;
     if (detail == null) return res.statusText;
     if (typeof detail === "string") return detail;
-    if (Array.isArray(detail)) return detail.map(String).join(", ");
+    if (Array.isArray(detail))
+      return detail
+        .map((e) => (typeof e === "object" && e?.msg ? e.msg : String(e)))
+        .join(", ");
     return JSON.stringify(detail);
   } catch {
     return res.statusText;

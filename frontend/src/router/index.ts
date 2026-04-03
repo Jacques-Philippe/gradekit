@@ -30,6 +30,8 @@ export const router = createRouter({
 router.beforeEach(async (to) => {
   const auth = useAuthStore();
 
+  auth.error = "";
+
   if (!auth.token) {
     await auth.restoreSession();
   }
