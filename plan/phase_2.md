@@ -37,12 +37,12 @@ All course endpoints require authentication via Bearer token (`Depends(get_curre
 
 The top bar is a persistent shell component rendered across all authenticated views via `AppWrapper.vue`.
 
-- [ ] Create `TopBar.vue` — full-width bar, fixed to the top
+- [x] Create `TopBar.vue` — full-width bar, fixed to the top
   - **Left:** product name "GradeKit" in bold
   - **Right:** logged-in username + "Logout" button that calls `authStore.logout` and navigates to Login
-- [ ] Mount `TopBar.vue` in `AppWrapper.vue` above the router view, visible only when authenticated (`authStore.token !== null`)
-- [ ] Style per `DESIGN.md`: dark navy background (`~#1a2844`), white text, consistent padding
-- [ ] Move the logout button out of `HomeView.vue` — it belongs in the top bar
+- [x] Mount `TopBar.vue` in `AppWrapper.vue` above the router view, visible only when authenticated (`authStore.token !== null`)
+- [x] Style per `DESIGN.md`: dark navy background (`~#1a2844`), white text, consistent padding
+- [x] Move the logout button out of `HomeView.vue` — it belongs in the top bar
 
 ---
 
