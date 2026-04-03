@@ -6,7 +6,7 @@ Goal: a TA can create courses, add students manually or via CSV import, and view
 
 ## 1. Backend — Models & migrations
 
-- [ ] Create `backend/models/course.py` — `id`, `name`, `owner_id` (FK to user)
+- [ ] Create `backend/models/course.py` — `id`, `name`, `description` (optional), `owner_id` (FK to user)
 - [ ] Create `backend/models/student.py` — `id`, `full_name`
 - [ ] Create `backend/models/enrollment.py` — `id`, `course_id` (FK), `student_id` (FK)
 - [ ] Run Alembic migration to create `courses`, `students`, `enrollments` tables
@@ -15,10 +15,12 @@ Goal: a TA can create courses, add students manually or via CSV import, and view
 
 ## 2. Backend — Course endpoints
 
+All course endpoints require authentication via Bearer token (`Depends(get_current_user)`).
+
 - [ ] `GET /courses` — list all courses for the authenticated user
 - [ ] `POST /courses` — create a course
-- [ ] `GET /courses/{id}` — get a single course
-- [ ] `DELETE /courses/{id}` — delete a course
+- [ ] `GET /courses/{id}` — get a single course (must be owned by the authenticated user)
+- [ ] `DELETE /courses/{id}` — delete a course (must be owned by the authenticated user)
 
 ---
 
