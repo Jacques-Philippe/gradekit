@@ -58,3 +58,70 @@ def test_list_students_returns_404_for_other_users_course(client):
 def test_list_students_requires_authentication(client):
     response = client.get("/courses/1/students")
     assert response.status_code == 401
+
+
+def test_create_student_succeeds(client):
+    token = register_and_login(client)
+    course_id = create_course(client, token)
+    response = client.post(
+        f"/courses/{course_id}/students",
+        json={"full_name": "Jane Doe"},
+        headers=auth(token),
+    )
+    assert response.status_code == 201
+    data = response.json()
+    assert data["full_name"] == "Jane Doe"
+    assert "id" in data
+
+
+def test_create_student_appears_in_list(client):
+    token = register_and_login(client)
+    course_id = create_course(client, token)
+    client.post(
+        f"/courses/{course_id}/students",
+        json={"full_name": "Jane Doe"},
+        headers=auth(token),
+    )
+    response = client.get(f"/courses/{course_id}/students", headers=auth(token))
+    assert len(response.json()) == 1
+    assert response.json()[0]["full_name"] == "Jane Doe"
+
+
+def test_create_student_rejects_blank_name(client):
+    token = register_and_login(client)
+    course_id = create_course(client, token)
+    response = client.post(
+        f"/courses/{course_id}/students",
+        json={"full_name": "   "},
+        headers=auth(token),
+    )
+    assert response.status_code == 422
+    messages = [e["msg"] for e in response.json()["detail"]]
+    assert any("Student name cannot be blank" in msg for msg in messages)
+
+
+def test_create_student_returns_404_for_nonexistent_course(client):
+    token = register_and_login(client)
+    response = client.post(
+        "/courses/999/students",
+        json={"full_name": "Jane Doe"},
+        headers=auth(token),
+    )
+    assert response.status_code == 404
+
+
+def test_create_student_returns_404_for_other_users_course(client):
+    token_alice = register_and_login(client, "alice", "secret")
+    token_bob = register_and_login(client, "bob", "secret")
+    course_id = create_course(client, token_alice)
+    response = client.post(
+        f"/courses/{course_id}/students",
+        json={"full_name": "Jane Doe"},
+        headers=auth(token_bob),
+    )
+    assert response.status_code == 404
+
+
+def test_create_student_requires_authentication(client):
+    response = client.post("/courses/1/students", json={"full_name": "Jane Doe"})
+    assert response.status_code == 401
