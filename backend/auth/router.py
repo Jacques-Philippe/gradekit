@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from auth.security import (
@@ -31,8 +32,12 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
 
     user = User(username=body.username, hashed_password=hash_password(body.password))
     db.add(user)
-    db.commit()
-    db.refresh(user)
+    try:
+        db.commit()
+        db.refresh(user)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="The username is already taken")
 
     return TokenResponse(token=create_access_token(user.id, user.username))
 
