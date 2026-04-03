@@ -112,7 +112,7 @@ def remove_student(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    get_owned_course(course_id, current_user, db)
+    course = get_owned_course(course_id, current_user, db)
     enrollment = (
         db.query(Enrollment)
         .filter(Enrollment.course_id == course_id, Enrollment.student_id == student_id)
@@ -120,8 +120,27 @@ def remove_student(
     )
     if enrollment is None:
         raise HTTPException(status_code=404, detail="Student not found in course")
+    student = db.get(Student, student_id)
     db.delete(enrollment)
     db.commit()
+    try:
+        db.add(
+            Activity(
+                user_id=current_user.id,
+                event_type=ActivityType.STUDENT_REMOVED,
+                payload=json.dumps(
+                    {
+                        "course_id": course_id,
+                        "course_name": course.name,
+                        "student_id": student_id,
+                        "student_name": student.full_name,
+                    }
+                ),
+            )
+        )
+        db.commit()
+    except Exception:
+        logger.exception("Failed to record STUDENT_REMOVED activity")
 
 
 @router.post("/import", response_model=ImportResponse)

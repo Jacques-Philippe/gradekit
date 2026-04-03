@@ -258,6 +258,34 @@ def test_import_students_returns_404_for_other_users_course(client):
     assert response.status_code == 404
 
 
+def test_remove_student_records_activity(client, db_session):
+    import json
+    from models.activity import Activity
+    from models.activity_type import ActivityType
+
+    token = register_and_login(client)
+    course_id = create_course(client, token)
+    res = client.post(
+        f"/courses/{course_id}/students",
+        json={"full_name": "Jane Doe"},
+        headers=auth(token),
+    )
+    student_id = res.json()["id"]
+    client.delete(f"/courses/{course_id}/students/{student_id}", headers=auth(token))
+
+    events = (
+        db_session.query(Activity)
+        .filter(Activity.event_type == ActivityType.STUDENT_REMOVED)
+        .all()
+    )
+    assert len(events) == 1
+    payload = json.loads(events[0].payload)
+    assert payload["course_id"] == course_id
+    assert payload["course_name"] == "CS101"
+    assert payload["student_id"] == student_id
+    assert payload["student_name"] == "Jane Doe"
+
+
 def test_import_students_records_activity(client, db_session):
     import json
     from models.activity import Activity
