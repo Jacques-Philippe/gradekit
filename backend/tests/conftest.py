@@ -8,6 +8,7 @@ import models.user  # noqa: F401 — registers User with Base.metadata
 import models.course  # noqa: F401
 import models.student  # noqa: F401
 import models.enrollment  # noqa: F401
+import models.activity  # noqa: F401
 from database import Base, get_db
 from main import app
 

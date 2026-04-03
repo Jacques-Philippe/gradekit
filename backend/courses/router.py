@@ -1,11 +1,18 @@
+import json
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, field_validator
 from sqlalchemy.orm import Session
 
 from auth.security import get_current_user
 from database import get_db
+from models.activity import Activity
+from models.activity_type import ActivityType
 from models.course import Course
 from models.user import User
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/courses")
 
@@ -53,6 +60,19 @@ def create_course(
     db.add(course)
     db.commit()
     db.refresh(course)
+    try:
+        db.add(
+            Activity(
+                user_id=current_user.id,
+                event_type=ActivityType.COURSE_CREATED,
+                payload=json.dumps(
+                    {"course_id": course.id, "course_name": course.name}
+                ),
+            )
+        )
+        db.commit()
+    except Exception:
+        logger.exception("Failed to record COURSE_CREATED activity")
     return CourseResponse(
         id=course.id, name=course.name, description=course.description
     )

@@ -124,6 +124,26 @@ def test_delete_course_requires_authentication(client):
     assert response.status_code == 401
 
 
+def test_create_course_records_activity(client, db_session):
+    import json
+    from models.activity import Activity
+    from models.activity_type import ActivityType
+
+    token = register_and_login(client)
+    response = client.post("/courses", json={"name": "Math 101"}, headers=auth(token))
+    course_id = response.json()["id"]
+
+    events = (
+        db_session.query(Activity)
+        .filter(Activity.event_type == ActivityType.COURSE_CREATED)
+        .all()
+    )
+    assert len(events) == 1
+    payload = json.loads(events[0].payload)
+    assert payload["course_id"] == course_id
+    assert payload["course_name"] == "Math 101"
+
+
 def test_list_courses_only_returns_own_courses(client, db_session):
     from models.course import Course
 
