@@ -66,7 +66,7 @@ GradeKit uses local accounts to protect the TA's data. There are no external ide
 ## On grading criteria
 
 For each assignment question, the TA can define a list of grading criteria.
-
+lala
 For a TA, grading is a mix of:
 
 1. **Judgment**
