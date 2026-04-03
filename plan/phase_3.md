@@ -6,7 +6,7 @@ Goal: a TA can create assignments within a course, define questions, and assign 
 
 ## 1. Backend — Models & migrations
 
-- [ ] Create `backend/models/assignment.py` — `id`, `title`, `course_id` (FK)
+- [x] Create `backend/models/assignment.py` — `id`, `title`, `course_id` (FK), `due_date` (nullable datetime) — created in Phase 2
 - [ ] Create `backend/models/question.py` — `id`, `question_text`, `description`, `assignment_id` (FK)
 - [ ] Create `backend/models/criterion.py` — `id`, `name`, `description`, `total_points`
 - [ ] Create `backend/models/question_criterion.py` — `id`, `question_id` (FK), `criterion_id` (FK)

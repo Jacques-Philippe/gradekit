@@ -171,7 +171,9 @@ Assignments are fully implemented in Phase 3, but the `due_date` field is planne
 
 ### Model
 
-- [ ] When creating `backend/models/assignment.py` (Phase 3), include `due_date: Mapped[datetime | None]` — nullable ISO 8601 datetime, optional at creation time
+- [x] Create `backend/models/assignment.py` with `id`, `title`, `course_id` (FK), and `due_date: Mapped[datetime | None]` — nullable ISO 8601 datetime, optional at creation time
+- [x] Register `models.assignment` in `alembic/env.py`
+- [x] Run Alembic migration to create the `assignments` table
 
 ### Endpoint
 
