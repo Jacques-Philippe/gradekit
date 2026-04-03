@@ -73,11 +73,17 @@ export const useAuthStore = defineStore("auth", {
     async restoreSession(): Promise<void> {
       const token = localStorage.getItem(TOKEN_KEY);
       if (!token) return;
-      const result = await apiMe(token);
-      if (result.ok) {
-        this.token = token;
-        this.user = result.data;
-      } else {
+      try {
+        const result = await apiMe(token);
+        if (result.ok) {
+          this.token = token;
+          this.user = result.data;
+        } else {
+          this.token = null;
+          this.user = null;
+          localStorage.removeItem(TOKEN_KEY);
+        }
+      } catch {
         this.token = null;
         this.user = null;
         localStorage.removeItem(TOKEN_KEY);
