@@ -6,9 +6,9 @@ Goal: a TA can create courses, add students manually or via CSV import, and view
 
 ## 1. Backend — Models & migrations
 
-- [ ] Create `backend/models/course.py` — `id`, `name`, `description` (optional), `owner_id` (FK to user)
-- [ ] Create `backend/models/student.py` — `id`, `full_name`
-- [ ] Create `backend/models/enrollment.py` — `id`, `course_id` (FK), `student_id` (FK)
+- [x] Create `backend/models/course.py` — `id`, `name`, `description` (optional), `owner_id` (FK to user)
+- [x] Create `backend/models/student.py` — `id`, `full_name`
+- [x] Create `backend/models/enrollment.py` — `id`, `course_id` (FK), `student_id` (FK)
 - [ ] Run Alembic migration to create `courses`, `students`, `enrollments` tables
 
 ---
