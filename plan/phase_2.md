@@ -127,30 +127,37 @@ A lightweight audit log that records user-scoped events as they happen. Later ph
 
 ### Model & migration
 
-- [ ] Create `backend/models/activity.py` — `id`, `owner_id` (FK to user), `message` (plain-text description of the event), `created_at` (datetime, default `utcnow`)
+- [ ] Create `backend/models/activity.py` with the following fields:
+  - `id`
+  - `user_id` (FK to user)
+  - `event_type` — SQLAlchemy `Enum` (e.g. `COURSE_CREATED`, `STUDENT_ADDED`, `STUDENT_REMOVED`, `STUDENTS_IMPORTED`)
+  - `payload` — `Text` column storing a JSON-serialised dict of context data (e.g. `{"course_id": 1, "course_name": "CS101", "student_name": "Jane Doe"}`); schema is event-type-specific and intentionally untyped at the DB level
+  - `created_at` (datetime, default `utcnow`)
+- [ ] Create `backend/models/activity_type.py` — Python `Enum` class defining all valid `event_type` values; import this wherever events are recorded to avoid magic strings
 - [ ] Run Alembic migration to create the `activity` table
 
 ### Recording events
 
 Wire event recording into the existing write endpoints (fire-and-forget — a failure to record must never fail the main operation):
 
-- [ ] `POST /courses` — record `"Course '{name}' created"`
-- [ ] `POST /courses/{course_id}/students` — record `"Student '{full_name}' added to '{course name}'"`
-- [ ] `POST /courses/{course_id}/students/import` — record `"{n} student(s) imported into '{course name}'"` (one event for the whole import, not one per row)
-- [ ] `DELETE /courses/{course_id}/students/{student_id}` — record `"Student '{full_name}' removed from '{course name}'"`
+- [ ] `POST /courses` — record `COURSE_CREATED` with `{ course_id, course_name }`
+- [ ] `POST /courses/{course_id}/students` — record `STUDENT_ADDED` with `{ course_id, course_name, student_id, student_name }`
+- [ ] `POST /courses/{course_id}/students/import` — record `STUDENTS_IMPORTED` with `{ course_id, course_name, count }` (one event for the whole import, not one per row)
+- [ ] `DELETE /courses/{course_id}/students/{student_id}` — record `STUDENT_REMOVED` with `{ course_id, course_name, student_id, student_name }`
 
 ### Endpoint
 
 - [ ] `GET /activity` — returns the 20 most recent activity events for the authenticated user, ordered most recent first
-  - Response shape: `[{ id, message, created_at }]`
+  - Response shape: `[{ id, event_type, payload, created_at }]`
+  - Optional `?event_type=` query parameter to filter by type
   - Requires authentication
 
 ### Tests (`backend/tests/test_activity.py`)
 
-- [ ] Creating a course records an activity event with the course name in the message
-- [ ] Adding a student records an activity event with the student name and course name
-- [ ] Importing students records a single activity event with the count and course name
-- [ ] Removing a student records an activity event
+- [ ] Creating a course records a `COURSE_CREATED` event with the correct payload
+- [ ] Adding a student records a `STUDENT_ADDED` event with the correct payload
+- [ ] Importing students records a single `STUDENTS_IMPORTED` event with the correct count in the payload
+- [ ] Removing a student records a `STUDENT_REMOVED` event with the correct payload
 - [ ] `GET /activity` returns events in reverse chronological order
 - [ ] `GET /activity` only returns the authenticated user's events (not other users')
 - [ ] `GET /activity` returns at most 20 events
