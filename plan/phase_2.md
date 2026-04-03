@@ -47,6 +47,13 @@ The top bar is a persistent shell component rendered across all authenticated vi
   - Clicking the avatar opens a dropdown menu
   - Dropdown contains a "Logout" option that calls `authStore.logout` and navigates to Login
   - Dropdown closes when clicking outside
+- [ ] Unit tests for `TopBar.vue` (`TopBar.test.ts`)
+  - Renders the "GradeKit" brand name
+  - Avatar button shows the uppercased first letter of the logged-in username
+  - Clicking the avatar opens the dropdown
+  - Dropdown is not visible before the avatar is clicked
+  - Clicking "Logout" calls `authStore.logout` and navigates to Login
+  - Clicking outside the dropdown closes it
 
 ---
 
