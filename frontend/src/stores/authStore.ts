@@ -20,10 +20,14 @@ export const useAuthStore = defineStore("auth", {
           this.error = result.error;
           return false;
         }
-        this.token = result.data.token;
-        localStorage.setItem(TOKEN_KEY, result.data.token);
         const me = await apiMe(result.data.token);
-        this.user = me.ok ? me.data : null;
+        if (!me.ok) {
+          this.error = "Unexpected error";
+          return false;
+        }
+        this.token = result.data.token;
+        this.user = me.data;
+        localStorage.setItem(TOKEN_KEY, result.data.token);
         return true;
       } catch {
         this.error = "Unexpected error";
@@ -42,10 +46,14 @@ export const useAuthStore = defineStore("auth", {
           this.error = result.error;
           return false;
         }
-        this.token = result.data.token;
-        localStorage.setItem(TOKEN_KEY, result.data.token);
         const me = await apiMe(result.data.token);
-        this.user = me.ok ? me.data : null;
+        if (!me.ok) {
+          this.error = "Unexpected error";
+          return false;
+        }
+        this.token = result.data.token;
+        this.user = me.data;
+        localStorage.setItem(TOKEN_KEY, result.data.token);
         return true;
       } catch {
         this.error = "Unexpected error";

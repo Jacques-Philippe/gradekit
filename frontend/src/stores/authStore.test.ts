@@ -44,6 +44,25 @@ describe("login", () => {
     expect(store.user).toBeNull();
     expect(store.error).toBe("Username does not exist");
   });
+
+  it("does not persist token when /auth/me fails after login", async () => {
+    vi.mocked(authApi.apiLogin).mockResolvedValue({
+      ok: true,
+      data: { token: "tok" },
+    });
+    vi.mocked(authApi.apiMe).mockResolvedValue({
+      ok: false,
+      error: "Invalid or expired token",
+    });
+
+    const store = useAuthStore();
+    const result = await store.login("alice", "secret");
+
+    expect(result).toBe(false);
+    expect(store.token).toBeNull();
+    expect(store.user).toBeNull();
+    expect(localStorage.getItem("auth_token")).toBeNull();
+  });
 });
 
 describe("register", () => {
@@ -76,6 +95,25 @@ describe("register", () => {
     expect(store.token).toBeNull();
     expect(store.user).toBeNull();
     expect(store.error).toBe("The username is already taken");
+  });
+
+  it("does not persist token when /auth/me fails after register", async () => {
+    vi.mocked(authApi.apiRegister).mockResolvedValue({
+      ok: true,
+      data: { token: "tok" },
+    });
+    vi.mocked(authApi.apiMe).mockResolvedValue({
+      ok: false,
+      error: "Invalid or expired token",
+    });
+
+    const store = useAuthStore();
+    const result = await store.register("alice", "secret");
+
+    expect(result).toBe(false);
+    expect(store.token).toBeNull();
+    expect(store.user).toBeNull();
+    expect(localStorage.getItem("auth_token")).toBeNull();
   });
 });
 
