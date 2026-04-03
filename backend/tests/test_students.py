@@ -258,6 +258,34 @@ def test_import_students_returns_404_for_other_users_course(client):
     assert response.status_code == 404
 
 
+def test_import_students_records_activity(client, db_session):
+    import json
+    from models.activity import Activity
+    from models.activity_type import ActivityType
+
+    token = register_and_login(client)
+    course_id = create_course(client, token)
+    client.post(
+        f"/courses/{course_id}/students/import",
+        files=csv_file("full_name\nJane Doe\nJohn Smith\n"),
+        headers=auth(token),
+    )
+
+    events = (
+        db_session.query(Activity)
+        .filter(Activity.event_type == ActivityType.STUDENTS_IMPORTED)
+        .all()
+    )
+    assert len(events) == 1
+    payload = json.loads(events[0].payload)
+    assert payload["course_id"] == course_id
+    assert payload["course_name"] == "CS101"
+    assert len(payload["students"]) == 2
+    names = [s["student_name"] for s in payload["students"]]
+    assert "Jane Doe" in names
+    assert "John Smith" in names
+
+
 def test_import_students_requires_authentication(client):
     response = client.post(
         "/courses/1/students/import",

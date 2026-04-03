@@ -131,7 +131,7 @@ def import_students(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    get_owned_course(course_id, current_user, db)
+    course = get_owned_course(course_id, current_user, db)
     content = file.file.read().decode("utf-8")
     reader = csv.DictReader(io.StringIO(content))
     if "full_name" not in (reader.fieldnames or []):
@@ -151,4 +151,25 @@ def import_students(
         db.add(Enrollment(course_id=course_id, student_id=student.id))
         created.append(StudentResponse(id=student.id, full_name=student.full_name))
     db.commit()
+    if created:
+        try:
+            db.add(
+                Activity(
+                    user_id=current_user.id,
+                    event_type=ActivityType.STUDENTS_IMPORTED,
+                    payload=json.dumps(
+                        {
+                            "course_id": course_id,
+                            "course_name": course.name,
+                            "students": [
+                                {"student_id": s.id, "student_name": s.full_name}
+                                for s in created
+                            ],
+                        }
+                    ),
+                )
+            )
+            db.commit()
+        except Exception:
+            logger.exception("Failed to record STUDENTS_IMPORTED activity")
     return ImportResponse(created=created, errors=errors)
