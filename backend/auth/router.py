@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -18,6 +18,22 @@ router = APIRouter(prefix="/auth")
 class RegisterRequest(BaseModel):
     username: str
     password: str
+
+    @field_validator("username")
+    @classmethod
+    def username_not_blank(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Username cannot be blank")
+        if len(v.strip()) > 255:
+            raise ValueError("Username cannot exceed 255 characters")
+        return v.strip()
+
+    @field_validator("password")
+    @classmethod
+    def password_not_blank(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Password cannot be blank")
+        return v
 
 
 class TokenResponse(BaseModel):
@@ -45,6 +61,20 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
 class LoginRequest(BaseModel):
     username: str
     password: str
+
+    @field_validator("username")
+    @classmethod
+    def username_not_blank(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Username cannot be blank")
+        return v.strip()
+
+    @field_validator("password")
+    @classmethod
+    def password_not_blank(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Password cannot be blank")
+        return v
 
 
 @router.post("/login", response_model=TokenResponse)

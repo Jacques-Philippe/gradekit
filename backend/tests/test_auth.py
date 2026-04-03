@@ -1,3 +1,6 @@
+import pytest
+
+
 def test_register_succeeds_and_returns_token(client):
     response = client.post(
         "/auth/register", json={"username": "alice", "password": "secret"}
@@ -70,6 +73,38 @@ def test_me_fails_with_expired_token(client):
     response = client.get("/auth/me", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 401
     assert response.json()["detail"] == "Invalid or expired token"
+
+
+@pytest.mark.parametrize(
+    "payload,expected_message",
+    [
+        ({"username": "", "password": "secret"}, "Username cannot be blank"),
+        ({"username": "   ", "password": "secret"}, "Username cannot be blank"),
+        ({"username": "alice", "password": ""}, "Password cannot be blank"),
+        ({"username": "alice", "password": "   "}, "Password cannot be blank"),
+    ],
+)
+def test_register_rejects_blank_credentials(client, payload, expected_message):
+    response = client.post("/auth/register", json=payload)
+    assert response.status_code == 422
+    messages = [e["msg"] for e in response.json()["detail"]]
+    assert any(expected_message in msg for msg in messages)
+
+
+@pytest.mark.parametrize(
+    "payload,expected_message",
+    [
+        ({"username": "", "password": "secret"}, "Username cannot be blank"),
+        ({"username": "   ", "password": "secret"}, "Username cannot be blank"),
+        ({"username": "alice", "password": ""}, "Password cannot be blank"),
+        ({"username": "alice", "password": "   "}, "Password cannot be blank"),
+    ],
+)
+def test_login_rejects_blank_credentials(client, payload, expected_message):
+    response = client.post("/auth/login", json=payload)
+    assert response.status_code == 422
+    messages = [e["msg"] for e in response.json()["detail"]]
+    assert any(expected_message in msg for msg in messages)
 
 
 def test_register_fails_if_username_taken(client):
