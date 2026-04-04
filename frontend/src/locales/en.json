@@ -79,6 +79,11 @@
     "parse_error_no_column": "CSV must have a 'full_name' column.",
     "parse_error_no_rows": "No valid rows found in CSV."
   },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "my_courses": "My Courses",
+    "settings": "Settings"
+  },
   "errors": {
     "incorrect_credentials": "Incorrect username or password.",
     "username_taken": "That username is already registered.",

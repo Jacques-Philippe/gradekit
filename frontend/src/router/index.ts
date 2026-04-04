@@ -35,6 +35,11 @@ const routes = [
     name: "Assignment",
     component: { template: "<div>AssignmentView placeholder</div>" },
   },
+  {
+    path: Routes.Settings,
+    name: "Settings",
+    component: { template: "<div>Settings coming soon.</div>" },
+  },
 ];
 
 export const router = createRouter({

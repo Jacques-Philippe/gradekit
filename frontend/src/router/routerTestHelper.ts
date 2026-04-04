@@ -17,6 +17,10 @@ export function makeTestRouter() {
         path: Routes.Assignment,
         component: { template: "<div>Assignment</div>" },
       },
+      {
+        path: Routes.Settings,
+        component: { template: "<div>Settings</div>" },
+      },
     ],
   });
 }

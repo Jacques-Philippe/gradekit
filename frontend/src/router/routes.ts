@@ -5,6 +5,7 @@ export const Routes = {
   Course: "/courses/:id",
   CourseStudents: "/courses/:id/students",
   Assignment: "/assignments/:id",
+  Settings: "/settings",
 } as const;
 
 export function courseRoute(id: number): string {

@@ -210,8 +210,8 @@ Use `vue-i18n` to extract all user-visible strings from the frontend into locale
 - [x] User is able to switch languages through a languages modal which is accessed by clicking a Languages button in the dropdown accessible via avatar click in the topbar.
 
 ## 13. Sidebar
-- [ ] Define sidebar in main view with items Dashboard, My Courses, and Settings
-- [ ] Sidebar should be visible only for desktop. Mobile should have a bottom bar
+- [x] Define persistent sidebar in HomeView with items Dashboard, My Courses, and Settings
+- [x] Sidebar should be visible only for desktop. Mobile should have a bottom bar
 
 ---
 
@@ -225,3 +225,6 @@ Use `vue-i18n` to extract all user-visible strings from the frontend into locale
 - TA can remove a student from a course
 - Login and Register pages are visually consistent with the app design system
 - Application is internationalized and can easily add new languages
+- TA can switch languages via language modal
+- Top bar is defined
+- Side bar is defined
