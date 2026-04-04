@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { apiLogin, apiMe, apiRegister, type AuthUser } from "@/api/auth";
+import { localizeError } from "@/utils/localizeError";
 
 const TOKEN_KEY = "auth_token";
 
@@ -17,7 +18,7 @@ export const useAuthStore = defineStore("auth", {
       try {
         const result = await apiRegister(username, password);
         if (!result.ok) {
-          this.error = result.error;
+          this.error = localizeError(result.error);
           return false;
         }
         const me = await apiMe(result.data.token);
@@ -43,7 +44,7 @@ export const useAuthStore = defineStore("auth", {
       try {
         const result = await apiLogin(username, password);
         if (!result.ok) {
-          this.error = result.error;
+          this.error = localizeError(result.error);
           return false;
         }
         const me = await apiMe(result.data.token);

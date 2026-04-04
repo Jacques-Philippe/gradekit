@@ -1,0 +1,90 @@
+{
+  "brand": "GradeKit",
+  "login": {
+    "heading": "Se connecter",
+    "username_placeholder": "Nom d'utilisateur",
+    "password_placeholder": "Mot de passe",
+    "submit": "Se connecter",
+    "submitting": "Connexion en cours\u2026",
+    "switch": "Pas encore de compte\u00a0?",
+    "switch_link": "S'inscrire"
+  },
+  "register": {
+    "heading": "Cr\u00e9er un compte",
+    "username_placeholder": "Nom d'utilisateur",
+    "password_placeholder": "Mot de passe",
+    "submit": "S'inscrire",
+    "submitting": "Cr\u00e9ation du compte\u2026",
+    "switch": "D\u00e9j\u00e0 un compte\u00a0?",
+    "switch_link": "Se connecter"
+  },
+  "topbar": {
+    "logout": "D\u00e9connexion",
+    "languages": "Langues",
+    "language_modal_title": "Choisir une langue",
+    "language_modal_close": "Fermer"
+  },
+  "home": {
+    "search_placeholder": "Rechercher des cours et des devoirs\u2026",
+    "search_courses": "Cours",
+    "search_assignments": "Devoirs",
+    "no_courses_found": "Aucun cours trouv\u00e9",
+    "no_assignments_found": "Aucun devoir trouv\u00e9",
+    "recently_worked_on": "Travaill\u00e9 r\u00e9cemment",
+    "new_course": "+ Nouveau cours",
+    "course_name_placeholder": "Nom du cours",
+    "create": "Cr\u00e9er",
+    "cancel": "Annuler",
+    "no_recent_activity": "Aucune activit\u00e9 r\u00e9cente.",
+    "incoming_deadlines": "\u00c9ch\u00e9ances \u00e0 venir",
+    "no_deadlines": "Aucune \u00e9ch\u00e9ance \u00e0 venir.",
+    "recent_activity": "Activit\u00e9 r\u00e9cente",
+    "no_activity": "Aucune activit\u00e9 pour l'instant.",
+    "time_just_now": "\u00e0 l'instant",
+    "time_minutes_ago": "\u00e0 l'instant | il y a {n}\u00a0minute | il y a {n}\u00a0minutes",
+    "time_hours_ago": "il y a {n}\u00a0heure | il y a {n}\u00a0heures",
+    "time_days_ago": "il y a {n}\u00a0jour | il y a {n}\u00a0jours",
+    "activity_course_created": "Cours \u00ab\u00a0{name}\u00a0\u00bb cr\u00e9\u00e9",
+    "activity_student_added": "{student} ajout\u00e9(e) \u00e0 {course}",
+    "activity_student_removed": "{student} retir\u00e9(e) de {course}",
+    "activity_students_imported": "{count} \u00e9tudiant import\u00e9 dans {course} | {count} \u00e9tudiants import\u00e9s dans {course}"
+  },
+  "course": {
+    "loading": "Chargement\u2026",
+    "students_heading": "\u00c9tudiants",
+    "add_student": "Ajouter un \u00e9tudiant",
+    "import_csv": "Importer CSV",
+    "no_students": "Aucun \u00e9tudiant inscrit.",
+    "assignments_heading": "Devoirs",
+    "assignments_placeholder": "Les devoirs arrivent en Phase 3."
+  },
+  "course_students": {
+    "back": "\u2190 Retour",
+    "title": "G\u00e9rer les \u00e9tudiants",
+    "tab_manual": "Ajouter manuellement",
+    "tab_import": "Importer CSV",
+    "name_placeholder": "Nom complet de l'\u00e9tudiant",
+    "add": "Ajouter",
+    "csv_hint_prefix": "T\u00e9l\u00e9versez un fichier CSV avec une colonne ",
+    "csv_hint_suffix": ".",
+    "confirm_import": "Confirmer l'import",
+    "cancel": "Annuler",
+    "preview_label": "Aper\u00e7u \u2014 {count} \u00e9tudiant trouv\u00e9 | Aper\u00e7u \u2014 {count} \u00e9tudiants trouv\u00e9s",
+    "enrolled_heading": "\u00c9tudiants inscrits",
+    "no_students": "Aucun \u00e9tudiant inscrit.",
+    "remove": "Retirer",
+    "remove_confirm": "Retirer {name} de ce cours\u00a0?",
+    "import_success": "{count} \u00e9tudiant import\u00e9. | {count} \u00e9tudiants import\u00e9s.",
+    "import_skipped": "{count} ligne ignor\u00e9e. | {count} lignes ignor\u00e9es.",
+    "parse_error_no_column": "Le CSV doit avoir une colonne \u00ab\u00a0full_name\u00a0\u00bb.",
+    "parse_error_no_rows": "Aucune ligne valide trouv\u00e9e dans le CSV."
+  },
+  "errors": {
+    "incorrect_credentials": "Nom d'utilisateur ou mot de passe incorrect.",
+    "username_taken": "Ce nom d'utilisateur est d\u00e9j\u00e0 utilis\u00e9.",
+    "course_not_found": "Cours introuvable.",
+    "student_not_found": "\u00c9tudiant introuvable dans ce cours.",
+    "student_name_blank": "Le nom de l'\u00e9tudiant ne peut pas \u00eatre vide.",
+    "csv_missing_column": "Le CSV doit avoir une colonne \u00ab\u00a0full_name\u00a0\u00bb."
+  }
+}

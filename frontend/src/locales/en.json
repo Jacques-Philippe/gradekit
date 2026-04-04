@@ -19,7 +19,10 @@
     "switch_link": "Log in"
   },
   "topbar": {
-    "logout": "Logout"
+    "logout": "Logout",
+    "languages": "Languages",
+    "language_modal_title": "Choose a language",
+    "language_modal_close": "Close"
   },
   "home": {
     "search_placeholder": "Search courses and assignments\u2026",
@@ -29,6 +32,7 @@
     "no_assignments_found": "No assignments found",
     "recently_worked_on": "Recently worked on",
     "new_course": "+ New Course",
+    "course_name_placeholder": "Course name",
     "create": "Create",
     "cancel": "Cancel",
     "no_recent_activity": "No recent activity yet.",
@@ -36,10 +40,14 @@
     "no_deadlines": "No upcoming deadlines.",
     "recent_activity": "Recent activity",
     "no_activity": "No activity yet.",
+    "time_just_now": "just now",
+    "time_minutes_ago": "just now | {n} minute ago | {n} minutes ago",
+    "time_hours_ago": "{n} hour ago | {n} hours ago",
+    "time_days_ago": "{n} day ago | {n} days ago",
     "activity_course_created": "Created course \"{name}\"",
     "activity_student_added": "Added {student} to {course}",
     "activity_student_removed": "Removed {student} from {course}",
-    "activity_students_imported": "Imported {count} student | Imported {count} students"
+    "activity_students_imported": "Imported {count} student into {course} | Imported {count} students into {course}"
   },
   "course": {
     "loading": "Loading\u2026",
@@ -57,6 +65,8 @@
     "tab_import": "Import CSV",
     "name_placeholder": "Student full name",
     "add": "Add",
+    "csv_hint_prefix": "Upload a CSV file with a ",
+    "csv_hint_suffix": " column.",
     "confirm_import": "Confirm Import",
     "cancel": "Cancel",
     "preview_label": "Preview \u2014 {count} student found | Preview \u2014 {count} students found",
@@ -68,5 +78,13 @@
     "import_skipped": "{count} row skipped. | {count} rows skipped.",
     "parse_error_no_column": "CSV must have a 'full_name' column.",
     "parse_error_no_rows": "No valid rows found in CSV."
+  },
+  "errors": {
+    "incorrect_credentials": "Incorrect username or password.",
+    "username_taken": "That username is already registered.",
+    "course_not_found": "Course not found.",
+    "student_not_found": "Student not found in course.",
+    "student_name_blank": "Student name cannot be blank.",
+    "csv_missing_column": "CSV must have a 'full_name' column."
   }
 }

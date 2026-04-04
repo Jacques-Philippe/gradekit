@@ -1,10 +1,12 @@
 <template>
   <div class="course-students-page">
     <button class="btn-back" @click="router.back()" data-testid="back-btn">
-      ← Back
+      {{ t("course_students.back") }}
     </button>
 
-    <h1 class="page-title" data-testid="page-title">Manage Students</h1>
+    <h1 class="page-title" data-testid="page-title">
+      {{ t("course_students.title") }}
+    </h1>
 
     <div class="tab-bar">
       <button
@@ -13,7 +15,7 @@
         @click="activeTab = 'manual'"
         data-testid="tab-manual"
       >
-        Add Manually
+        {{ t("course_students.tab_manual") }}
       </button>
       <button
         class="tab-btn"
@@ -21,7 +23,7 @@
         @click="activeTab = 'import'"
         data-testid="tab-import"
       >
-        Import CSV
+        {{ t("course_students.tab_import") }}
       </button>
     </div>
 
@@ -40,7 +42,7 @@
           v-model="manualName"
           type="text"
           class="text-input"
-          placeholder="Student full name"
+          :placeholder="t('course_students.name_placeholder')"
           data-testid="manual-name-input"
         />
         <button
@@ -49,7 +51,7 @@
           :disabled="addPending"
           data-testid="add-student-submit"
         >
-          Add
+          {{ t("course_students.add") }}
         </button>
       </form>
       <p v-if="addError" class="form-error" data-testid="add-student-error">
@@ -65,7 +67,8 @@
     >
       <div v-if="!importPreview.length" class="import-upload">
         <p class="import-hint">
-          Upload a CSV file with a <code>full_name</code> column.
+          {{ t("course_students.csv_hint_prefix") }}<code>full_name</code
+          >{{ t("course_students.csv_hint_suffix") }}
         </p>
         <input
           type="file"
@@ -80,10 +83,11 @@
       </div>
       <div v-else class="import-preview">
         <p class="preview-label" data-testid="preview-label">
-          Preview — {{ importPreview.length }} student{{
-            importPreview.length === 1 ? "" : "s"
+          {{
+            t("course_students.preview_label", importPreview.length, {
+              named: { count: importPreview.length },
+            })
           }}
-          found:
         </p>
         <ul class="preview-list" data-testid="preview-list">
           <li
@@ -102,14 +106,14 @@
             @click="confirmImport"
             data-testid="confirm-import-btn"
           >
-            Confirm Import
+            {{ t("course_students.confirm_import") }}
           </button>
           <button
             class="btn-cancel"
             @click="cancelImport"
             data-testid="cancel-import-btn"
           >
-            Cancel
+            {{ t("course_students.cancel") }}
           </button>
         </div>
         <p v-if="importError" class="form-error" data-testid="import-error">
@@ -122,26 +126,31 @@
         data-testid="import-result"
       >
         <p class="result-success">
-          Imported {{ importResult.created.length }} student{{
-            importResult.created.length === 1 ? "" : "s"
-          }}.
+          {{
+            t("course_students.import_success", importResult.created.length, {
+              named: { count: importResult.created.length },
+            })
+          }}
         </p>
         <p
           v-if="importResult.errors.length"
           class="result-errors"
           data-testid="import-result-errors"
         >
-          {{ importResult.errors.length }} row{{
-            importResult.errors.length === 1 ? "" : "s"
+          {{
+            t("course_students.import_skipped", importResult.errors.length, {
+              named: { count: importResult.errors.length },
+            })
           }}
-          skipped.
         </p>
       </div>
     </section>
 
     <!-- Enrolled student list -->
     <section class="enrolled-section">
-      <h2 class="section-heading">Enrolled students</h2>
+      <h2 class="section-heading">
+        {{ t("course_students.enrolled_heading") }}
+      </h2>
       <ul
         v-if="students.length"
         class="student-list"
@@ -160,12 +169,12 @@
             @click="confirmingStudent = student"
             :data-testid="`remove-student-${student.id}`"
           >
-            Remove
+            {{ t("course_students.remove") }}
           </button>
         </li>
       </ul>
       <p v-else class="empty-state" data-testid="students-empty">
-        No students enrolled yet.
+        {{ t("course_students.no_students") }}
       </p>
     </section>
     <!-- Remove confirmation modal -->
@@ -177,8 +186,11 @@
     >
       <div class="modal">
         <p class="modal-message">
-          Remove <strong>{{ confirmingStudent.full_name }}</strong> from this
-          course?
+          {{
+            t("course_students.remove_confirm", {
+              name: confirmingStudent.full_name,
+            })
+          }}
         </p>
         <div class="modal-actions">
           <button
@@ -187,14 +199,14 @@
             @click="confirmRemove"
             data-testid="confirm-remove-btn"
           >
-            Remove
+            {{ t("course_students.remove") }}
           </button>
           <button
             class="btn-cancel"
             @click="confirmingStudent = null"
             data-testid="cancel-remove-btn"
           >
-            Cancel
+            {{ t("course_students.cancel") }}
           </button>
         </div>
       </div>
@@ -205,6 +217,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import {
   apiGetStudents,
   apiAddStudent,
@@ -213,7 +226,9 @@ import {
   type Student,
   type ImportResult,
 } from "@/api/students";
+import { localizeError } from "@/utils/localizeError";
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 
@@ -254,7 +269,7 @@ async function submitAddStudent() {
   const result = await apiAddStudent(courseId, name);
   addPending.value = false;
   if (!result.ok) {
-    addError.value = result.error;
+    addError.value = localizeError(result.error);
     return;
   }
   students.value = [...students.value, result.data];
@@ -284,13 +299,13 @@ function onFileSelected(event: Event) {
     const text = e.target?.result as string;
     const names = parseCsv(text);
     if (names === null) {
-      parseError.value = "CSV must have a 'full_name' column.";
+      parseError.value = t("course_students.parse_error_no_column");
       importPreview.value = [];
       pendingFile.value = null;
       return;
     }
     if (!names.length) {
-      parseError.value = "No valid rows found in CSV.";
+      parseError.value = t("course_students.parse_error_no_rows");
       importPreview.value = [];
       pendingFile.value = null;
       return;
@@ -314,7 +329,7 @@ async function confirmImport() {
   const result = await apiImportStudents(courseId, pendingFile.value);
   importPending.value = false;
   if (!result.ok) {
-    importError.value = result.error;
+    importError.value = localizeError(result.error);
     return;
   }
   importResult.value = result.data;

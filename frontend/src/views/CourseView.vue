@@ -1,7 +1,7 @@
 <template>
   <div class="course-page">
     <div v-if="loading" class="loading" data-testid="course-loading">
-      Loading…
+      {{ t("course.loading") }}
     </div>
     <div v-else-if="error" class="error-state" data-testid="course-error">
       {{ error }}
@@ -11,21 +11,21 @@
 
       <section class="course-section">
         <div class="section-header">
-          <h2 class="section-heading">Students</h2>
+          <h2 class="section-heading">{{ t("course.students_heading") }}</h2>
           <div class="section-actions">
             <button
               class="btn-secondary"
               @click="goToStudents()"
               data-testid="add-student-btn"
             >
-              Add Student
+              {{ t("course.add_student") }}
             </button>
             <button
               class="btn-secondary"
               @click="goToStudents('import')"
               data-testid="import-csv-btn"
             >
-              Import CSV
+              {{ t("course.import_csv") }}
             </button>
           </div>
         </div>
@@ -44,14 +44,14 @@
           </li>
         </ul>
         <p v-else class="empty-state" data-testid="students-empty">
-          No students enrolled yet.
+          {{ t("course.no_students") }}
         </p>
       </section>
 
       <section class="course-section">
-        <h2 class="section-heading">Assignments</h2>
+        <h2 class="section-heading">{{ t("course.assignments_heading") }}</h2>
         <p class="empty-state" data-testid="assignments-placeholder">
-          Assignments coming in Phase 3.
+          {{ t("course.assignments_placeholder") }}
         </p>
       </section>
     </template>
@@ -61,10 +61,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import { apiGetCourse, type Course } from "@/api/courses";
 import { apiGetStudents, type Student } from "@/api/students";
+import { localizeError } from "@/utils/localizeError";
 import { courseStudentsRoute } from "@/router/routes";
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 
@@ -82,7 +85,7 @@ onMounted(async () => {
   ]);
   loading.value = false;
   if (!courseResult.ok) {
-    error.value = courseResult.error;
+    error.value = localizeError(courseResult.error);
     return;
   }
   course.value = courseResult.data;

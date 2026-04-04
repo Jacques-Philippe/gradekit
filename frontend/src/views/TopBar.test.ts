@@ -53,7 +53,7 @@ describe("TopBar", () => {
     const { wrapper, store, router } = await mountTopBar();
     vi.spyOn(store, "logout");
     await wrapper.find(".avatar").trigger("click");
-    await wrapper.find(".dropdown-item").trigger("click");
+    await wrapper.find("[data-testid='logout-btn']").trigger("click");
     await flushPromises();
     expect(store.logout).toHaveBeenCalled();
     expect(router.currentRoute.value.path).toBe(Routes.Login);

@@ -4,7 +4,7 @@
       <input
         class="search-input"
         type="text"
-        placeholder="Search courses and assignments…"
+        :placeholder="t('home.search_placeholder')"
         v-model="query"
         @focus="showResults = true"
         @blur="onFocusOut"
@@ -16,7 +16,7 @@
         data-testid="search-results"
       >
         <div class="result-group">
-          <p class="group-label">Courses</p>
+          <p class="group-label">{{ t("home.search_courses") }}</p>
           <template v-if="matchingCourses.length">
             <button
               v-for="course in matchingCourses"
@@ -28,24 +28,24 @@
               {{ course.name }}
             </button>
           </template>
-          <p v-else class="no-results">No courses found</p>
+          <p v-else class="no-results">{{ t("home.no_courses_found") }}</p>
         </div>
         <div class="result-group">
-          <p class="group-label">Assignments</p>
-          <p class="no-results">No assignments found</p>
+          <p class="group-label">{{ t("home.search_assignments") }}</p>
+          <p class="no-results">{{ t("home.no_assignments_found") }}</p>
         </div>
       </div>
     </div>
     <section class="recent-section">
       <div class="section-header">
-        <h2 class="section-heading">Recently worked on</h2>
+        <h2 class="section-heading">{{ t("home.recently_worked_on") }}</h2>
         <button
           v-if="!showCreateForm"
           class="btn-create"
           @click="showCreateForm = true"
           data-testid="open-create-course"
         >
-          + New Course
+          {{ t("home.new_course") }}
         </button>
       </div>
       <form
@@ -58,7 +58,7 @@
           v-model="newCourseName"
           class="create-input"
           type="text"
-          placeholder="Course name"
+          :placeholder="t('home.course_name_placeholder')"
           autofocus
           data-testid="create-course-input"
         />
@@ -68,7 +68,7 @@
           :disabled="createPending"
           data-testid="create-course-submit"
         >
-          Create
+          {{ t("home.create") }}
         </button>
         <button
           type="button"
@@ -76,7 +76,7 @@
           @click="cancelCreate"
           data-testid="create-course-cancel"
         >
-          Cancel
+          {{ t("home.cancel") }}
         </button>
         <p
           v-if="createError"
@@ -97,11 +97,11 @@
           {{ course.name }}
         </button>
       </div>
-      <p v-else class="empty-state">No recent activity yet.</p>
+      <p v-else class="empty-state">{{ t("home.no_recent_activity") }}</p>
     </section>
 
     <section class="recent-section">
-      <h2 class="section-heading">Incoming deadlines</h2>
+      <h2 class="section-heading">{{ t("home.incoming_deadlines") }}</h2>
       <ul
         v-if="deadlines.length"
         class="deadline-list"
@@ -124,12 +124,12 @@
         </li>
       </ul>
       <p v-else class="empty-state" data-testid="deadlines-empty">
-        No upcoming deadlines.
+        {{ t("home.no_deadlines") }}
       </p>
     </section>
 
     <section class="recent-section">
-      <h2 class="section-heading">Recent activity</h2>
+      <h2 class="section-heading">{{ t("home.recent_activity") }}</h2>
       <ul
         v-if="activityFeed.length"
         class="activity-list"
@@ -148,7 +148,7 @@
         </li>
       </ul>
       <p v-else class="empty-state" data-testid="activity-empty">
-        No activity yet.
+        {{ t("home.no_activity") }}
       </p>
     </section>
   </div>
@@ -157,11 +157,14 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import { apiGetCourses, apiCreateCourse, type Course } from "@/api/courses";
+import { localizeError } from "@/utils/localizeError";
 import { apiGetActivity, type ActivityEvent } from "@/api/activity";
 import { apiGetDeadlines, type Deadline } from "@/api/deadlines";
 import { courseRoute } from "@/router/routes";
 
+const { t } = useI18n();
 const router = useRouter();
 
 const query = ref("");
@@ -228,28 +231,34 @@ function formatDueDate(isoString: string): string {
 function relativeTime(isoString: string): string {
   const diffMs = Date.now() - new Date(isoString).getTime();
   const diffMins = Math.floor(diffMs / 60_000);
-  if (diffMins < 1) return "just now";
-  if (diffMins < 60)
-    return `${diffMins} minute${diffMins === 1 ? "" : "s"} ago`;
+  if (diffMins < 1) return t("home.time_just_now");
+  if (diffMins < 60) return t("home.time_minutes_ago", diffMins);
   const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24)
-    return `${diffHours} hour${diffHours === 1 ? "" : "s"} ago`;
+  if (diffHours < 24) return t("home.time_hours_ago", diffHours);
   const diffDays = Math.floor(diffHours / 24);
-  return `${diffDays} day${diffDays === 1 ? "" : "s"} ago`;
+  return t("home.time_days_ago", diffDays);
 }
 
 function formatEventMessage(event: ActivityEvent): string {
   const p = JSON.parse(event.payload) as Record<string, unknown>;
   switch (event.event_type) {
     case "COURSE_CREATED":
-      return `Created course "${p.course_name}"`;
+      return t("home.activity_course_created", { name: p.course_name });
     case "STUDENT_ADDED":
-      return `Added ${p.student_name} to ${p.course_name}`;
+      return t("home.activity_student_added", {
+        student: p.student_name,
+        course: p.course_name,
+      });
     case "STUDENT_REMOVED":
-      return `Removed ${p.student_name} from ${p.course_name}`;
+      return t("home.activity_student_removed", {
+        student: p.student_name,
+        course: p.course_name,
+      });
     case "STUDENTS_IMPORTED": {
       const count = (p.students as unknown[]).length;
-      return `Imported ${count} student${count === 1 ? "" : "s"} into ${p.course_name}`;
+      return t("home.activity_students_imported", count, {
+        named: { count, course: p.course_name },
+      });
     }
     default:
       return event.event_type;
@@ -280,7 +289,7 @@ async function submitCreateCourse() {
   const result = await apiCreateCourse(name);
   createPending.value = false;
   if (!result.ok) {
-    createError.value = result.error;
+    createError.value = localizeError(result.error);
     return;
   }
   courses.value = [...courses.value, result.data];

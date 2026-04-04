@@ -198,16 +198,20 @@ Assignments are fully implemented in Phase 3, but the `due_date` field is planne
 
 Use `vue-i18n` to extract all user-visible strings from the frontend into locale message files.
 
-- [ ] Install `vue-i18n` and register it on the Vue app in `main.ts`
-- [ ] Create `frontend/src/locales/en.json` — English locale file containing all strings
-- [ ] Create `frontend/src/i18n.ts` — initialises and exports the `i18n` instance (default locale `en`, fallback locale `en`)
-- [ ] Replace hard-coded strings in `LoginView.vue` and `RegisterView.vue` with `t()` calls
-- [ ] Replace hard-coded strings in `TopBar.vue` with `t()` calls
-- [ ] Replace hard-coded strings in `HomeView.vue` with `t()` calls (once implemented in section 5)
-- [ ] Replace hard-coded strings in `CourseView.vue` with `t()` calls (once implemented in section 6)
-- [ ] Replace hard-coded strings in `CourseStudentsView.vue` with `t()` calls (once implemented in section 7)
-- [ ] Also localize the error messages coming from the backend
-- [ ] User is able to switch languages through a languages modal which is accessed by clicking a Languages button in the dropdown accessible via avatar click in the topbar.
+- [x] Install `vue-i18n` and register it on the Vue app in `main.ts`
+- [x] Create `frontend/src/locales/en.json` — English locale file containing all strings
+- [x] Create `frontend/src/i18n.ts` — initialises and exports the `i18n` instance (default locale `en`, fallback locale `en`)
+- [x] Replace hard-coded strings in `LoginView.vue` and `RegisterView.vue` with `t()` calls
+- [x] Replace hard-coded strings in `TopBar.vue` with `t()` calls
+- [x] Replace hard-coded strings in `HomeView.vue` with `t()` calls (once implemented in section 5)
+- [x] Replace hard-coded strings in `CourseView.vue` with `t()` calls (once implemented in section 6)
+- [x] Replace hard-coded strings in `CourseStudentsView.vue` with `t()` calls (once implemented in section 7)
+- [x] Also localize the error messages coming from the backend
+- [x] User is able to switch languages through a languages modal which is accessed by clicking a Languages button in the dropdown accessible via avatar click in the topbar.
+
+## 13. Sidebar
+- [ ] Define sidebar in main view with items Dashboard, My Courses, and Settings
+- [ ] Sidebar should be visible only for desktop. Mobile should have a bottom bar
 
 ---
 
@@ -220,3 +224,4 @@ Use `vue-i18n` to extract all user-visible strings from the frontend into locale
 - After import, all valid rows appear in the enrolled list
 - TA can remove a student from a course
 - Login and Register pages are visually consistent with the app design system
+- Application is internationalized and can easily add new languages
