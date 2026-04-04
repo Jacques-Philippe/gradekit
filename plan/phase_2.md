@@ -213,6 +213,16 @@ Use `vue-i18n` to extract all user-visible strings from the frontend into locale
 - [x] Define persistent sidebar in HomeView with items Dashboard, My Courses, and Settings
 - [x] Sidebar should be visible only for desktop. Mobile should have a bottom bar
 
+## 14. My Courses
+- [ ] at the moment we have no way to specify a deadline date or description to a course when we create one, and clicking "the create new course" button creates a new form input under "Recently worked on" which looks pretty janky.
+  - [ ] Let's begin by determining a form with more inputs for due date and description, both optional.
+  - [ ] Separate the course creation form from the "Recently worked on", specifically it should be above this section.
+- [ ] Evaluate the necessity of a My Courses sidebar option, given the user can search for any course from the Dashboard
+- [ ] if we determine the My Courses option is necessary
+  - [ ] Define /courses/ page where the TA can see and filter for all of their courses
+  - [ ] the functionality for creating a course should be moved here
+
+
 ---
 
 ## Acceptance criteria
