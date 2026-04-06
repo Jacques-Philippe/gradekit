@@ -86,10 +86,8 @@
     "heading": "Mes cours",
     "new_course": "Nouveau cours",
     "search_placeholder": "Rechercher par nom ou description\u2026",
-    "due_before_label": "Avant le",
     "col_name": "Nom",
     "col_description": "Description",
-    "col_due_date": "Date limite",
     "col_actions": "Actions",
     "view": "Voir",
     "delete": "Supprimer",
@@ -98,11 +96,9 @@
     "delete_confirm": "Supprimer le cours \u00ab\u00a0{name}\u00a0\u00bb\u00a0? Cette action est irr\u00e9versible.",
     "course_name_placeholder": "Nom du cours",
     "description_placeholder": "Description (optionnelle)",
-    "due_date_label": "Date limite (optionnelle)",
     "create": "Cr\u00e9er",
     "cancel": "Annuler",
-    "no_description": "\u2014",
-    "no_due_date": "\u2014"
+    "no_description": "\u2014"
   },
   "sidebar": {
     "dashboard": "Tableau de bord",

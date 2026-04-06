@@ -5,7 +5,6 @@ export interface Course {
   id: number;
   name: string;
   description: string | null;
-  due_date: string | null;
 }
 
 export async function apiGetCourse(id: number): Promise<ApiResult<Course>> {
@@ -23,7 +22,6 @@ export async function apiGetCourses(): Promise<ApiResult<Course[]>> {
 export interface CreateCourseParams {
   name: string;
   description?: string;
-  due_date?: string;
 }
 
 export async function apiDeleteCourse(id: number): Promise<ApiResult<null>> {

@@ -21,18 +21,6 @@
         :placeholder="t('my_courses.search_placeholder')"
         data-testid="search-input"
       />
-      <div class="filter-date-wrapper">
-        <label class="filter-label" for="due-before">
-          {{ t("my_courses.due_before_label") }}
-        </label>
-        <input
-          id="due-before"
-          v-model="dueBeforeFilter"
-          class="filter-input filter-date"
-          type="date"
-          data-testid="due-before-input"
-        />
-      </div>
     </div>
 
     <div v-if="loading" class="empty-state" data-testid="courses-loading">
@@ -60,7 +48,6 @@
             <th class="col-description">
               {{ t("my_courses.col_description") }}
             </th>
-            <th class="col-due-date">{{ t("my_courses.col_due_date") }}</th>
             <th class="col-actions">{{ t("my_courses.col_actions") }}</th>
           </tr>
         </thead>
@@ -73,13 +60,6 @@
             <td class="col-name">{{ course.name }}</td>
             <td class="col-description cell-muted">
               {{ course.description || t("my_courses.no_description") }}
-            </td>
-            <td class="col-due-date cell-muted">
-              {{
-                course.due_date
-                  ? formatDate(course.due_date)
-                  : t("my_courses.no_due_date")
-              }}
             </td>
             <td class="col-actions">
               <div class="action-btns">
@@ -134,18 +114,6 @@
               :placeholder="t('my_courses.description_placeholder')"
               rows="2"
               data-testid="create-course-description"
-            />
-          </div>
-          <div class="modal-field">
-            <label class="modal-label" for="new-due-date">
-              {{ t("my_courses.due_date_label") }}
-            </label>
-            <input
-              id="new-due-date"
-              v-model="newDueDate"
-              class="modal-input"
-              type="datetime-local"
-              data-testid="create-course-due-date"
             />
           </div>
           <p v-if="createError" class="form-error" data-testid="create-error">
@@ -226,12 +194,10 @@ const courses = ref<Course[]>([]);
 const loading = ref(true);
 
 const searchQuery = ref("");
-const dueBeforeFilter = ref("");
 
 const showCreateModal = ref(false);
 const newName = ref("");
 const newDescription = ref("");
-const newDueDate = ref("");
 const createPending = ref(false);
 const createError = ref("");
 
@@ -240,20 +206,11 @@ const deletingId = ref<number | null>(null);
 
 const filteredCourses = computed(() => {
   const q = searchQuery.value.toLowerCase().trim();
-  const dueBeforeDate = dueBeforeFilter.value
-    ? new Date(dueBeforeFilter.value + "T23:59:59")
-    : null;
-
+  if (!q) return courses.value;
   return courses.value.filter((c) => {
-    if (q) {
-      const inName = c.name.toLowerCase().includes(q);
-      const inDesc = (c.description ?? "").toLowerCase().includes(q);
-      if (!inName && !inDesc) return false;
-    }
-    if (dueBeforeDate && c.due_date) {
-      if (new Date(c.due_date) > dueBeforeDate) return false;
-    }
-    return true;
+    const inName = c.name.toLowerCase().includes(q);
+    const inDesc = (c.description ?? "").toLowerCase().includes(q);
+    return inName || inDesc;
   });
 });
 
@@ -263,19 +220,10 @@ onMounted(async () => {
   if (result.ok) courses.value = result.data;
 });
 
-function formatDate(isoString: string): string {
-  return new Date(isoString).toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
-
 function closeCreateModal() {
   showCreateModal.value = false;
   newName.value = "";
   newDescription.value = "";
-  newDueDate.value = "";
   createError.value = "";
 }
 
@@ -287,7 +235,6 @@ async function submitCreateCourse() {
   const result = await apiCreateCourse({
     name,
     description: newDescription.value.trim() || undefined,
-    due_date: newDueDate.value || undefined,
   });
   createPending.value = false;
   if (!result.ok) {
@@ -357,22 +304,6 @@ async function confirmDelete() {
   min-width: 200px;
 }
 
-.filter-date-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.filter-label {
-  font-size: 12px;
-  font-weight: 500;
-  color: #6b7280;
-}
-
-.filter-date {
-  width: 160px;
-}
-
 .empty-state {
   font-size: 13px;
   color: #9ca3af;
@@ -425,11 +356,6 @@ async function confirmDelete() {
 
 .col-description {
   flex: 1;
-}
-
-.col-due-date {
-  width: 140px;
-  white-space: nowrap;
 }
 
 .col-actions {
@@ -542,14 +468,6 @@ async function confirmDelete() {
 
 .modal-textarea:focus {
   border-color: #1a2844;
-}
-
-.modal-label {
-  display: block;
-  font-size: 12px;
-  font-weight: 500;
-  color: #6b7280;
-  margin-bottom: 4px;
 }
 
 .modal-message {

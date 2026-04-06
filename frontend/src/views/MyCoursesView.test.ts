@@ -8,19 +8,9 @@ import { setupTestPinia } from "@/utils/piniaTestHelper";
 import * as coursesApi from "@/api/courses";
 
 const COURSES = [
-  {
-    id: 1,
-    name: "CS101",
-    description: "Intro to CS",
-    due_date: "2099-06-01T00:00:00Z",
-  },
-  { id: 2, name: "Math 201", description: null, due_date: null },
-  {
-    id: 3,
-    name: "Physics 101",
-    description: "Mechanics and waves",
-    due_date: "2099-03-15T00:00:00Z",
-  },
+  { id: 1, name: "CS101", description: "Intro to CS" },
+  { id: 2, name: "Math 201", description: null },
+  { id: 3, name: "Physics 101", description: "Mechanics and waves" },
 ];
 
 describe("MyCourseView", () => {
@@ -102,21 +92,6 @@ describe("MyCourseView", () => {
       true,
     );
     expect(wrapper.find("[data-testid='courses-table']").exists()).toBe(false);
-  });
-
-  it("filters by due before date", async () => {
-    const wrapper = mount(MyCourseView, {
-      global: { plugins: [pinia, router] },
-    });
-    await flushPromises();
-    // Physics 101 is due 2099-03-15, CS101 is due 2099-06-01 — filter to before 2099-04-01
-    await wrapper
-      .find("[data-testid='due-before-input']")
-      .setValue("2099-04-01");
-    expect(wrapper.find("[data-testid='course-row-3']").exists()).toBe(true);
-    expect(wrapper.find("[data-testid='course-row-1']").exists()).toBe(false);
-    // Math 201 has no due_date — not excluded
-    expect(wrapper.find("[data-testid='course-row-2']").exists()).toBe(true);
   });
 
   it("navigates to CourseView when View is clicked", async () => {
@@ -203,12 +178,7 @@ describe("MyCourseView", () => {
   });
 
   it("creating a course adds it to the table and closes the modal", async () => {
-    const newCourse = {
-      id: 99,
-      name: "New Course",
-      description: null,
-      due_date: null,
-    };
+    const newCourse = { id: 99, name: "New Course", description: null };
     vi.spyOn(coursesApi, "apiCreateCourse").mockResolvedValue({
       ok: true,
       data: newCourse,
