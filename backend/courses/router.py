@@ -32,6 +32,22 @@ class CreateCourseRequest(BaseModel):
         return v.strip()
 
 
+class UpdateCourseRequest(BaseModel):
+    name: str | None = None
+    description: str | None = None
+
+    @field_validator("name")
+    @classmethod
+    def name_not_blank(cls, v: str | None) -> str | None:
+        if v is None:
+            return v
+        if not v.strip():
+            raise ValueError("Course name cannot be blank")
+        if len(v.strip()) > 255:
+            raise ValueError("Course name cannot exceed 255 characters")
+        return v.strip()
+
+
 class CourseResponse(BaseModel):
     id: int
     name: str
