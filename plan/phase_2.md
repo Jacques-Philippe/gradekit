@@ -229,10 +229,11 @@ Use `vue-i18n` to extract all user-visible strings from the frontend into locale
 - [x] Remove course creation form from `HomeView` — the "Recently worked on" section remains, but the "+ New Course" button and form are gone
 
 ### Issues
-- Given I created a new course with a deadline today, I'm not seeing it added to the upcoming deadlines shown on the Dashboard
-- I'm able to create courses with the same name, maybe this shouldn't be allowed
-- I should be able to edit a course
-- Running the unit tests with the docker instance running adds to the actual database from the tests. This probably shouldn't happen.
+- [ ] Running the unit tests with the docker instance running adds to the actual database from the tests. This probably shouldn't happen.
+- [ ] Given I created a new course with a deadline today, I'm not seeing it added to the upcoming deadlines shown on the Dashboard
+- [ ] I'm able to create courses with the same name, maybe this shouldn't be allowed
+- [ ] I should be able to edit a course; add an edit button alongside view/delete or add an edit functionality on the course's page (maybe both)
+
 
 ---
 
