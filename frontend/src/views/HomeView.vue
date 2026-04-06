@@ -37,79 +37,6 @@
       </div>
     </div>
 
-    <!-- Course creation — standalone section above "Recently worked on" -->
-    <section class="create-section">
-      <button
-        v-if="!showCreateForm"
-        class="btn-create"
-        @click="showCreateForm = true"
-        data-testid="open-create-course"
-      >
-        {{ t("home.new_course") }}
-      </button>
-      <div v-else class="create-form-card">
-        <h2 class="create-form-heading">{{ t("home.new_course_heading") }}</h2>
-        <form
-          class="create-form"
-          @submit.prevent="submitCreateCourse"
-          data-testid="create-course-form"
-        >
-          <input
-            v-model="newCourseName"
-            class="create-input"
-            type="text"
-            :placeholder="t('home.course_name_placeholder')"
-            autofocus
-            data-testid="create-course-input"
-          />
-          <textarea
-            v-model="newCourseDescription"
-            class="create-textarea"
-            :placeholder="t('home.description_placeholder')"
-            rows="2"
-            data-testid="create-course-description"
-          />
-          <div class="create-field">
-            <label class="create-label" for="course-due-date">
-              {{ t("home.due_date_label") }}
-            </label>
-            <input
-              id="course-due-date"
-              v-model="newCourseDueDate"
-              class="create-input"
-              type="datetime-local"
-              data-testid="create-course-due-date"
-            />
-          </div>
-          <div class="form-actions">
-            <button
-              type="submit"
-              class="btn-primary"
-              :disabled="createPending"
-              data-testid="create-course-submit"
-            >
-              {{ t("home.create") }}
-            </button>
-            <button
-              type="button"
-              class="btn-cancel"
-              @click="cancelCreate"
-              data-testid="create-course-cancel"
-            >
-              {{ t("home.cancel") }}
-            </button>
-          </div>
-          <p
-            v-if="createError"
-            class="form-error"
-            data-testid="create-course-error"
-          >
-            {{ createError }}
-          </p>
-        </form>
-      </div>
-    </section>
-
     <section class="recent-section">
       <h2 class="section-heading">{{ t("home.recently_worked_on") }}</h2>
       <div v-if="recentCourses.length" class="course-cards">
@@ -184,8 +111,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-import { apiGetCourses, apiCreateCourse, type Course } from "@/api/courses";
-import { localizeError } from "@/utils/localizeError";
+import { apiGetCourses, type Course } from "@/api/courses";
 import { apiGetActivity, type ActivityEvent } from "@/api/activity";
 import { apiGetDeadlines, type Deadline } from "@/api/deadlines";
 import { courseRoute } from "@/router/routes";
@@ -199,12 +125,6 @@ const courses = ref<Course[]>([]);
 const recentCourses = ref<Course[]>([]);
 const activityFeed = ref<ActivityEvent[]>([]);
 const deadlines = ref<Deadline[]>([]);
-const showCreateForm = ref(false);
-const newCourseName = ref("");
-const newCourseDescription = ref("");
-const newCourseDueDate = ref("");
-const createPending = ref(false);
-const createError = ref("");
 
 const matchingCourses = computed(() =>
   courses.value.filter((c) =>
@@ -302,34 +222,6 @@ function navigateToCourse(id: number) {
 function onFocusOut() {
   showResults.value = false;
 }
-
-function cancelCreate() {
-  showCreateForm.value = false;
-  newCourseName.value = "";
-  newCourseDescription.value = "";
-  newCourseDueDate.value = "";
-  createError.value = "";
-}
-
-async function submitCreateCourse() {
-  const name = newCourseName.value.trim();
-  if (!name) return;
-  createPending.value = true;
-  createError.value = "";
-  const result = await apiCreateCourse({
-    name,
-    description: newCourseDescription.value.trim() || undefined,
-    due_date: newCourseDueDate.value || undefined,
-  });
-  createPending.value = false;
-  if (!result.ok) {
-    createError.value = localizeError(result.error);
-    return;
-  }
-  courses.value = [...courses.value, result.data];
-  recentCourses.value = [result.data, ...recentCourses.value].slice(0, 5);
-  cancelCreate();
-}
 </script>
 
 <style scoped>
@@ -410,127 +302,6 @@ async function submitCreateCourse() {
   padding: 6px 14px;
   font-size: 13px;
   color: #9ca3af;
-  margin: 0;
-}
-
-/* Course creation section */
-.create-section {
-  margin-top: 28px;
-}
-
-.btn-create {
-  font-size: 13px;
-  font-weight: 500;
-  color: #1a2844;
-  background: transparent;
-  border: 1px solid #1a2844;
-  border-radius: 6px;
-  padding: 6px 14px;
-  cursor: pointer;
-}
-
-.btn-create:hover {
-  background: #f5f6f8;
-}
-
-.create-form-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 20px 24px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-}
-
-.create-form-heading {
-  font-size: 15px;
-  font-weight: 600;
-  color: #1a2844;
-  margin: 0 0 16px;
-}
-
-.create-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.create-input {
-  width: 100%;
-  padding: 8px 12px;
-  font-size: 14px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  outline: none;
-  box-sizing: border-box;
-}
-
-.create-input:focus {
-  border-color: #1a2844;
-}
-
-.create-textarea {
-  width: 100%;
-  padding: 8px 12px;
-  font-size: 14px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  outline: none;
-  box-sizing: border-box;
-  resize: vertical;
-  font-family: inherit;
-}
-
-.create-textarea:focus {
-  border-color: #1a2844;
-}
-
-.create-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.create-label {
-  font-size: 12px;
-  font-weight: 500;
-  color: #6b7280;
-}
-
-.form-actions {
-  display: flex;
-  gap: 8px;
-  padding-top: 4px;
-}
-
-.btn-primary {
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  background: #1a2844;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-cancel {
-  padding: 8px 14px;
-  font-size: 14px;
-  background: #f5f6f8;
-  color: #374151;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.form-error {
-  font-size: 13px;
-  color: #dc2626;
   margin: 0;
 }
 

@@ -20,8 +20,9 @@
       <span class="bottom-bar-label">{{ t("sidebar.dashboard") }}</span>
     </router-link>
     <router-link
-      :to="Routes.Home"
+      :to="Routes.MyCourses"
       class="bottom-bar-item"
+      :class="{ 'bottom-bar-item-active': route.path === Routes.MyCourses }"
       data-testid="bottom-bar-my-courses"
     >
       <svg

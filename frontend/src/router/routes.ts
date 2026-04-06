@@ -2,6 +2,7 @@ export const Routes = {
   Home: "/",
   Login: "/login",
   Register: "/register",
+  MyCourses: "/courses",
   Course: "/courses/:id",
   CourseStudents: "/courses/:id/students",
   Assignment: "/assignments/:id",

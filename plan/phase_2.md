@@ -218,16 +218,21 @@ Use `vue-i18n` to extract all user-visible strings from the frontend into locale
   - [x] Let's begin by determining a form with more inputs for due date and description, both optional.
   - [x] Separate the course creation form from the "Recently worked on", specifically it should be above this section.
 - [x] Evaluate the necessity of a My Courses sidebar option, given the user can search for any course from the Dashboard. I find it would be a better spot for course creation than the Dashboard. The conclusion of this investigation is that we want to have a dedicated page for My Courses where we can see all of a TA's courses. We can filter for a given course as well as create a new one.
-- [ ] Define `/courses/` page (`MyCourseView.vue`) with:
-  - [ ] Page header "My Courses"
-  - [ ] Text search bar that filters the course table in real time across name and description simultaneously
-  - [ ] "Due before" date input that filters the table to courses whose due date is on or before the selected date (optional — clearing it removes the filter)
-  - [ ] Table listing all courses — columns: Name, Description, Due date, and an Actions column with a "View" button (navigates to `CourseView`) and a "Delete" button; clicking Delete opens a confirmation modal before proceeding
-  - [ ] "New Course" button in the header area — opens a modal containing the course form (name, optional description, optional due date); on success the modal closes and the new course appears in the table
-  - [ ] Empty state message when the TA has no courses yet
-- [ ] Wire the "My Courses" sidebar item to `/courses/` (currently points to `/`)
-- [ ] Remove course creation form from `HomeView` — the "Recently worked on" section remains, but the "+ New Course" button and form are gone
+- [x] Define `/courses/` page (`MyCoursesView.vue`) with:
+  - [x] Page header "My Courses"
+  - [x] Text search bar that filters the course table in real time across name and description simultaneously
+  - [x] "Due before" date input that filters the table to courses whose due date is on or before the selected date (optional — clearing it removes the filter)
+  - [x] Table listing all courses — columns: Name, Description, Due date, and an Actions column with a "View" button (navigates to `CourseView`) and a "Delete" button; clicking Delete opens a confirmation modal before proceeding
+  - [x] "New Course" button in the header area — opens a modal containing the course form (name, optional description, optional due date); on success the modal closes and the new course appears in the table
+  - [x] Empty state message when the TA has no courses yet
+- [x] Wire the "My Courses" sidebar item to `/courses/` (currently points to `/`)
+- [x] Remove course creation form from `HomeView` — the "Recently worked on" section remains, but the "+ New Course" button and form are gone
 
+### Issues
+- Given I created a new course with a deadline today, I'm not seeing it added to the upcoming deadlines shown on the Dashboard
+- I'm able to create courses with the same name, maybe this shouldn't be allowed
+- I should be able to edit a course
+- Running the unit tests with the docker instance running adds to the actual database from the tests. This probably shouldn't happen.
 
 ---
 

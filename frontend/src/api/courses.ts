@@ -26,6 +26,12 @@ export interface CreateCourseParams {
   due_date?: string;
 }
 
+export async function apiDeleteCourse(id: number): Promise<ApiResult<null>> {
+  const res = await apiFetch(`/courses/${id}`, { method: "DELETE" });
+  if (!res.ok) return err(await parseError(res));
+  return ok(null);
+}
+
 export async function apiCreateCourse(
   params: CreateCourseParams,
 ): Promise<ApiResult<Course>> {

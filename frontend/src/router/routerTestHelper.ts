@@ -6,6 +6,10 @@ export function makeTestRouter() {
     history: createMemoryHistory(),
     routes: [
       { path: Routes.Home, component: { template: "<div>Home</div>" } },
+      {
+        path: Routes.MyCourses,
+        component: { template: "<div>MyCourses</div>" },
+      },
       { path: Routes.Login, component: { template: "<div>Login</div>" } },
       { path: Routes.Register, component: { template: "<div>Register</div>" } },
       { path: Routes.Course, component: { template: "<div>Course</div>" } },

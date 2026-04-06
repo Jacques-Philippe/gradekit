@@ -24,8 +24,9 @@
       </li>
       <li>
         <router-link
-          :to="Routes.Home"
+          :to="Routes.MyCourses"
           class="sidebar-item"
+          :class="{ 'sidebar-item-active': route.path === Routes.MyCourses }"
           data-testid="sidebar-my-courses"
         >
           <svg

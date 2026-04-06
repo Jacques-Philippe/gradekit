@@ -82,6 +82,28 @@
     "parse_error_no_column": "CSV must have a 'full_name' column.",
     "parse_error_no_rows": "No valid rows found in CSV."
   },
+  "my_courses": {
+    "heading": "My Courses",
+    "new_course": "New Course",
+    "search_placeholder": "Search by name or description\u2026",
+    "due_before_label": "Due before",
+    "col_name": "Name",
+    "col_description": "Description",
+    "col_due_date": "Due date",
+    "col_actions": "Actions",
+    "view": "View",
+    "delete": "Delete",
+    "no_courses": "You have no courses yet.",
+    "no_courses_filtered": "No courses match your filters.",
+    "delete_confirm": "Delete course \"{name}\"? This cannot be undone.",
+    "course_name_placeholder": "Course name",
+    "description_placeholder": "Description (optional)",
+    "due_date_label": "Due date (optional)",
+    "create": "Create",
+    "cancel": "Cancel",
+    "no_description": "\u2014",
+    "no_due_date": "\u2014"
+  },
   "sidebar": {
     "dashboard": "Dashboard",
     "my_courses": "My Courses",
