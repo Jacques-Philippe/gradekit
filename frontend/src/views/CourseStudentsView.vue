@@ -279,7 +279,7 @@ async function submitAddStudent() {
 function parseCsv(text: string): string[] | null {
   const lines = text.split(/\r?\n/).filter((l) => l.trim());
   if (!lines.length) return null;
-  const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
+  const headers = lines[0]!.split(",").map((h) => h.trim().toLowerCase());
   const col = headers.indexOf("full_name");
   if (col === -1) return null;
   return lines

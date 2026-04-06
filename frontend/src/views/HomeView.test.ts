@@ -135,8 +135,8 @@ describe("HomeView", () => {
     expect(wrapper.find("[data-testid='recent-course-2']").exists()).toBe(true);
     expect(wrapper.find("[data-testid='recent-course-1']").exists()).toBe(true);
     const cards = wrapper.findAll("[data-testid^='recent-course-']");
-    expect(cards[0].attributes("data-testid")).toBe("recent-course-2");
-    expect(cards[1].attributes("data-testid")).toBe("recent-course-1");
+    expect(cards[0]!.attributes("data-testid")).toBe("recent-course-2");
+    expect(cards[1]!.attributes("data-testid")).toBe("recent-course-1");
   });
 
   it("shows empty state when there is no activity", async () => {
