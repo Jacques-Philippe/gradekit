@@ -41,3 +41,21 @@ export async function apiCreateCourse(
   if (!res.ok) return err(await parseError(res));
   return ok(await res.json());
 }
+
+export interface UpdateCourseParams {
+  name?: string;
+  description?: string;
+}
+
+export async function apiUpdateCourse(
+  id: number,
+  params: UpdateCourseParams,
+): Promise<ApiResult<Course>> {
+  const res = await apiFetch(`/courses/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
+  });
+  if (!res.ok) return err(await parseError(res));
+  return ok(await res.json());
+}

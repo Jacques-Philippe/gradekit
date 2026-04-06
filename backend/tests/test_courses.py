@@ -110,6 +110,72 @@ def test_get_course_requires_authentication(client):
     assert response.status_code == 401
 
 
+def test_update_course_succeeds(client):
+    token = register_and_login(client)
+    created = client.post("/courses", json={"name": "Math 101"}, headers=auth(token))
+    course_id = created.json()["id"]
+    response = client.patch(
+        f"/courses/{course_id}",
+        json={"name": "Math 202", "description": "Updated desc"},
+        headers=auth(token),
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["name"] == "Math 202"
+    assert data["description"] == "Updated desc"
+
+
+def test_update_course_partial_name_only(client):
+    token = register_and_login(client)
+    created = client.post(
+        "/courses",
+        json={"name": "Math 101", "description": "Original"},
+        headers=auth(token),
+    )
+    course_id = created.json()["id"]
+    response = client.patch(
+        f"/courses/{course_id}", json={"name": "Math 202"}, headers=auth(token)
+    )
+    assert response.status_code == 200
+    assert response.json()["name"] == "Math 202"
+    assert response.json()["description"] == "Original"
+
+
+def test_update_course_rejects_duplicate_name(client):
+    token = register_and_login(client)
+    client.post("/courses", json={"name": "Math 101"}, headers=auth(token))
+    created = client.post("/courses", json={"name": "Physics 101"}, headers=auth(token))
+    course_id = created.json()["id"]
+    response = client.patch(
+        f"/courses/{course_id}", json={"name": "Math 101"}, headers=auth(token)
+    )
+    assert response.status_code == 409
+
+
+def test_update_course_returns_404_for_nonexistent(client):
+    token = register_and_login(client)
+    response = client.patch("/courses/999", json={"name": "X"}, headers=auth(token))
+    assert response.status_code == 404
+
+
+def test_update_course_returns_404_for_other_users_course(client):
+    token_alice = register_and_login(client, "alice", "secret")
+    token_bob = register_and_login(client, "bob", "secret")
+    created = client.post(
+        "/courses", json={"name": "Alice's Course"}, headers=auth(token_alice)
+    )
+    course_id = created.json()["id"]
+    response = client.patch(
+        f"/courses/{course_id}", json={"name": "Stolen"}, headers=auth(token_bob)
+    )
+    assert response.status_code == 404
+
+
+def test_update_course_requires_authentication(client):
+    response = client.patch("/courses/1", json={"name": "X"})
+    assert response.status_code == 401
+
+
 def test_delete_course_succeeds(client):
     token = register_and_login(client)
     created = client.post("/courses", json={"name": "Math 101"}, headers=auth(token))

@@ -71,6 +71,13 @@
                   {{ t("my_courses.view") }}
                 </button>
                 <button
+                  class="btn-edit"
+                  @click="openEditModal(course)"
+                  :data-testid="`edit-course-${course.id}`"
+                >
+                  {{ t("my_courses.edit") }}
+                </button>
+                <button
                   class="btn-delete"
                   @click="confirmingCourse = course"
                   :data-testid="`delete-course-${course.id}`"
@@ -141,6 +148,60 @@
       </div>
     </div>
 
+    <!-- Edit Course modal -->
+    <div
+      v-if="editingCourse"
+      class="modal-backdrop"
+      data-testid="edit-modal"
+      @click.self="closeEditModal"
+    >
+      <div class="modal">
+        <h2 class="modal-heading">{{ t("my_courses.edit_course") }}</h2>
+        <form @submit.prevent="submitEditCourse" data-testid="edit-course-form">
+          <div class="modal-field">
+            <input
+              v-model="editName"
+              class="modal-input"
+              type="text"
+              :placeholder="t('my_courses.course_name_placeholder')"
+              autofocus
+              data-testid="edit-course-input"
+            />
+          </div>
+          <div class="modal-field">
+            <textarea
+              v-model="editDescription"
+              class="modal-textarea"
+              :placeholder="t('my_courses.description_placeholder')"
+              rows="2"
+              data-testid="edit-course-description"
+            />
+          </div>
+          <p v-if="editError" class="form-error" data-testid="edit-error">
+            {{ editError }}
+          </p>
+          <div class="modal-actions">
+            <button
+              type="submit"
+              class="btn-primary"
+              :disabled="editPending"
+              data-testid="edit-course-submit"
+            >
+              {{ t("my_courses.save") }}
+            </button>
+            <button
+              type="button"
+              class="btn-cancel"
+              @click="closeEditModal"
+              data-testid="edit-course-cancel"
+            >
+              {{ t("my_courses.cancel") }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Delete confirmation modal -->
     <div
       v-if="confirmingCourse"
@@ -182,6 +243,7 @@ import {
   apiGetCourses,
   apiCreateCourse,
   apiDeleteCourse,
+  apiUpdateCourse,
   type Course,
 } from "@/api/courses";
 import { localizeError } from "@/utils/localizeError";
@@ -200,6 +262,12 @@ const newName = ref("");
 const newDescription = ref("");
 const createPending = ref(false);
 const createError = ref("");
+
+const editingCourse = ref<Course | null>(null);
+const editName = ref("");
+const editDescription = ref("");
+const editPending = ref(false);
+const editError = ref("");
 
 const confirmingCourse = ref<Course | null>(null);
 const deletingId = ref<number | null>(null);
@@ -243,6 +311,41 @@ async function submitCreateCourse() {
   }
   courses.value = [...courses.value, result.data];
   closeCreateModal();
+}
+
+function openEditModal(course: Course) {
+  editingCourse.value = course;
+  editName.value = course.name;
+  editDescription.value = course.description ?? "";
+  editError.value = "";
+}
+
+function closeEditModal() {
+  editingCourse.value = null;
+  editName.value = "";
+  editDescription.value = "";
+  editError.value = "";
+}
+
+async function submitEditCourse() {
+  if (!editingCourse.value) return;
+  const name = editName.value.trim();
+  if (!name) return;
+  editPending.value = true;
+  editError.value = "";
+  const result = await apiUpdateCourse(editingCourse.value.id, {
+    name,
+    description: editDescription.value.trim() || undefined,
+  });
+  editPending.value = false;
+  if (!result.ok) {
+    editError.value = localizeError(result.error);
+    return;
+  }
+  courses.value = courses.value.map((c) =>
+    c.id === result.data.id ? result.data : c,
+  );
+  closeEditModal();
 }
 
 async function confirmDelete() {
@@ -395,6 +498,20 @@ async function confirmDelete() {
 
 .btn-view:hover {
   background: #f0f2f7;
+}
+
+.btn-edit {
+  font-size: 12px;
+  color: #374151;
+  background: none;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.btn-edit:hover {
+  background: #f5f6f8;
 }
 
 .btn-delete {

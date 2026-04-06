@@ -119,6 +119,33 @@ def get_course(
     )
 
 
+@router.patch("/{course_id}", response_model=CourseResponse)
+def update_course(
+    course_id: int,
+    body: UpdateCourseRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    course = db.get(Course, course_id)
+    if course is None or course.owner_id != current_user.id:
+        raise HTTPException(status_code=404, detail="Course not found")
+    if body.name is not None:
+        course.name = body.name
+    if body.description is not None:
+        course.description = body.description
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Course name already exists")
+    db.refresh(course)
+    return CourseResponse(
+        id=course.id,
+        name=course.name,
+        description=course.description,
+    )
+
+
 @router.delete("/{course_id}", status_code=204)
 def delete_course(
     course_id: int,
