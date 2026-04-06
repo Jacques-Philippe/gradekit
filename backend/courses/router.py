@@ -1,5 +1,6 @@
 import json
 import logging
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, field_validator
@@ -20,6 +21,7 @@ router = APIRouter(prefix="/courses")
 class CreateCourseRequest(BaseModel):
     name: str
     description: str | None = None
+    due_date: datetime | None = None
 
     @field_validator("name")
     @classmethod
@@ -35,6 +37,7 @@ class CourseResponse(BaseModel):
     id: int
     name: str
     description: str | None
+    due_date: datetime | None
 
 
 @router.get("", response_model=list[CourseResponse])
@@ -44,7 +47,10 @@ def list_courses(
 ):
     courses = db.query(Course).filter(Course.owner_id == current_user.id).all()
     return [
-        CourseResponse(id=c.id, name=c.name, description=c.description) for c in courses
+        CourseResponse(
+            id=c.id, name=c.name, description=c.description, due_date=c.due_date
+        )
+        for c in courses
     ]
 
 
@@ -55,7 +61,10 @@ def create_course(
     db: Session = Depends(get_db),
 ):
     course = Course(
-        name=body.name, description=body.description, owner_id=current_user.id
+        name=body.name,
+        description=body.description,
+        due_date=body.due_date,
+        owner_id=current_user.id,
     )
     db.add(course)
     db.commit()
@@ -74,7 +83,10 @@ def create_course(
     except Exception:
         logger.exception("Failed to record COURSE_CREATED activity")
     return CourseResponse(
-        id=course.id, name=course.name, description=course.description
+        id=course.id,
+        name=course.name,
+        description=course.description,
+        due_date=course.due_date,
     )
 
 
@@ -88,7 +100,10 @@ def get_course(
     if course is None or course.owner_id != current_user.id:
         raise HTTPException(status_code=404, detail="Course not found")
     return CourseResponse(
-        id=course.id, name=course.name, description=course.description
+        id=course.id,
+        name=course.name,
+        description=course.description,
+        due_date=course.due_date,
     )
 
 

@@ -8,7 +8,7 @@ import { setupTestPinia } from "@/utils/piniaTestHelper";
 import * as coursesApi from "@/api/courses";
 import * as studentsApi from "@/api/students";
 
-const COURSE = { id: 1, name: "CS101", description: null };
+const COURSE = { id: 1, name: "CS101", description: null, due_date: null };
 const STUDENTS = [
   { id: 10, full_name: "Alice Smith" },
   { id: 11, full_name: "Bob Jones" },

@@ -10,8 +10,8 @@ import * as activityApi from "@/api/activity";
 import * as deadlinesApi from "@/api/deadlines";
 
 const COURSES = [
-  { id: 1, name: "CS101", description: null },
-  { id: 2, name: "Math 201", description: null },
+  { id: 1, name: "CS101", description: null, due_date: null },
+  { id: 2, name: "Math 201", description: null, due_date: null },
 ];
 
 const ACTIVITY = [
@@ -208,7 +208,12 @@ describe("HomeView", () => {
   });
 
   it("creates a course and updates the recent list", async () => {
-    const newCourse = { id: 3, name: "New Course", description: null };
+    const newCourse = {
+      id: 3,
+      name: "New Course",
+      description: null,
+      due_date: null,
+    };
     vi.spyOn(coursesApi, "apiCreateCourse").mockResolvedValue({
       ok: true,
       data: newCourse,
