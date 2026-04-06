@@ -238,7 +238,7 @@ Use `vue-i18n` to extract all user-visible strings from the frontend into locale
   - [x] Add an edit button alongside view/delete on the MyCoursesView.vue that opens a modal to edit the course
   - [x] Add an edit button on the course's page that opens the same modal
 
-- [ ] Make sure localized string .JSONs are written in UTF-8
+- [x] Make sure localized string .JSONs are written in UTF-8
 
 ---
 
