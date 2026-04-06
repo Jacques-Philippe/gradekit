@@ -62,6 +62,23 @@ def test_create_course_rejects_blank_name(client):
     assert any("Course name cannot be blank" in msg for msg in messages)
 
 
+def test_create_course_rejects_duplicate_name_for_same_user(client):
+    token = register_and_login(client)
+    client.post("/courses", json={"name": "Math 101"}, headers=auth(token))
+    response = client.post("/courses", json={"name": "Math 101"}, headers=auth(token))
+    assert response.status_code == 409
+    assert response.json()["detail"] == "Course name already exists"
+
+
+def test_create_course_allows_same_name_for_different_users(client):
+    token_alice = register_and_login(client, "alice", "secret")
+    token_bob = register_and_login(client, "bob", "secret")
+    r1 = client.post("/courses", json={"name": "Math 101"}, headers=auth(token_alice))
+    r2 = client.post("/courses", json={"name": "Math 101"}, headers=auth(token_bob))
+    assert r1.status_code == 201
+    assert r2.status_code == 201
+
+
 def test_get_course_succeeds(client):
     token = register_and_login(client)
     created = client.post("/courses", json={"name": "Math 101"}, headers=auth(token))

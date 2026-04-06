@@ -109,6 +109,7 @@
     "incorrect_credentials": "Incorrect username or password.",
     "username_taken": "That username is already registered.",
     "course_not_found": "Course not found.",
+    "course_name_taken": "A course with that name already exists.",
     "student_not_found": "Student not found in course.",
     "student_name_blank": "Student name cannot be blank.",
     "csv_missing_column": "CSV must have a 'full_name' column."

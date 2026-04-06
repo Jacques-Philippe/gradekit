@@ -109,6 +109,7 @@
     "incorrect_credentials": "Nom d'utilisateur ou mot de passe incorrect.",
     "username_taken": "Ce nom d'utilisateur est d\u00e9j\u00e0 utilis\u00e9.",
     "course_not_found": "Cours introuvable.",
+    "course_name_taken": "Un cours avec ce nom existe d\u00e9j\u00e0.",
     "student_not_found": "\u00c9tudiant introuvable dans ce cours.",
     "student_name_blank": "Le nom de l'\u00e9tudiant ne peut pas \u00eatre vide.",
     "csv_missing_column": "Le CSV doit avoir une colonne \u00ab\u00a0full_name\u00a0\u00bb."

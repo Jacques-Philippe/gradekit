@@ -3,6 +3,7 @@ import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, field_validator
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from auth.security import get_current_user
@@ -60,7 +61,11 @@ def create_course(
         owner_id=current_user.id,
     )
     db.add(course)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Course name already exists")
     db.refresh(course)
     try:
         db.add(
