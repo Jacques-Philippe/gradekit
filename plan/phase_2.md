@@ -232,7 +232,11 @@ Use `vue-i18n` to extract all user-visible strings from the frontend into locale
 - [x] Running the unit tests with the docker instance running adds to the actual database from the tests. This probably shouldn't happen.
 - [x] I just realized having a due date for a course makes no sense. Due date only makes sense or is relevant in the context of assignments. Please remove all references to due date from the My Courses page
 - [x] I'm able to create courses with the same name, maybe this shouldn't be allowed
-- [ ] I should be able to edit a course; add an edit button alongside view/delete or add an edit functionality on the course's page (maybe both)
+- [ ] I should be able to edit a course;
+  - [ ] Create an endpoint on the backend to modify the course
+  - [ ] Unit test the endpoint
+  - [ ] Add an edit button alongside view/delete on the MyCoursesView.vue that opens a modal to edit the course
+  - [ ] Add an edit button on the course's page that opens the same modal
 
 
 ---
