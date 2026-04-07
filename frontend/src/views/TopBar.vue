@@ -2,7 +2,13 @@
   <div class="top-bar">
     <span class="brand">{{ t("brand") }}</span>
     <div class="avatar-wrapper" ref="wrapperRef">
-      <button class="avatar" @click="dropdownOpen = !dropdownOpen">
+      <button
+        class="avatar"
+        @click="dropdownOpen = !dropdownOpen"
+        :aria-label="t('topbar.account_menu')"
+        aria-haspopup="true"
+        :aria-expanded="dropdownOpen"
+      >
         {{ initial }}
       </button>
       <div v-if="dropdownOpen" class="dropdown">

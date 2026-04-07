@@ -19,6 +19,7 @@
     "switch_link": "Se connecter"
   },
   "topbar": {
+    "account_menu": "Menu du compte",
     "logout": "Déconnexion",
     "languages": "Langues",
     "language_modal_title": "Choisir une langue",

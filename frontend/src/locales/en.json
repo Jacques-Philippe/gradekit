@@ -19,6 +19,7 @@
     "switch_link": "Log in"
   },
   "topbar": {
+    "account_menu": "Account menu",
     "logout": "Logout",
     "languages": "Languages",
     "language_modal_title": "Choose a language",
