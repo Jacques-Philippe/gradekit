@@ -33,8 +33,15 @@
     data-testid="language-modal"
     @click.self="languagesOpen = false"
   >
-    <div class="modal">
-      <h2 class="modal-title">{{ t("topbar.language_modal_title") }}</h2>
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="language-modal-title"
+    >
+      <h2 class="modal-title" id="language-modal-title">
+        {{ t("topbar.language_modal_title") }}
+      </h2>
       <ul class="language-list">
         <li v-for="lang in availableLocales" :key="lang.code">
           <button
