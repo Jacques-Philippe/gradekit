@@ -63,6 +63,7 @@
     "students_heading": "Étudiants",
     "add_student": "Ajouter un étudiant",
     "import_csv": "Importer CSV",
+    "students_error": "Impossible de charger les étudiants.",
     "no_students": "Aucun étudiant inscrit.",
     "assignments_heading": "Devoirs",
     "assignments_placeholder": "Les devoirs arrivent en Phase 3."

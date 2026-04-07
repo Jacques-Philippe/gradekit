@@ -40,8 +40,15 @@
             </button>
           </div>
         </div>
+        <p
+          v-if="studentsError"
+          class="error-state"
+          data-testid="students-error"
+        >
+          {{ studentsError }}
+        </p>
         <ul
-          v-if="students.length"
+          v-else-if="students.length"
           class="student-list"
           data-testid="student-list"
         >
@@ -142,6 +149,7 @@ const course = ref<Course | null>(null);
 const students = ref<Student[]>([]);
 const loading = ref(true);
 const error = ref("");
+const studentsError = ref("");
 
 const showEditModal = ref(false);
 const editName = ref("");
@@ -160,7 +168,11 @@ onMounted(async () => {
     return;
   }
   course.value = courseResult.data;
-  if (studentsResult.ok) students.value = studentsResult.data;
+  if (studentsResult.ok) {
+    students.value = studentsResult.data;
+  } else {
+    studentsError.value = t("course.students_error");
+  }
 });
 
 function openEditModal() {

@@ -63,6 +63,7 @@
     "students_heading": "Students",
     "add_student": "Add Student",
     "import_csv": "Import CSV",
+    "students_error": "Could not load students.",
     "no_students": "No students enrolled yet.",
     "assignments_heading": "Assignments",
     "assignments_placeholder": "Assignments coming in Phase 3."
