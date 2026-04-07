@@ -116,7 +116,7 @@ import { apiGetActivity, type ActivityEvent } from "@/api/activity";
 import { apiGetDeadlines, type Deadline } from "@/api/deadlines";
 import { courseRoute } from "@/router/routes";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const router = useRouter();
 
 const query = ref("");
@@ -168,7 +168,7 @@ function isUrgent(isoString: string): boolean {
 }
 
 function formatDueDate(isoString: string): string {
-  return new Date(isoString).toLocaleString(undefined, {
+  return new Date(isoString).toLocaleString(locale.value, {
     month: "short",
     day: "numeric",
     hour: "2-digit",
