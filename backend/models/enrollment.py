@@ -9,5 +9,9 @@ class Enrollment(Base):
     __table_args__ = (UniqueConstraint("course_id", "student_id"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id"), nullable=False)
-    student_id: Mapped[int] = mapped_column(ForeignKey("students.id"), nullable=False)
+    course_id: Mapped[int] = mapped_column(
+        ForeignKey("courses.id", ondelete="CASCADE"), nullable=False
+    )
+    student_id: Mapped[int] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), nullable=False
+    )

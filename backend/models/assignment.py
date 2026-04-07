@@ -11,5 +11,7 @@ class Assignment(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
-    course_id: Mapped[int] = mapped_column(ForeignKey("courses.id"), nullable=False)
+    course_id: Mapped[int] = mapped_column(
+        ForeignKey("courses.id", ondelete="CASCADE"), nullable=False
+    )
     due_date: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
