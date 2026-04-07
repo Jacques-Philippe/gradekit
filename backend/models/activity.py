@@ -15,5 +15,7 @@ class Activity(Base):
     event_type: Mapped[ActivityType] = mapped_column(Enum(ActivityType), nullable=False)
     payload: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, nullable=False, default=lambda: datetime.now(timezone.utc)
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
     )

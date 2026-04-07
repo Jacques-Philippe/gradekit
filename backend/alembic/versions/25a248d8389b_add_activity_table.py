@@ -38,7 +38,7 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.Column("payload", sa.Text(), nullable=False),
-        sa.Column("created_at", sa.DateTime(), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.ForeignKeyConstraint(
             ["user_id"],
             ["users.id"],
