@@ -1,13 +1,12 @@
 <template>
   <div class="home-page">
-    <div class="search-wrapper">
+    <div class="search-wrapper" @focusout="onFocusOut">
       <input
         class="search-input"
         type="text"
         :placeholder="t('home.search_placeholder')"
         v-model="query"
         @focus="showResults = true"
-        @blur="onFocusOut"
         data-testid="search-input"
       />
       <div
@@ -22,7 +21,7 @@
               v-for="course in matchingCourses"
               :key="course.id"
               class="result-item"
-              @mousedown.prevent="navigateToCourse(course.id)"
+              @click="navigateToCourse(course.id)"
               :data-testid="`result-course-${course.id}`"
             >
               {{ course.name }}
@@ -219,8 +218,11 @@ function navigateToCourse(id: number) {
   router.push(courseRoute(id));
 }
 
-function onFocusOut() {
-  showResults.value = false;
+function onFocusOut(event: FocusEvent) {
+  const wrapper = event.currentTarget as HTMLElement;
+  if (!wrapper.contains(event.relatedTarget as Node)) {
+    showResults.value = false;
+  }
 }
 </script>
 

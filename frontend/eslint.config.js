@@ -38,6 +38,7 @@ export default [
         Event: "readonly",
         File: "readonly",
         FileReader: "readonly",
+        FocusEvent: "readonly",
       },
     },
 
