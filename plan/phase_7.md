@@ -21,7 +21,7 @@ Goal: augment the grading experience with AI-assisted features using a locally-r
 
 ### Frontend
 
-- [ ] Feedback fields in `GradeSubmissionView` send a request after 500ms debounce and 3+ characters typed
+- [ ] Feedback fields in `GradeSubmissionView` send a request after 500ms debounce and 3+ characters typed; **use AbortController to cancel in-flight requests when new input arrives**, or tag requests with a monotonically increasing sequence id and ignore responses that don't match the latest input's sequence id, so stale responses cannot overwrite newer ghost text
 - [ ] Top suggestion rendered as inline ghost text in muted gray (`~#9ca3af`), same font and size as the input
 - [ ] **Tab** accepts the suggestion; any other keystroke dismisses it
 - [ ] Repeated **Tab** presses cycle through alternative suggestions, then wrap back to the TA's original text

@@ -77,8 +77,8 @@ Surfaces a proactive nudge when assignments are due soon, using the `GET /deadli
 ### Logic
 
 - [ ] On app load (in `AppWrapper.vue`), fetch `GET /deadlines` and check for deadlines within the user's configured threshold
-- [ ] If found, check `localStorage` for `deadline_reminder_dismissed_at`; show modal only if absent or older than the configured snooze duration
-- [ ] On dismiss, write `deadline_reminder_dismissed_at = now()` to `localStorage`
+- [ ] If found, check `localStorage` for user-scoped key `deadline_reminder_dismissed_at:{userId}`; show modal only if absent or older than the configured snooze duration
+- [ ] On dismiss, write the current timestamp to the user-scoped key `deadline_reminder_dismissed_at:{userId}` in `localStorage`
 
 ### Modal content
 
