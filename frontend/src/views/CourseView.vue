@@ -184,6 +184,7 @@ function openEditModal() {
 }
 
 function closeEditModal() {
+  if (editPending.value) return;
   showEditModal.value = false;
   editName.value = "";
   editDescription.value = "";
