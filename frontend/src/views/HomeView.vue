@@ -144,9 +144,9 @@ onMounted(async () => {
     const courseMap = new Map(coursesResult.data.map((c) => [c.id, c]));
     const latestByCourse = new Map<number, string>();
     for (const event of activityResult.data) {
-      const payload = JSON.parse(event.payload) as { course_id?: number };
-      const courseId = payload.course_id;
-      if (courseId !== undefined && !latestByCourse.has(courseId)) {
+      const payload = safeParsePayload(event.payload);
+      const courseId = payload?.course_id;
+      if (typeof courseId === "number" && !latestByCourse.has(courseId)) {
         latestByCourse.set(courseId, event.created_at);
       }
     }
@@ -161,6 +161,19 @@ onMounted(async () => {
       .map((id) => courseMap.get(id)!);
   }
 });
+
+function safeParsePayload(payloadStr: string): Record<string, unknown> | null {
+  try {
+    const parsed = JSON.parse(payloadStr);
+    return parsed !== null &&
+      typeof parsed === "object" &&
+      !Array.isArray(parsed)
+      ? (parsed as Record<string, unknown>)
+      : null;
+  } catch {
+    return null;
+  }
+}
 
 function isUrgent(isoString: string): boolean {
   return new Date(isoString).getTime() - Date.now() <= 24 * 60 * 60 * 1000;
@@ -187,7 +200,8 @@ function relativeTime(isoString: string): string {
 }
 
 function formatEventMessage(event: ActivityEvent): string {
-  const p = JSON.parse(event.payload) as Record<string, unknown>;
+  const p = safeParsePayload(event.payload);
+  if (!p) return event.event_type;
   switch (event.event_type) {
     case "COURSE_CREATED":
       return t("home.activity_course_created", { name: p.course_name });
@@ -202,7 +216,7 @@ function formatEventMessage(event: ActivityEvent): string {
         course: p.course_name,
       });
     case "STUDENTS_IMPORTED": {
-      const count = (p.students as unknown[]).length;
+      const count = Array.isArray(p.students) ? p.students.length : 0;
       return t("home.activity_students_imported", count, {
         named: { count, course: p.course_name },
       });
