@@ -192,6 +192,9 @@
             })
           }}
         </p>
+        <p v-if="removeError" class="form-error" data-testid="remove-error">
+          {{ removeError }}
+        </p>
         <div class="modal-actions">
           <button
             class="btn-danger"
@@ -255,6 +258,7 @@ const importResult = ref<ImportResult | null>(null);
 // Remove
 const confirmingStudent = ref<Student | null>(null);
 const removingId = ref<number | null>(null);
+const removeError = ref("");
 
 onMounted(async () => {
   const result = await apiGetStudents(courseId);
@@ -342,11 +346,15 @@ async function confirmRemove() {
   if (!confirmingStudent.value) return;
   const studentId = confirmingStudent.value.id;
   removingId.value = studentId;
+  removeError.value = "";
   const result = await apiDeleteStudent(courseId, studentId);
   removingId.value = null;
-  confirmingStudent.value = null;
-  if (!result.ok) return;
+  if (!result.ok) {
+    removeError.value = localizeError(result.error);
+    return;
+  }
   students.value = students.value.filter((s) => s.id !== studentId);
+  confirmingStudent.value = null;
 }
 </script>
 
