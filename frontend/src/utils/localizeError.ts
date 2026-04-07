@@ -15,7 +15,7 @@ const ERROR_CODE_MAP: Record<string, string> = {
 export function localizeError(error: string | ApiError): string {
   const apiError = typeof error === "string" ? { detail: error } : error;
   if (apiError.code && apiError.code in ERROR_CODE_MAP) {
-    const key = ERROR_CODE_MAP[apiError.code as string];
+    const key = ERROR_CODE_MAP[apiError.code as string] as string;
     return i18n.global.t(key);
   }
   return apiError.detail;
