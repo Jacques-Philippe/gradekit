@@ -158,6 +158,11 @@ const editPending = ref(false);
 const editError = ref("");
 
 onMounted(async () => {
+  if (!Number.isFinite(courseId) || courseId <= 0) {
+    loading.value = false;
+    error.value = localizeError({ detail: "Course not found" });
+    return;
+  }
   const [courseResult, studentsResult] = await Promise.all([
     apiGetCourse(courseId),
     apiGetStudents(courseId),
