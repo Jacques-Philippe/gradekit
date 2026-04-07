@@ -55,7 +55,7 @@ A per-user settings system for configuring app behaviour.
 
 ### Backend
 
-- [ ] Create `backend/models/user_settings.py` — `id`, `user_id` (FK, unique), `deadline_reminders_enabled` (bool, default `true`), `reminder_threshold_hours` (int, default `48`), `reminder_snooze_hours` (int, default `24`)
+- [ ] Create `backend/models/user_settings.py` — `id`, `user_id` (FK, unique), `deadline_reminders_enabled` (bool, default `true`), `reminder_threshold_hours` (list of ints, default `[24, 48]`), `reminder_snooze_hours` (int, default `24`)
 - [ ] Run Alembic migration to create `user_settings` table
 - [ ] `GET /settings` — return the authenticated user's settings (auto-create with defaults on first access)
 - [ ] `PATCH /settings` — partial update of settings fields
@@ -64,7 +64,7 @@ A per-user settings system for configuring app behaviour.
 
 - [ ] Create `SettingsView.vue` — accessible from TopBar avatar dropdown
 - [ ] Toggle to enable/disable deadline reminders
-- [ ] Selector for reminder threshold: 24h, 48h, or both
+- [ ] Checkboxes for reminder thresholds: 24h and/or 48h (multiple selection)
 - [ ] Selector for snooze duration (default 24h)
 - [ ] Persists via `PATCH /settings`
 
@@ -91,7 +91,7 @@ Surfaces a proactive nudge when assignments are due soon, using the `GET /deadli
 ### Settings integration
 
 - [ ] Modal respects `deadline_reminders_enabled` — skip entirely if disabled
-- [ ] Modal respects `reminder_threshold_hours` — only show deadlines within that window
+- [ ] Modal respects `reminder_threshold_hours` — only show deadlines within any of the configured thresholds
 - [ ] Snooze duration uses `reminder_snooze_hours` from user settings
 
 ---
