@@ -124,6 +124,7 @@ def remove_student(
     db.delete(enrollment)
     db.commit()
     try:
+        student_name = student.full_name if student else None
         db.add(
             Activity(
                 user_id=current_user.id,
@@ -133,7 +134,7 @@ def remove_student(
                         "course_id": course_id,
                         "course_name": course.name,
                         "student_id": student_id,
-                        "student_name": student.full_name,
+                        "student_name": student_name,
                     }
                 ),
             )
