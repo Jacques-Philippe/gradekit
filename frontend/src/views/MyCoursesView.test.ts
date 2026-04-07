@@ -215,4 +215,95 @@ describe("MyCourseView", () => {
     expect(wrapper.find("[data-testid='create-modal']").exists()).toBe(false);
     expect(wrapper.find("[data-testid='course-row-99']").exists()).toBe(true);
   });
+
+  it("opens edit modal when Edit is clicked", async () => {
+    const wrapper = mount(MyCourseView, {
+      global: { plugins: [pinia, router] },
+    });
+    await flushPromises();
+    await wrapper.find("[data-testid='edit-course-1']").trigger("click");
+    expect(wrapper.find("[data-testid='edit-modal']").exists()).toBe(true);
+  });
+
+  it("edit modal is not visible by default", async () => {
+    const wrapper = mount(MyCourseView, {
+      global: { plugins: [pinia, router] },
+    });
+    await flushPromises();
+    expect(wrapper.find("[data-testid='edit-modal']").exists()).toBe(false);
+  });
+
+  it("cancelling edit modal closes it", async () => {
+    const wrapper = mount(MyCourseView, {
+      global: { plugins: [pinia, router] },
+    });
+    await flushPromises();
+    await wrapper.find("[data-testid='edit-course-1']").trigger("click");
+    await wrapper.find("[data-testid='edit-course-cancel']").trigger("click");
+    expect(wrapper.find("[data-testid='edit-modal']").exists()).toBe(false);
+  });
+
+  it("updating a course updates the row and closes the modal", async () => {
+    const updatedCourse = {
+      id: 1,
+      name: "CS101 Updated",
+      description: "New description",
+    };
+    vi.spyOn(coursesApi, "apiUpdateCourse").mockResolvedValue({
+      ok: true,
+      data: updatedCourse,
+    });
+    const wrapper = mount(MyCourseView, {
+      global: { plugins: [pinia, router] },
+    });
+    await flushPromises();
+    await wrapper.find("[data-testid='edit-course-1']").trigger("click");
+    await wrapper
+      .find("[data-testid='edit-course-input']")
+      .setValue("CS101 Updated");
+    await wrapper
+      .find("[data-testid='edit-course-description']")
+      .setValue("New description");
+    await wrapper.find("[data-testid='edit-course-form']").trigger("submit");
+    await flushPromises();
+    expect(wrapper.find("[data-testid='edit-modal']").exists()).toBe(false);
+    expect(wrapper.find("[data-testid='course-row-1']").text()).toContain(
+      "CS101 Updated",
+    );
+  });
+
+  it("shows error in edit modal when update fails", async () => {
+    vi.spyOn(coursesApi, "apiUpdateCourse").mockResolvedValue({
+      ok: false,
+      error: { detail: "Course name already taken" },
+    });
+    const wrapper = mount(MyCourseView, {
+      global: { plugins: [pinia, router] },
+    });
+    await flushPromises();
+    await wrapper.find("[data-testid='edit-course-1']").trigger("click");
+    await wrapper
+      .find("[data-testid='edit-course-input']")
+      .setValue("CS101 Updated");
+    await wrapper.find("[data-testid='edit-course-form']").trigger("submit");
+    await flushPromises();
+    expect(wrapper.find("[data-testid='edit-modal']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='edit-error']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='edit-error']").text()).toContain(
+      "Course name already taken",
+    );
+  });
+
+  it("shows error state when course fetch fails", async () => {
+    vi.spyOn(coursesApi, "apiGetCourses").mockResolvedValue({
+      ok: false,
+      error: { detail: "Failed to load courses" },
+    });
+    const wrapper = mount(MyCourseView, {
+      global: { plugins: [pinia, router] },
+    });
+    await flushPromises();
+    expect(wrapper.find("[data-testid='courses-error']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='courses-table']").exists()).toBe(false);
+  });
 });
