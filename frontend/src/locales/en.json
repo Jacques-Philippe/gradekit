@@ -101,6 +101,7 @@
     "delete": "Delete",
     "edit_course": "Edit Course",
     "save": "Save",
+    "fetch_error": "Could not load courses.",
     "no_courses": "You have no courses yet.",
     "no_courses_filtered": "No courses match your filters.",
     "delete_confirm": "Delete course \"{name}\"? This cannot be undone.",

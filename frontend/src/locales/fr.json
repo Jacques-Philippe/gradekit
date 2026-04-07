@@ -101,6 +101,7 @@
     "delete": "Supprimer",
     "edit_course": "Modifier le cours",
     "save": "Enregistrer",
+    "fetch_error": "Impossible de charger les cours.",
     "no_courses": "Vous n'avez pas encore de cours.",
     "no_courses_filtered": "Aucun cours ne correspond à vos filtres.",
     "delete_confirm": "Supprimer le cours « {name} » ? Cette action est irréversible.",

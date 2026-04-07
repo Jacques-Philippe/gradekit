@@ -27,8 +27,11 @@
       {{ t("course.loading") }}
     </div>
     <template v-else>
+      <p v-if="fetchError" class="error-state" data-testid="courses-error">
+        {{ fetchError }}
+      </p>
       <p
-        v-if="courses.length === 0"
+        v-else-if="courses.length === 0"
         class="empty-state"
         data-testid="no-courses"
       >
@@ -254,6 +257,7 @@ const router = useRouter();
 
 const courses = ref<Course[]>([]);
 const loading = ref(true);
+const fetchError = ref("");
 
 const searchQuery = ref("");
 
@@ -285,7 +289,11 @@ const filteredCourses = computed(() => {
 onMounted(async () => {
   const result = await apiGetCourses();
   loading.value = false;
-  if (result.ok) courses.value = result.data;
+  if (result.ok) {
+    courses.value = result.data;
+  } else {
+    fetchError.value = t("my_courses.fetch_error");
+  }
 });
 
 function closeCreateModal() {
@@ -410,6 +418,13 @@ async function confirmDelete() {
 .empty-state {
   font-size: 13px;
   color: #9ca3af;
+  margin: 0;
+  padding: 24px 0;
+}
+
+.error-state {
+  font-size: 13px;
+  color: #dc2626;
   margin: 0;
   padding: 24px 0;
 }
