@@ -1,10 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount, flushPromises } from "@vue/test-utils";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { mount, flushPromises, VueWrapper } from "@vue/test-utils";
 import { createPinia, setActivePinia } from "pinia";
 import TopBar from "@/views/TopBar.vue";
 import { useAuthStore } from "@/stores/authStore";
 import { Routes } from "@/router/routes";
 import { makeTestRouter } from "@/router/routerTestHelper";
+
+let wrapper: VueWrapper | null = null;
 
 async function mountTopBar(username = "alice") {
   const pinia = createPinia();
@@ -12,7 +14,7 @@ async function mountTopBar(username = "alice") {
   const router = makeTestRouter();
   await router.push(Routes.Home);
   await router.isReady();
-  const wrapper = mount(TopBar, {
+  wrapper = mount(TopBar, {
     global: { plugins: [pinia, router] },
     attachTo: document.body,
   });
@@ -25,6 +27,11 @@ async function mountTopBar(username = "alice") {
 
 beforeEach(() => {
   vi.restoreAllMocks();
+});
+
+afterEach(() => {
+  wrapper?.unmount();
+  wrapper = null;
 });
 
 describe("TopBar", () => {
