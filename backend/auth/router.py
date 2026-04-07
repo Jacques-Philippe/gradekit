@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel, field_validator
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -10,6 +10,7 @@ from auth.security import (
     verify_password,
 )
 from database import get_db
+from errors import AppHTTPException, ErrorCode
 from models.user import User
 
 router = APIRouter(prefix="/auth")
@@ -48,7 +49,11 @@ class TokenResponse(BaseModel):
 def register(body: RegisterRequest, db: Session = Depends(get_db)):
     existing = db.query(User).filter(User.username == body.username).first()
     if existing:
-        raise HTTPException(status_code=400, detail="The username is already taken")
+        raise AppHTTPException(
+            status_code=400,
+            detail="The username is already taken",
+            code=ErrorCode.USERNAME_TAKEN,
+        )
 
     user = User(username=body.username, hashed_password=hash_password(body.password))
     db.add(user)
@@ -57,7 +62,11 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)):
         db.refresh(user)
     except IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=400, detail="The username is already taken")
+        raise AppHTTPException(
+            status_code=400,
+            detail="The username is already taken",
+            code=ErrorCode.USERNAME_TAKEN,
+        )
 
     return TokenResponse(token=create_access_token(user.id, user.username))
 
@@ -89,7 +98,11 @@ class LoginRequest(BaseModel):
 def login(body: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == body.username).first()
     if not user or not verify_password(body.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise AppHTTPException(
+            status_code=401,
+            detail="Invalid credentials",
+            code=ErrorCode.INVALID_CREDENTIALS,
+        )
 
     return TokenResponse(token=create_access_token(user.id, user.username))
 

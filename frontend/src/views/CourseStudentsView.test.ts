@@ -108,7 +108,7 @@ describe("CourseStudentsView", () => {
   it("shows error in modal when student removal fails", async () => {
     vi.spyOn(studentsApi, "apiDeleteStudent").mockResolvedValue({
       ok: false,
-      error: "Student deletion failed",
+      error: { detail: "Student deletion failed" },
     });
     const wrapper = mount(CourseStudentsView, {
       global: { plugins: [pinia, router] },
@@ -179,7 +179,7 @@ describe("CourseStudentsView", () => {
   it("shows error when adding a student fails", async () => {
     vi.spyOn(studentsApi, "apiAddStudent").mockResolvedValue({
       ok: false,
-      error: "Something went wrong",
+      error: { detail: "Something went wrong" },
     });
     const wrapper = mount(CourseStudentsView, {
       global: { plugins: [pinia, router] },

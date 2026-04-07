@@ -15,18 +15,27 @@ export async function apiFetch(
   return fetch(`/api${path}`, { ...init, headers });
 }
 
-export async function parseError(res: Response): Promise<string> {
+export interface ApiError {
+  detail: string;
+  code?: string;
+}
+
+export async function parseError(res: Response): Promise<ApiError> {
   try {
     const body = await res.json();
     const detail = body.detail;
-    if (detail == null) return res.statusText;
-    if (typeof detail === "string") return detail;
+    const code = body.code;
+    if (detail == null) return { detail: res.statusText };
+    if (typeof detail === "string") return { detail, code };
     if (Array.isArray(detail))
-      return detail
-        .map((e) => (typeof e === "object" && e?.msg ? e.msg : String(e)))
-        .join(", ");
-    return JSON.stringify(detail);
+      return {
+        detail: detail
+          .map((e) => (typeof e === "object" && e?.msg ? e.msg : String(e)))
+          .join(", "),
+        code,
+      };
+    return { detail: JSON.stringify(detail), code };
   } catch {
-    return res.statusText;
+    return { detail: res.statusText };
   }
 }

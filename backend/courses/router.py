@@ -1,13 +1,14 @@
 import json
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel, field_validator
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from auth.security import get_current_user
 from database import get_db
+from errors import AppHTTPException, ErrorCode
 from models.activity import Activity
 from models.activity_type import ActivityType
 from models.course import Course
@@ -81,7 +82,11 @@ def create_course(
         db.commit()
     except IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=409, detail="Course name already exists")
+        raise AppHTTPException(
+            status_code=409,
+            detail="Course name already exists",
+            code=ErrorCode.COURSE_NAME_TAKEN,
+        )
     db.refresh(course)
     try:
         db.add(
@@ -111,7 +116,11 @@ def get_course(
 ):
     course = db.get(Course, course_id)
     if course is None or course.owner_id != current_user.id:
-        raise HTTPException(status_code=404, detail="Course not found")
+        raise AppHTTPException(
+            status_code=404,
+            detail="Course not found",
+            code=ErrorCode.COURSE_NOT_FOUND,
+        )
     return CourseResponse(
         id=course.id,
         name=course.name,
@@ -128,7 +137,11 @@ def update_course(
 ):
     course = db.get(Course, course_id)
     if course is None or course.owner_id != current_user.id:
-        raise HTTPException(status_code=404, detail="Course not found")
+        raise AppHTTPException(
+            status_code=404,
+            detail="Course not found",
+            code=ErrorCode.COURSE_NOT_FOUND,
+        )
     if body.name is not None:
         course.name = body.name
     if body.description is not None:
@@ -137,7 +150,11 @@ def update_course(
         db.commit()
     except IntegrityError:
         db.rollback()
-        raise HTTPException(status_code=409, detail="Course name already exists")
+        raise AppHTTPException(
+            status_code=409,
+            detail="Course name already exists",
+            code=ErrorCode.COURSE_NAME_TAKEN,
+        )
     db.refresh(course)
     return CourseResponse(
         id=course.id,
@@ -154,6 +171,10 @@ def delete_course(
 ):
     course = db.get(Course, course_id)
     if course is None or course.owner_id != current_user.id:
-        raise HTTPException(status_code=404, detail="Course not found")
+        raise AppHTTPException(
+            status_code=404,
+            detail="Course not found",
+            code=ErrorCode.COURSE_NOT_FOUND,
+        )
     db.delete(course)
     db.commit()

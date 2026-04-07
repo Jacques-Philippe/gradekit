@@ -100,7 +100,7 @@ describe("CourseView", () => {
   it("shows error state when course fetch fails", async () => {
     vi.spyOn(coursesApi, "apiGetCourse").mockResolvedValue({
       ok: false,
-      error: "Not found",
+      error: { detail: "Not found" },
     });
     const wrapper = mount(CourseView, { global: { plugins: [pinia, router] } });
     await flushPromises();

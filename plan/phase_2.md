@@ -239,6 +239,10 @@ Use `vue-i18n` to extract all user-visible strings from the frontend into locale
   - [x] Add an edit button on the course's page that opens the same modal
 
 - [x] Make sure localized string .JSONs are written in UTF-8
+- [x] Refactor the error handling system such that the backend return the error code as well as the detail to allow for less brittle localized string error mapping
+  - [x] Backend: Modify all error responses to include a code field
+  - [x] Frontend: Update parseError to extract the code
+  - [x] Frontend: Update localizeError to map codes instead of messages
 
 ---
 

@@ -3,12 +3,13 @@ import io
 import json
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, UploadFile
 from pydantic import BaseModel, field_validator
 from sqlalchemy.orm import Session
 
 from auth.security import get_current_user
 from database import get_db
+from errors import AppHTTPException, ErrorCode
 from models.activity import Activity
 from models.activity_type import ActivityType
 from models.course import Course
@@ -50,7 +51,11 @@ class ImportResponse(BaseModel):
 def get_owned_course(course_id: int, current_user: User, db: Session) -> Course:
     course = db.get(Course, course_id)
     if course is None or course.owner_id != current_user.id:
-        raise HTTPException(status_code=404, detail="Course not found")
+        raise AppHTTPException(
+            status_code=404,
+            detail="Course not found",
+            code=ErrorCode.COURSE_NOT_FOUND,
+        )
     return course
 
 
@@ -119,7 +124,11 @@ def remove_student(
         .first()
     )
     if enrollment is None:
-        raise HTTPException(status_code=404, detail="Student not found in course")
+        raise AppHTTPException(
+            status_code=404,
+            detail="Student not found in course",
+            code=ErrorCode.STUDENT_NOT_FOUND,
+        )
     student = db.get(Student, student_id)
     db.delete(enrollment)
     db.commit()
@@ -160,14 +169,17 @@ def import_students(
             content = raw.decode("latin-1")
         except UnicodeDecodeError:
             logger.exception("CSV upload has unsupported encoding")
-            raise HTTPException(
+            raise AppHTTPException(
                 status_code=422,
                 detail="CSV file encoding is not supported; please upload a UTF-8 or Latin-1 encoded file",
+                code=ErrorCode.UNSUPPORTED_FILE_ENCODING,
             )
     reader = csv.DictReader(io.StringIO(content))
     if "full_name" not in (reader.fieldnames or []):
-        raise HTTPException(
-            status_code=422, detail="CSV must have a 'full_name' column"
+        raise AppHTTPException(
+            status_code=422,
+            detail="CSV must have a 'full_name' column",
+            code=ErrorCode.CSV_MISSING_COLUMN,
         )
     created = []
     errors = []

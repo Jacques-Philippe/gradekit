@@ -33,7 +33,7 @@ describe("login", () => {
   it("sets error and leaves token null on failure", async () => {
     vi.mocked(authApi.apiLogin).mockResolvedValue({
       ok: false,
-      error: "Invalid credentials",
+      error: { detail: "Invalid credentials" },
     });
 
     const store = useAuthStore();
@@ -52,7 +52,7 @@ describe("login", () => {
     });
     vi.mocked(authApi.apiMe).mockResolvedValue({
       ok: false,
-      error: "Invalid or expired token",
+      error: { detail: "Invalid or expired token" },
     });
 
     const store = useAuthStore();
@@ -85,7 +85,7 @@ describe("register", () => {
   it("sets error and leaves token null on failure", async () => {
     vi.mocked(authApi.apiRegister).mockResolvedValue({
       ok: false,
-      error: "The username is already taken",
+      error: { detail: "The username is already taken" },
     });
 
     const store = useAuthStore();
@@ -104,7 +104,7 @@ describe("register", () => {
     });
     vi.mocked(authApi.apiMe).mockResolvedValue({
       ok: false,
-      error: "Invalid or expired token",
+      error: { detail: "Invalid or expired token" },
     });
 
     const store = useAuthStore();
@@ -153,7 +153,7 @@ describe("restoreSession", () => {
     localStorage.setItem("auth_token", "bad-tok");
     vi.mocked(authApi.apiMe).mockResolvedValue({
       ok: false,
-      error: "Invalid or expired token",
+      error: { detail: "Invalid or expired token" },
     });
 
     const store = useAuthStore();
