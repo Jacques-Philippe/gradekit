@@ -151,7 +151,18 @@ def import_students(
     db: Session = Depends(get_db),
 ):
     course = get_owned_course(course_id, current_user, db)
-    content = file.file.read().decode("utf-8")
+    raw = file.file.read()
+    try:
+        content = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        try:
+            content = raw.decode("latin-1")
+        except UnicodeDecodeError:
+            logger.exception("CSV upload has unsupported encoding")
+            raise HTTPException(
+                status_code=422,
+                detail="CSV file encoding is not supported; please upload a UTF-8 or Latin-1 encoded file",
+            )
     reader = csv.DictReader(io.StringIO(content))
     if "full_name" not in (reader.fieldnames or []):
         raise HTTPException(
