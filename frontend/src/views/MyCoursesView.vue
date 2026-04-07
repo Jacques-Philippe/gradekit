@@ -216,6 +216,9 @@
         <p class="modal-message">
           {{ t("my_courses.delete_confirm", { name: confirmingCourse.name }) }}
         </p>
+        <p v-if="deleteError" class="form-error" data-testid="delete-error">
+          {{ deleteError }}
+        </p>
         <div class="modal-actions">
           <button
             class="btn-danger"
@@ -275,6 +278,7 @@ const editError = ref("");
 
 const confirmingCourse = ref<Course | null>(null);
 const deletingId = ref<number | null>(null);
+const deleteError = ref("");
 
 const filteredCourses = computed(() => {
   const q = searchQuery.value.toLowerCase().trim();
@@ -360,10 +364,15 @@ async function confirmDelete() {
   if (!confirmingCourse.value) return;
   const id = confirmingCourse.value.id;
   deletingId.value = id;
+  deleteError.value = "";
   const result = await apiDeleteCourse(id);
-  deletingId.value = null;
+  if (!result.ok) {
+    deletingId.value = null;
+    deleteError.value = localizeError(result.error);
+    return;
+  }
   confirmingCourse.value = null;
-  if (!result.ok) return;
+  deletingId.value = null;
   courses.value = courses.value.filter((c) => c.id !== id);
 }
 </script>

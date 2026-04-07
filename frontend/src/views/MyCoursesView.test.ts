@@ -150,6 +150,25 @@ describe("MyCourseView", () => {
     expect(wrapper.find("[data-testid='course-row-1']").exists()).toBe(true);
   });
 
+  it("shows error in modal when course deletion fails", async () => {
+    vi.spyOn(coursesApi, "apiDeleteCourse").mockResolvedValue({
+      ok: false,
+      error: { detail: "Could not delete course" },
+    });
+    const wrapper = mount(MyCourseView, {
+      global: { plugins: [pinia, router] },
+    });
+    await flushPromises();
+    await wrapper.find("[data-testid='delete-course-1']").trigger("click");
+    await wrapper.find("[data-testid='confirm-delete-btn']").trigger("click");
+    await flushPromises();
+    expect(wrapper.find("[data-testid='delete-modal']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='delete-error']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='delete-error']").text()).toContain(
+      "Could not delete course",
+    );
+  });
+
   it("opens new course modal when New Course is clicked", async () => {
     const wrapper = mount(MyCourseView, {
       global: { plugins: [pinia, router] },
