@@ -10,7 +10,7 @@ export async function withLoading<T>(
   try {
     const result = await fn();
     if (!result.ok) {
-      store.error = `${failureMessage}: ${result.error}`;
+      store.error = `${failureMessage}: ${result.error.detail}`;
     }
     return result;
   } catch {
