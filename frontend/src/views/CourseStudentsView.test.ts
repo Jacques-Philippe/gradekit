@@ -105,6 +105,25 @@ describe("CourseStudentsView", () => {
     expect(wrapper.find("[data-testid='student-row-11']").exists()).toBe(true);
   });
 
+  it("shows error in modal when student removal fails", async () => {
+    vi.spyOn(studentsApi, "apiDeleteStudent").mockResolvedValue({
+      ok: false,
+      error: "Student deletion failed",
+    });
+    const wrapper = mount(CourseStudentsView, {
+      global: { plugins: [pinia, router] },
+    });
+    await flushPromises();
+    await wrapper.find("[data-testid='remove-student-10']").trigger("click");
+    await wrapper.find("[data-testid='confirm-remove-btn']").trigger("click");
+    await flushPromises();
+    expect(wrapper.find("[data-testid='remove-modal']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='remove-error']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='remove-error']").text()).toContain(
+      "Student deletion failed",
+    );
+  });
+
   it("defaults to manual tab", async () => {
     const wrapper = mount(CourseStudentsView, {
       global: { plugins: [pinia, router] },

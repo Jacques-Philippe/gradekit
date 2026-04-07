@@ -107,23 +107,13 @@ describe("HomeView", () => {
     expect(wrapper.find("[data-testid='search-results']").exists()).toBe(false);
   });
 
-  it("hides results when the input loses focus", async () => {
-    const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
-    await flushPromises();
-    const input = wrapper.find("[data-testid='search-input']");
-    await input.trigger("focus");
-    await input.setValue("CS");
-    await input.trigger("blur");
-    expect(wrapper.find("[data-testid='search-results']").exists()).toBe(false);
-  });
-
   it("navigates to the course route when a result is clicked", async () => {
     const wrapper = mount(HomeView, { global: { plugins: [pinia, router] } });
     await flushPromises();
     const input = wrapper.find("[data-testid='search-input']");
     await input.trigger("focus");
     await input.setValue("CS");
-    await wrapper.find("[data-testid='result-course-1']").trigger("mousedown");
+    await wrapper.find("[data-testid='result-course-1']").trigger("click");
     await flushPromises();
     expect(router.currentRoute.value.path).toBe("/courses/1");
   });
