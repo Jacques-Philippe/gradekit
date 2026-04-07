@@ -16,8 +16,8 @@ Goal: augment the grading experience with AI-assisted features using a locally-r
 
 ### Backend
 
-- [ ] `POST /ml/suggest-feedback` — accepts `{ partial_text, criterion_id }`, queries past comments for that criterion, returns top 3 semantically similar suggestions
-- [ ] Backend proxies this through to the ML service; result cached briefly to avoid redundant inference on rapid keystrokes
+- [ ] `POST /ml/suggest-feedback` — accepts `{ partial_text, criterion_id }`, authenticated endpoint that internally uses user_id from the session; queries past comments for that criterion **scoped to the authenticated user**, returns top 3 semantically similar suggestions
+- [ ] Backend proxies this through to the ML service; result cached briefly to avoid redundant inference on rapid keystrokes; **cache key includes user_id, criterion_id, and partial_text** to prevent leaking other users' suggestions
 
 ### Frontend
 
