@@ -282,7 +282,9 @@ function goToStudents(tab?: string) {
   background: #ffffff;
   border-radius: 10px;
   padding: 24px;
-  width: 380px;
+  width: 100%;
+  max-width: 380px;
+  box-sizing: border-box;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 }
 
