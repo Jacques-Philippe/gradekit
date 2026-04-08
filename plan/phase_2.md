@@ -221,9 +221,8 @@ Use `vue-i18n` to extract all user-visible strings from the frontend into locale
 - [x] Define `/courses/` page (`MyCoursesView.vue`) with:
   - [x] Page header "My Courses"
   - [x] Text search bar that filters the course table in real time across name and description simultaneously
-  - [x] "Due before" date input that filters the table to courses whose due date is on or before the selected date (optional — clearing it removes the filter)
-  - [x] Table listing all courses — columns: Name, Description, Due date, and an Actions column with a "View" button (navigates to `CourseView`) and a "Delete" button; clicking Delete opens a confirmation modal before proceeding
-  - [x] "New Course" button in the header area — opens a modal containing the course form (name, optional description, optional due date); on success the modal closes and the new course appears in the table
+  - [x] Table listing all courses — columns: Name, Description, and an Actions column with a "View" button (navigates to `CourseView`) and a "Delete" button; clicking Delete opens a confirmation modal before proceeding
+  - [x] "New Course" button in the header area — opens a modal containing the course form (name, optional description); on success the modal closes and the new course appears in the table
   - [x] Empty state message when the TA has no courses yet
 - [x] Wire the "My Courses" sidebar item to `/courses/` (currently points to `/`)
 - [x] Remove course creation form from `HomeView` — the "Recently worked on" section remains, but the "+ New Course" button and form are gone
