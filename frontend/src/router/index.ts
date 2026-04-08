@@ -20,6 +20,31 @@ const routes = [
     name: "Home",
     component: () => import("@/views/HomeView.vue"),
   },
+  {
+    path: Routes.MyCourses,
+    name: "MyCourses",
+    component: () => import("@/views/MyCoursesView.vue"),
+  },
+  {
+    path: Routes.Course,
+    name: "Course",
+    component: () => import("@/views/CourseView.vue"),
+  },
+  {
+    path: Routes.CourseStudents,
+    name: "CourseStudents",
+    component: () => import("@/views/CourseStudentsView.vue"),
+  },
+  {
+    path: Routes.Assignment,
+    name: "Assignment",
+    component: { template: "<div>AssignmentView placeholder</div>" },
+  },
+  {
+    path: Routes.Settings,
+    name: "Settings",
+    component: { template: "<div>Settings coming soon.</div>" },
+  },
 ];
 
 export const router = createRouter({

@@ -49,9 +49,59 @@ Goal: the application handles edge cases gracefully and feels complete to use en
 
 ---
 
+## 6. Settings
+
+A per-user settings system for configuring app behaviour.
+
+### Backend
+
+- [ ] Create `backend/models/user_settings.py` — `id`, `user_id` (FK, unique), `deadline_reminders_enabled` (bool, default `true`), `reminder_threshold_hours` (list of ints, default `[24, 48]`), `reminder_snooze_hours` (int, default `24`)
+- [ ] Run Alembic migration to create `user_settings` table
+- [ ] `GET /settings` — return the authenticated user's settings (auto-create with defaults on first access)
+- [ ] `PATCH /settings` — partial update of settings fields
+
+### Frontend
+
+- [ ] Create `SettingsView.vue` — accessible from TopBar avatar dropdown
+- [ ] Toggle to enable/disable deadline reminders
+- [ ] Checkboxes for reminder thresholds: 24h and/or 48h (multiple selection)
+- [ ] Selector for snooze duration (default 24h)
+- [ ] Persists via `PATCH /settings`
+
+---
+
+## 7. Deadline reminder modal
+
+Surfaces a proactive nudge when assignments are due soon, using the `GET /deadlines` endpoint from Phase 2.
+
+### Logic
+
+- [ ] On app load (in `AppWrapper.vue`), fetch `GET /deadlines` and check for deadlines within the user's configured threshold
+- [ ] If found, check `localStorage` for user-scoped key `deadline_reminder_dismissed_at:{userId}`; show modal only if absent or older than the configured snooze duration
+- [ ] On dismiss, write the current timestamp to the user-scoped key `deadline_reminder_dismissed_at:{userId}` in `localStorage`
+
+### Modal content
+
+- [ ] Heading: "Deadlines coming up"
+- [ ] Count summary: e.g. "2 assignments due within 24h, 1 more within 48h"
+- [ ] Per-assignment rows: assignment title, course name, formatted due date, "Keep Grading" button
+- [ ] "Keep Grading" reuses the same navigation as the existing "Keep Grading" button on `GradeAssignmentView` — routes to the next ungraded submission for that assignment
+- [ ] "Dismiss" button closes the modal and records the dismissal timestamp
+
+### Settings integration
+
+- [ ] Modal respects `deadline_reminders_enabled` — skip entirely if disabled
+- [ ] Modal respects `reminder_threshold_hours` — only show deadlines within any of the configured thresholds
+- [ ] Snooze duration uses `reminder_snooze_hours` from user settings
+
+---
+
 ## Acceptance criteria
 
 - No user-visible action results in a blank screen or unhandled error
 - All destructive actions require confirmation
 - Every list view has a meaningful empty state
 - All async actions show feedback while in progress
+- Deadline reminder modal appears on load when relevant deadlines exist and has not been recently dismissed
+- Modal links directly to the next ungraded submission per assignment
+- All reminder behaviour is configurable per user via SettingsView

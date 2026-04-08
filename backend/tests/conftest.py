@@ -1,3 +1,7 @@
+import os
+
+os.environ["DATABASE_URL"] = "sqlite:///:memory:"
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -5,6 +9,11 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 import models.user  # noqa: F401 — registers User with Base.metadata
+import models.course  # noqa: F401
+import models.student  # noqa: F401
+import models.enrollment  # noqa: F401
+import models.activity  # noqa: F401
+import models.assignment  # noqa: F401
 from database import Base, get_db
 from main import app
 
@@ -23,6 +32,15 @@ def reset_db():
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
+
+
+@pytest.fixture
+def db_session(reset_db):
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 @pytest.fixture

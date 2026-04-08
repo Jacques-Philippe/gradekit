@@ -6,25 +6,36 @@ export async function apiFetch(
 ): Promise<Response> {
   const authStore = useAuthStore();
   const headers = new Headers(init.headers);
-  headers.set("Content-Type", "application/json");
+  if (!(init.body instanceof FormData)) {
+    headers.set("Content-Type", "application/json");
+  }
   if (authStore.token) {
     headers.set("Authorization", `Bearer ${authStore.token}`);
   }
   return fetch(`/api${path}`, { ...init, headers });
 }
 
-export async function parseError(res: Response): Promise<string> {
+export interface ApiError {
+  detail: string;
+  code?: string;
+}
+
+export async function parseError(res: Response): Promise<ApiError> {
   try {
     const body = await res.json();
     const detail = body.detail;
-    if (detail == null) return res.statusText;
-    if (typeof detail === "string") return detail;
+    const code = body.code;
+    if (detail == null) return { detail: res.statusText };
+    if (typeof detail === "string") return { detail, code };
     if (Array.isArray(detail))
-      return detail
-        .map((e) => (typeof e === "object" && e?.msg ? e.msg : String(e)))
-        .join(", ");
-    return JSON.stringify(detail);
+      return {
+        detail: detail
+          .map((e) => (typeof e === "object" && e?.msg ? e.msg : String(e)))
+          .join(", "),
+        code,
+      };
+    return { detail: JSON.stringify(detail), code };
   } catch {
-    return res.statusText;
+    return { detail: res.statusText };
   }
 }

@@ -43,10 +43,3 @@ alembic downgrade -1
 ```bash
 alembic history
 ```
-
-## Initial migration (already applied)
-
-```bash
-alembic revision --autogenerate -m "create users table"
-alembic upgrade head
-```

@@ -2,6 +2,7 @@
 
 Derived from a reference screenshot of a TA assignment detail view.
 
+Must work on mobile and desktop.
 ---
 
 ## Layout
@@ -102,3 +103,23 @@ Colored pills indicating question type. Each type has its own color:
 - **Hierarchy through typography** — bold question text, muted metadata, large stat values
 - **Color for categorization only** — type badges use color functionally, not decoratively
 - **Primary action always visible** — CTA in sidebar and top-right of each page header are never hidden
+
+---
+
+## AI Interactions
+
+### Feedback autocomplete
+
+Inline ghost text in the feedback field on `GradeSubmissionView`, following the Copilot-style pattern:
+
+1. TA begins typing in a feedback field (criterion note or general comment)
+2. After a **500ms debounce** and a **minimum of 3 characters**, the frontend requests a suggestion from the backend
+3. The top suggestion appears as **greyed-out ghost text** inline, completing the current sentence
+4. **Tab** accepts the suggestion; any other key dismisses it and continues normal input
+5. If multiple suggestions are available, repeated **Tab** presses cycle through them before wrapping back to the TA's original text
+
+**Scope:** suggestions are drawn from comments the TA has previously written for the **same criterion** across all assignments. Per-criterion scope keeps suggestions relevant; cross-criterion suggestions would be too noisy.
+
+**Graceful degradation:** if the TA has no prior history for a criterion (e.g. first time grading), no ghost text is shown. The feature becomes more useful over time as history accumulates.
+
+**Visual style:** ghost text uses muted gray (`~#9ca3af`), same font and size as the input. No tooltip, no dropdown — the suggestion is entirely inline to avoid breaking reading flow.
