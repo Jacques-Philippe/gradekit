@@ -1,5 +1,5 @@
 import { mount, flushPromises } from "@vue/test-utils";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import type { Pinia } from "pinia";
 import type { Router } from "vue-router";
 import MyCourseView from "@/views/MyCoursesView.vue";
@@ -26,6 +26,10 @@ describe("MyCourseView", () => {
       ok: true,
       data: COURSES,
     });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it("renders the page heading", async () => {
